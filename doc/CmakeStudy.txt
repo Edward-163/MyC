@@ -1,0 +1,12 @@
+创hello目录
+写hello.C
+写CMakeLists.txt
+project(hello)
+add_executable(hello hello.c)
+
+hello目录下cmake . (直接cmake .不一定生成MakeFile,需要指定minGw编译器才行cmake -G"MinGW")生成MakeFile等文件
+make命令 调用MakeFile??生成一堆文件包括hello可执行文件(以上内部编译入门)
+
+创hello/build/ 
+cmake ..
+make
