@@ -1,0 +1,10 @@
+pd
+printf("%d ",);fflush(stdout);
+pdl
+printf("%d \n",);fflush(stdout);
+ps
+printf("%s ",);fflush(stdout);
+psl
+printf("%s \n",);fflush(stdout);
+pl
+printf("\n");fflush(stdout);
