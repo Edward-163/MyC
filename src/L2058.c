@@ -61,6 +61,5 @@ int* nodesBetweenCriticalPoints(struct ListNode* head, int* returnSize){
 }
 
 int main() {
-
     return 0;
 }
