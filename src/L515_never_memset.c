@@ -8,7 +8,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-#include <regex.h>
 
 /*
  答案都不用初始化ans,巧妙利用g_level,做好了初始化和更新的操作
