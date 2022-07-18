@@ -9,15 +9,16 @@ project(chyj)
 
 #指定C语言中常常需要引入的#include 头文件所在的目录
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/uthash-2.3.0/src/)
-# 全局递归搜索 /src目录下的A.c,并把绝对路径追加到abc变量(看下面的例子,此处abc应该是个集合变量)中
+# cmake官网中默认变量
 message(${CMAKE_BINARY_DIR})
 message(${CMAKE_SOURCE_DIR})
 message(${PROJECT_BINARY_DIR})
 message(${PROJECT_SOURCE_DIR})
+# 全局递归搜索 /src目录下的A.c,并把绝对路径追加到abc变量(看下面的例子,此处abc应该是个集合变量)中
 file(GLOB_RECURSE abc ${PROJECT_SOURCE_DIR}/src/A.c)
 # message相当于cmake的打印语句 C:/Users/h30029170/CLionProjects/chyj/bin/A.c
 message(${abc})
-# 3 遍历项目根目录下所有的 .c 文件    https://zhuanlan.zhihu.com/p/157646534
+# 遍历项目根目录下所有的 .c 文件    https://zhuanlan.zhihu.com/p/157646534
 file(GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/src/*.c)
 foreach (file ${files})
     message(filPath\t${file})
