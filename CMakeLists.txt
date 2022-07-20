@@ -25,6 +25,9 @@ foreach (file ${files})
     #    正则中\1代表获取第一个()匹配的内容,\2以此类推
     string(REGEX REPLACE ".*/(.+)\\.c" "\\1" exe ${file})
     message(exeName\t${exe})
+    #    收集指定目录中所有源文件的名称，并将列表存储在提供的变量中
+    #   aux_source_directory(${PROJECT_SOURCE_DIR}/huawei_secure_c/src SEC_SRC)
+    #   add_executable(execFileName source1 [source2 ...])#通常source1生成可执行文件,假设它们是2个.c,为啥要加到一个可执行文件中??
     add_executable(${exe} ${file})
     #    我猜空格在cmake中算特殊字符,需要\转义
     message(\ \ \ \ 当前目录下/src/${exe}.c被编译输出到当前目录下/bin/${exe}.exe)
