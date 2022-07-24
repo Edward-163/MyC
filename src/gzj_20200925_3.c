@@ -5,16 +5,10 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-#include <regex.h>
 
 /*
  
  */
-/**
- *
- * @return 最长匹配长度
- */
-
 int fn(char* ip,char* route){
     char *string = strrchr(route, '/');
     int count = atoi(string + 1);

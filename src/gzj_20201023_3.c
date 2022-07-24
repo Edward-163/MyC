@@ -5,7 +5,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-#include <regex.h>
 /*
  addEvent(int startDate, String content, int num, int period) – 自日期 startDate 开始（startDate 包含在内），添加 num 个以 period 为间隔周期待办事项 content。例如若命令为 addEvent(0,"a",4,2)，表示于日期 0，2，4，6 分别添加待办事项 "a"。
     返回本次操作共计新增待办事项的数量。若部分日期上已存在该事项，无论该事项是否设置为已完成，这些日期不需添加该事项。

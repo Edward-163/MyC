@@ -5,11 +5,9 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-#include <regex.h>
 /*
  
  */
-#include "securec.h"
 #define MAX_N 10001
 #define BUF_LEN 32
 // 待实现函数，在此函数中填入答题代码

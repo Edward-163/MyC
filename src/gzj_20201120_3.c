@@ -5,7 +5,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-#include <regex.h>
 /*
  请设计一款自动售货机的进出货管理系统 VendingMachineSystem()，需实现以下功能：
 //         设置该自动售货机上共有 trayNum 个商品轨道，每个商品轨道上最多可放置 trayCapacity 个商品。
