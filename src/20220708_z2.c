@@ -40,8 +40,31 @@ operations = "MROMDMLMUMRMDMRMUMLMC"
 distances = [1,2,1,2,1,1,1,1,1,1]
 输出：2
  */
-
+typedef struct {
+    int u;
+    int d;
+    int l;
+    int r;
+}Square;
 int GetUnitBlockNum(int height, int width, char *operations, int *distances, int distancesSize){
+    int square[height][width][4]; // udlr
+    for (int h = 0; h < height; ++h){
+        for (int w = 0; w < width; ++w){
+            memset(square[h][w],0,sizeof(int)*4);
+            if(h==0){
+                square[h][w][0]=1;
+            }
+            if(h==height - 1){
+                square[h][w][1]=1;
+            }
+            if(w==0){
+                square[h][w][2] = 1;
+            }
+            if(w == width - 1) {
+                square[h][w][3] = 1;
+            }
+        }
+    }
 
 }
 int main()
