@@ -54,7 +54,7 @@ int lenLongestFibSubseq(int *arr, int arrSize) {
 
 int main() {
     // @formatter:off
-//    int arr[]={1,2,3,4,5,6,7,8}; // 5
+//    int g_arr[]={1,2,3,4,5,6,7,8}; // 5
     int arr[]={1,3,7,11,12,14,18}; // 3
     int size=sizeof(arr)/sizeof(arr[0]);
     int i = lenLongestFibSubseq(arr,size);

@@ -27,7 +27,7 @@ char ** stringMatching(char ** words, int wordsSize, int* returnSize){
 }
 
 int main(){
-//    char* arr[]={"mass","as","hero","superhero"};
+//    char* g_arr[]={"mass","as","hero","superhero"};
     char* arr[]={"leetcode","et","code"};
     char** words;
 

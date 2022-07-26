@@ -42,7 +42,7 @@ int main()
 {
     // @formatter:off
     int arr[][2]={{1,2},{2,3},{3,4},{4,5}};
-//    int arr[][2]={{1,2},{3,4},{5,6},{7,8}};
+//    int g_arr[][2]={{1,2},{3,4},{5,6},{7,8}};
     int size=sizeof(arr)/sizeof(arr[0]);
     int* points[size];
     for (int i = 0; i < size; ++i){

@@ -41,9 +41,9 @@ int maximumSwap(int num){
 int maximumSwap2(int num){
     int numcopy=num;
     ///bug:不能这么写
-//    int arr[9]=(int*)malloc(sizeof(int)*9);
+//    int g_arr[9]=(int*)malloc(sizeof(int)*9);
     int arr[9];
-//    int* arr=(int*)malloc(sizeof(int)*9);
+//    int* g_arr=(int*)malloc(sizeof(int)*9);
     int aidx=0;
     while(num!=0){
         arr[aidx++]=num%10;

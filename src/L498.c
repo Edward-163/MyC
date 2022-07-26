@@ -63,9 +63,9 @@ int* findDiagonalOrder(int** mat, int matSize, int* matColSize, int* returnSize)
 
 }
 int main() {
-//    int arr[][3]={{1,2,3},{4,5,6},{7,8,9}};
+//    int g_arr[][3]={{1,2,3},{4,5,6},{7,8,9}};
     int arr[][3]={{1,2,3},{4,5,6}};
-//    int arr[][3]={{1,2},{4,5}};
+//    int g_arr[][3]={{1,2},{4,5}};
     int matSize=sizeof(arr)/sizeof(arr[0]);
     int* mat[3];
     for (int a = 0; a < matSize; ++a) {

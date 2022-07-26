@@ -51,7 +51,7 @@ int main() {
     char *pattern = "abb";
     int i1=1;
     i1 = strlen(pattern);
-//    char arr[][3]={"abb","deq","mee","aqq","dkd","ccc"};
+//    char g_arr[][3]={"abb","deq","mee","aqq","dkd","ccc"};
     char arr[][3]={"abb","deq"};
     int wordSize=sizeof(arr)/sizeof(arr[0]);
     char* word[wordSize];

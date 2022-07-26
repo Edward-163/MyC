@@ -43,7 +43,7 @@ int arrayNesting(int* nums, int numsSize){
 }
 int main() {
     // @formatter:off
-//    int arr[]={5,4,0,3,1,6,2};
+//    int g_arr[]={5,4,0,3,1,6,2};
     int arr[]={1,0,3,4,2};
     int size=sizeof(arr)/sizeof(arr[0]);
     int i = arrayNesting(arr,size);

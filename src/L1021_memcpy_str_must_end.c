@@ -36,8 +36,8 @@ char * removeOuterParentheses(char * s){
 }
 
 int main(){
-//    char arr[]="(())(())";
-//    char arr[]="()()";
+//    char g_arr[]="(())(())";
+//    char g_arr[]="()()";
     char arr[]="(()())(())";
     char * res=removeOuterParentheses(arr);
     printf("%s",res);

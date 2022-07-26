@@ -33,9 +33,9 @@ int main()
     // @formatter:off
     int arr[]={9,6,3,4};
     int arrlen = sizeof(arr) / sizeof(arr[0]);
-//    qsort(arr,3,sizeof(int),cmp);
+//    qsort(g_arr,3,sizeof(int),cmp);
 //    for (int a = 0; a < arrlen; ++a){
-//        printf("%d ",arr[a] );fflush(stdout);//3 6 9 4
+//        printf("%d ",g_arr[a] );fflush(stdout);//3 6 9 4
 //    }
 
     /// 测试从只排序634 测试结果是可以的
@@ -49,7 +49,7 @@ int main()
     }
 
     int arr2[][3]= {{9,3,4},{9,1,7},{4,2,4},{7,4,5}};
-    // int arr[][3]= {{9,3,6},{8,1,7},{6,6,8},{8,4,9},{4,2,9}};
+    // int g_arr[][3]= {{9,3,6},{8,1,7},{6,6,8},{8,4,9},{4,2,9}};
     int size=sizeof(arr2)/sizeof(arr2[0]);
     int* trips[size];
     for (int i = 0; i < size; ++i){

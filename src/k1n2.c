@@ -54,7 +54,7 @@ static int GetTop3Num(const char *inputStr, int *outBuf) {
 //    outBuf=(int*)malloc(sizeof(int)*min);
 //    outBuf
     for (int e = 0; e < min; e++) {
-        //printf("%d",arr[e]);//right
+        //printf("%d",g_arr[e]);//right
         outBuf[e] = arr[e];//bug??
 //        printf("%d", outBuf[e]);//right
     }
@@ -65,7 +65,7 @@ static int GetTop3Num(const char *inputStr, int *outBuf) {
 int main(void) {
     /// 不初始赋值,元素全是随机值,初始赋值{0},全部元素就是0了,很方便
 //    char inputStr[101] = {0};
-    /// bug:segmentation falut,字符数组强烈建议写char arr[],不要写char * arr
+    /// bug:segmentation falut,字符数组强烈建议写char g_arr[],不要写char * g_arr
 //    char inputStr[101] = "a56b-6-8()_56!@$-a";
     char *inputStr = "a56b-6-8()_56!@$-a";
     int outBuf[MAX_RET_SIZE];

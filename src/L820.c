@@ -89,7 +89,7 @@ int minimumLengthEncoding(char **words, int wordsSize)
 int main()
 {
     // @formatter:off
-//    char* arr[]={{"time"}, {"me"}, {"bell"}};
+//    char* g_arr[]={{"time"}, {"me"}, {"bell"}};
     char* arr[]={{"t"}};
     int size=sizeof(arr)/sizeof(arr[0]);
     int i = minimumLengthEncoding(arr, size);

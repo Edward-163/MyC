@@ -33,7 +33,7 @@ int* nodesBetweenCriticalPoints(struct ListNode* head, int* returnSize){
     int min=-1;
     int firstCriticalIdx=-1;
     for(int a=1;a<aidx-1;a++){
-//        printf("%d",arr[a]);
+//        printf("%d",g_arr[a]);
 //        fflush(stdout);
         if(arr2[a]==1){
             if (criticalIdx1 == -1) {

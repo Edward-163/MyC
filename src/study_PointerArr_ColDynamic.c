@@ -21,7 +21,7 @@ int main()
         char* str={"hyj"}; // 悟了悟了
      */
 //    char* dict[]={{"a"},{"ab"},{"b"}};
-    char* dict[]={{"cat"},{"bat"},{"rat"}}; /// 注意这种传给char**不会sig,但类似int* arr[]传给int**铁定sig,L815
+    char* dict[]={{"cat"},{"bat"},{"rat"}}; /// 注意这种传给char**不会sig,但类似int* g_arr[]传给int**铁定sig,L815
     int size=sizeof(dict)/sizeof(dict[0]);
     char sentence[]="by the battery"; // "the cat was rat by the bat" 可以正常打印,但tok时会sig
     return 0;

@@ -35,9 +35,9 @@ int main() {
     /**
      https://blog.csdn.net/chenkaixin_1024/article/details/53150951?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-53150951-blog-46334695.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-53150951-blog-46334695.pc_relevant_default&utm_relevant_index=1
      C语言中并不存在字符串类型，有的只是字符串常量，而且字符串常量是存放在静态全局区上的，而一般局部变量，
-     形式参数则是保存在栈区上的。因此在这里字符指针变量arr以及字符数组arr[]都是在栈区上的，而对于char* arr="hello world";
+     形式参数则是保存在栈区上的。因此在这里字符指针变量arr以及字符数组arr[]都是在栈区上的，而对于char* g_arr="hello world";
      而言，仅仅是定义了一个指针并让它指向静态区上的字符串常量"hello world"【即arr上保存的是"hello world"的首字符地址】，
-     而stcpy(arr,"hello");则是要将"hello world"改成"hello"，但因为是常量无法修改，所以程序崩溃
+     而stcpy(g_arr,"hello");则是要将"hello world"改成"hello"，但因为是常量无法修改，所以程序崩溃
      */
 //    char *text = "alice is a good girl she is a good student";
     char text[] = "alice is a good girl she is a good student";

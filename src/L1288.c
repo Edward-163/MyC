@@ -3,7 +3,7 @@
 #define MAX(a,b) (a)>(b)?(a):(b)
 
 int removeCoveredIntervals(int** intervals, int intervalsSize, int* intervalsColSize){
-    //arr[100001]  下标是左界,值是右界
+    //g_arr[100001]  下标是左界,值是右界
     int arr[100001];
     memset(arr,-1,sizeof(int)*100001);
 
@@ -41,14 +41,14 @@ int removeCoveredIntervals(int** intervals, int intervalsSize, int* intervalsCol
     }
 
 //    for(int a=100000;a>=0;a--){
-//        if(arr[a]!=-1){
+//        if(g_arr[a]!=-1){
 //            int aa=a-1;
-//            while(aa>=0 && arr[aa]==-1){
+//            while(aa>=0 && g_arr[aa]==-1){
 //                aa--;
 //            }
 //            ///bug:aa可能越界
-//            //if(arr[a]<=arr[aa]){
-//            if(aa>=0 && arr[a]<=arr[aa]){
+//            //if(g_arr[a]<=g_arr[aa]){
+//            if(aa>=0 && g_arr[a]<=g_arr[aa]){
 //                res--;
 //            }
 //
@@ -60,7 +60,7 @@ int removeCoveredIntervals(int** intervals, int intervalsSize, int* intervalsCol
 }
 
 int main(){
-//    int arr[][2] = {{1, 4}, {2, 8}, {3, 6}};
+//    int g_arr[][2] = {{1, 4}, {2, 8}, {3, 6}};
     int arr[][2]={{66672,75156},{59890,65654},{92950,95965},{9103,31953},{54869,69855},{33272,92693},{52631,65356},{43332,89722},{4218,57729},{20993,92876}};
     int intervalsSize = sizeof(arr) / sizeof(arr[0]);
     int * intervals[intervalsSize];

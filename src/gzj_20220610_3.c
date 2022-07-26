@@ -74,13 +74,13 @@ int Fn(int **orders, int *orderSize, int **orderColSize, int interval)
 int main()
 {
     /// 死了这条心吧,网友说C语言不支持列不同的二维数组,只能"绕道"往int* hyj[5]里面塞一维数组
-//    int arr[][5]={{0,1,1}, {0,0,2}, {1,1,1}, {1,0,2,0,0}, {3,0,2}};
-//    int orderSize=sizeof(arr)/sizeof(arr[0]);
+//    int g_arr[][5]={{0,1,1}, {0,0,2}, {1,1,1}, {1,0,2,0,0}, {3,0,2}};
+//    int orderSize=sizeof(g_arr)/sizeof(g_arr[0]);
 //    int* orders[orderSize];
 //    for (int i = 0; i < orderSize; ++i){
-//        orders[i]=arr[i];
+//        orders[i]=g_arr[i];
 //        /// bug:列固定为上面的5,上面不写5又会报错
-//        orderColSize[i]=sizeof(arr[i])/sizeof(arr[i][0]);
+//        orderColSize[i]=sizeof(g_arr[i])/sizeof(g_arr[i][0]);
 //    }
     int orderSize = 5;
     int *arr[orderSize];
@@ -107,7 +107,7 @@ int main()
     orderColSize[4] = 3;
 
     int interval = 3;
-    /// arr是元素type为int*的数组,是指针数组,可以把arr的type理解为int*[5] arr,指针数组作为函数参数会退化int**
+    /// arr是元素type为int*的数组,是指针数组,可以把arr的type理解为int*[5] g_arr,指针数组作为函数参数会退化int**
     int ans = Fn(arr, &orderSize, &orderColSize, interval);
     printf("%d ", ans);
     fflush(stdout);

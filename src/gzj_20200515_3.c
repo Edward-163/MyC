@@ -139,17 +139,17 @@ int main()
     char peak[] = "peak";
 
 //    //char father[] = "annabelle";
-//    int arr[3][2][2];
-//    arr[3][2][2] = r->arr;/// no 看上去可以,但打印出来的值全是乱的
+//    int g_arr[3][2][2];
+//    g_arr[3][2][2] = r->g_arr;/// no 看上去可以,但打印出来的值全是乱的
 //
-////    int arr2[3][2][2]= r->arr;/// no
+////    int arr2[3][2][2]= r->g_arr;/// no
 //
 //    for (int a = 0; a < 3; ++a) {
 //        for (int b = 0; b < 2; ++b) {
 //            for (int c = 0; c < 2; ++c) {
-//                printf("%d ", arr[a][b][c]);
+//                printf("%d ", g_arr[a][b][c]);
 //                fflush(stdout);
-////                printf("%d ",r->arr[a][b][c]);fflush(stdout);/// 这种可以
+////                printf("%d ",r->g_arr[a][b][c]);fflush(stdout);/// 这种可以
 //            }
 //            printf("|");
 //            fflush(stdout);

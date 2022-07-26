@@ -9,7 +9,7 @@ bool fn(int* arr,int len,bool isA,int left){
         ridx--;
     }
     /// bug:
-//    int max=arr[ridx];
+//    int max=g_arr[ridx];
     int max=ridx+1;
     if(isA==true && max>=left)return true;
     if(isA==false && max>=left)return false;

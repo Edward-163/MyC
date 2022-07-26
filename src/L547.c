@@ -69,9 +69,9 @@ int findCircleNum(int **isConnected, int isConnectedSize, int *isConnectedColSiz
 int main()
 {
     // formatter:off
-//    int arr[][3] = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
+//    int g_arr[][3] = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
     int arr[][3] = {{1, 1, 0}, {1, 1, 0}};
-//    int arr[][3] = {{1, 1, 1}};
+//    int g_arr[][3] = {{1, 1, 1}};
     int size = sizeof(arr) / sizeof(arr[0]);
     int *conn[size];
     int *colSize = (int *) malloc(sizeof(int) * size);

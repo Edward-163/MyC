@@ -15,8 +15,8 @@ int main(){
 
     int a=2;
     char arr[a];
-//    char arr[]={'h','y'};
-//    Fn(arr);
+//    char g_arr[]={'h','y'};
+//    Fn(g_arr);
 
     /**
      p只是声明了指向int型的指针，声明指针系统是不会分配内存的，所以*p没有内存来存常量9的值，自然发生错误，int *p = NULL; p = (int*)malloc(sizeof(int )); *p = 9这样就不会有错

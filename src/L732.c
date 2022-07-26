@@ -47,7 +47,7 @@ int myCalendarThreeBook(MyCalendarThree *obj, int start, int end) {
 
 void myCalendarThreeFree(MyCalendarThree *obj) {
     /// bug不能释放arr,提示arr不是通过malloc分配的
-    //free(obj->arr);
+    //free(obj->g_arr);
     free(obj);
 }
 

@@ -90,12 +90,12 @@ int numBusesToDestination(int **routes, int routesSize, int *routesColSize, int 
 int main()
 {
     // @formatter:off
-//    int arr[][3]= {{7,12,0},{4,5,15},{6,0,0},{15,19,0},{9,12,13}};
+//    int g_arr[][3]= {{7,12,0},{4,5,15},{6,0,0},{15,19,0},{9,12,13}};
    int arr[][3]= {{7,12,0},{7,12,15},{6,0,0},{15,19,0},{9,12,13}};
-    // int arr[][3]= {{1,2,7},{3,6,7}};
-//    int arr[][5]= {{7,12},{4,5,15},{6},{15,19},{9,12,13}};
-//    int arr[][3]={{7,12},{4,5,15},{6},{15,19},{9,12,13}}; // sig
-//    int* arr[]={{7,12},{4,5,15},{6},{15,19},{9,12,13}}; //
+    // int g_arr[][3]= {{1,2,7},{3,6,7}};
+//    int g_arr[][5]= {{7,12},{4,5,15},{6},{15,19},{9,12,13}};
+//    int g_arr[][3]={{7,12},{4,5,15},{6},{15,19},{9,12,13}}; // sig
+//    int* g_arr[]={{7,12},{4,5,15},{6},{15,19},{9,12,13}}; //
     int size=sizeof(arr)/sizeof(arr[0]); // 1 6
     int* rou[size];
     for (int i = 0; i < size; ++i){
@@ -110,24 +110,24 @@ int main()
     // int target=6;
 
 //    for (int i = 0; i < size; ++i){
-//        colSize[i]=sizeof(arr[i])/sizeof(arr[i][0]);
+//        colSize[i]=sizeof(g_arr[i])/sizeof(g_arr[i][0]);
 //    }
 
 //    int size=5;
-//    int* arr[size]; // sig
-//    int arr[size][3]; //
+//    int* g_arr[size]; // sig
+//    int g_arr[size][3]; //
 //    int arr0[]={7,12};
 //    int arr1[]={4,5,15};
 //    int arr2[]={6};
 //    int arr3[]={15,19};
 //    int arr4[]={9,12,13};
-//    arr[0]=arr0;
-//    arr[1]=arr1;
-//    arr[2]=arr2;
-//    arr[3]=arr3;
-//    arr[4]=arr4;
+//    g_arr[0]=arr0;
+//    g_arr[1]=arr1;
+//    g_arr[2]=arr2;
+//    g_arr[3]=arr3;
+//    g_arr[4]=arr4;
 
-//    int** arr=malloc(sizeof(int*)*5);// sig
+//    int** g_arr=malloc(sizeof(int*)*5);// sig
 //    int arr0[]={7,12};
 //    int arr1[]={4,5,15};
 //    int arr2[]={6};

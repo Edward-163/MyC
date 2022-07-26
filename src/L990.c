@@ -21,7 +21,7 @@ int findP(int* arr,int f){
     return f;
 }
 bool equationsPossible(char ** equations, int equationsSize){
-    int arr[26];//idx代表节点的值,arr[idx]代表父节点的值
+    int arr[26];//idx代表节点的值,g_arr[idx]代表父节点的值
     memset(arr,-1,sizeof(int)*26);
 
     for(int a=0;a<equationsSize;a++){
