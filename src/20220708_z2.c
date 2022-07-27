@@ -5,6 +5,100 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
+
+
+void Init(int height, int width, int square[height][width][4])
+{
+    for (int h = 0; h < height; ++h) {
+        for (int w = 0; w < width; ++w) {
+            memset(square[h][w], 0, sizeof(int) * 4); // 4 four side
+            if (h == 0) { // 0 first row
+                square[h][w][0] = 1; // 0 up
+            }
+            if (h == height - 1) {
+                square[h][w][1] = 1; // 1 down
+            }
+            if (w == 0) { // first col
+                square[h][w][2] = 1; // 2 left
+            }
+            if (w == width - 1) {
+                square[h][w][3] = 1; // 3 right
+            }
+        }
+    }
+}
+
+int GetAns(int height, int width, const int square[height][width][4])
+{
+    int ans = 0;
+    for (int h = 0; h < height; ++h) {
+        for (int w = 0; w < width; ++w) {
+            // 2 left 3 right
+            if (square[h][w][0] == 1 && square[h][w][1] == 1 && square[h][w][2] == 1 && square[h][w][3] == 1) {
+                ans++;
+            }
+        }
+    }
+    return ans;
+}
+
+
+void Down(int height, int width, int square[height][width][4], int px, int py, char openstate, int dis)
+{
+    if (openstate == 'O') {
+        for (int i = 0; i < dis; i++) {
+            if (px + i < height && py - 1 >= 0) {
+                square[px + i][py - 1][3] = 1; // 3 right
+            }
+            if (py + 1 < width) {
+                square[px + i][py][2] = 1; // 2 left
+            }
+        }
+    }
+}
+
+void Up(int height, int width, int square[height][width][4], int px, int py, char openstate, int dis)
+{
+    if (openstate == 'O') {
+        for (int i = 0; i < dis; i++) {
+            if (px - i - 1 >= 0 && py - 1 >= 0) {
+                square[px - i - 1][py - 1][3] = 1; // 3 right
+            }
+            if (px - i - 1 >= 0) {
+                square[px - i - 1][py][2] = 1; // 2 left
+            }
+        }
+    }
+}
+
+void Left(int height, int width, int square[height][width][4], int px, int py, char openstate, int dis)
+{
+    if (openstate == 'O') {
+        for (int i = 0; i < dis; i++) {
+            if (px - 1 >= 0 && py - i - 1 >= 0) {
+                square[px - 1][py - i - 1][1] = 1; // 1 down
+            }
+            if (py + 1 < width && py - i - 1 >= 0) {
+                square[px][py - i - 1][0] = 1; // 0 up
+            }
+        }
+    }
+}
+
+void Right(int height, int width, int square[height][width][4], int px, int py, char openstate, int dis)
+{
+    if (openstate == 'O') {
+        for (int i = 0; i < dis; i++) {
+            if (px - 1 >= 0 && py + i < width) {
+                square[px - 1][py + i][1] = 1;
+            }
+            if (py + i < width) {
+                square[px][py + i][0] = 1;
+            }
+        }
+    }
+}
+
 /*
 某工厂使用激光刀切割材料。激光刀具有开启和关闭两种状态，并可转向和移动。支持指令如下：
 ·         O —— 开启激光刀（即 "OPEN"），指令执行后激光刀处于开启状态
@@ -21,56 +115,92 @@
 ·         operations[i] 仅为 'O'、'C'、'U'、'D'、'L'、'R'、'M'
 ·         一条边可能会被多次切割
  
-示例 1：
 输入：
 height = 3
 width = 4
 operations = "MRMOMDMLMUMCRMODMC"
 distances =  [1,1,2,1,2,2, 1, 2]
 输出：3
+
  输入：
 height = 3
 width = 4
 operations = "MRMOMDMLMUMC"
 distances = [1,1,2,1,2,2]
 输出：0
+
  height = 3
 width = 3
 operations = "MROMDMLMUMRMDMRMUMLMC"
 distances = [1,2,1,2,1,1,1,1,1,1]
 输出：2
  */
-typedef struct {
-    int u;
-    int d;
-    int l;
-    int r;
-}Square;
-int GetUnitBlockNum(int height, int width, char *operations, int *distances, int distancesSize){
+int GetUnitBlockNum(int height, int width, char *operations, int *distances, int distancesSize)
+{
     int square[height][width][4]; // udlr
-    for (int h = 0; h < height; ++h){
-        for (int w = 0; w < width; ++w){
-            memset(square[h][w],0,sizeof(int)*4);
-            if(h==0){
-                square[h][w][0]=1;
+    Init(height, width, square);
+    // point==blade
+    int px = 0;
+    int py = 0;
+    char dire = 'D';
+    int opidx = 0;
+    int disidx = 0;
+    char openstate = 'C';
+    while (operations[opidx] != '\0') {
+        if (operations[opidx] == 'M') {
+            int dis = distances[disidx++];
+            // cal direct
+            if (dire == 'D') {
+                Down(height, width, square, px, py, openstate, dis);
+                px += dis;
             }
-            if(h==height - 1){
-                square[h][w][1]=1;
+
+            if (dire == 'U') {
+                Up(height, width, square, px, py, openstate, dis);
+                px -= dis;
             }
-            if(w==0){
-                square[h][w][2] = 1;
+
+            if (dire == 'L') {
+                Left(height, width, square, px, py, openstate, dis);
+                py -= dis;
             }
-            if(w == width - 1) {
-                square[h][w][3] = 1;
+
+            if (dire == 'R') {
+                Right(height, width, square, px, py, openstate, dis);
+                py += dis;
             }
+        } else if (operations[opidx] == 'O' || operations[opidx] == 'C') {
+            openstate = operations[opidx];
+        } else {
+            dire = operations[opidx];
         }
+        // step
+        opidx++;
     }
 
+    // ans
+    int ans = GetAns(height, width, square);
+    return ans;
 }
+
 int main()
 {
     // @formatter:off
-    
+    int height=3;
+    int width=4;
+    char oper[]="MRMOMDMLMUMCRMODMC";
+    int dist[]={1,1,2,1,2,2, 1, 2}; // 3
+
+    // char oper[]="MRMOMDMLMUMC";
+    // int dist[]={1,1,2,1,2,2}; // 0
+
+    // width=3;
+    // char oper[]="MROMDMLMUMRMDMRMUMLMC";
+    // int dist[]={1,2,1,2,1,1,1,1,1,1}; // 2
+
+    int dsize=sizeof(dist)/sizeof(dist[0]);
+    int i = GetUnitBlockNum(height,width,oper,dist,dsize);
+    printf("%d \n",i);fflush(stdout);
     return 0;
     // @formatter:on
 }
