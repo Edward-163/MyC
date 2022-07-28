@@ -32,4 +32,4 @@ foreach (file ${files})
     #    我猜空格在cmake中算特殊字符,需要\转义
     message(\ \ \ \ 当前目录下/src/${exe}.c被编译输出到当前目录下/bin/${exe}.exe)
 endforeach ()
-# 测试修改之前提交中某个文件的内容2
+# 测试修改之前提交中某个文件的内容2 
