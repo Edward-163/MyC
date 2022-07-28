@@ -1,6 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
- */
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -51,7 +48,7 @@ int *largestValues(struct TreeNode *root, int *returnSize)
         return NULL;
     }
     g_ans = (int *) malloc(sizeof(int) * MAX);
-    /// 这玩意 第一：memset函数按字节对内存块进行初始化，所以不能用它将int数组初始化为0和-1之外的其他值（除非该值高字节和低字节相同）
+    /// memset坑 函数按字节对内存块进行初始化，所以不能用它将int数组初始化为0和-1之外的其他值（除非该值高字节和低字节相同）
 //    memset(g_ans, 2, sizeof(int) * MAX);
     for (int i = 0; i < MAX; ++i) {
         g_ans[i] = INT_MIN;
