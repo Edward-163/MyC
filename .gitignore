@@ -1,3 +1,9 @@
 .idea
 .vscode
 build
+
+
+#解决gitignore不生效问题
+#git rm --cached -r .
+#git add .
+#git commmit -m 'update ignore'
