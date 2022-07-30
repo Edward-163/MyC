@@ -1,0 +1,5 @@
+无法打开源文件
+解决
+正确安装mingw64(Gnu Compiler collection 8.1.0以上传),配置好全局PATH,开关vscode,它会自己检测gcc目录
+
+

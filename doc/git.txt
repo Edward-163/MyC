@@ -1,0 +1,16 @@
+.gitignore只能忽略未被track的文件，而git本地缓存。如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
+git rm --cached -r .
+git add .
+git commmit -m 'update ignore'
+
+
+git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir
+git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
+git reset --hard HEAD^ // 修改无了,相当于回滚到上一个提交
+https://vue3js.cn/interview/git/HEAD_tree_index.html#%E4%B8%80%E3%80%81head
+
+
+本地推目录到github和gitee,每次都只能一个目录(但可以包含多个文件),想多个目录一起推,gitBash就卡死或者报错了
+github生成的token可以直接在setting中添加,比gitBash在远程url中添加加token要更方便些.
+早上到公司添加第二个token的时候提示Ed..账号已添加,token不让加了?!!
+git remote set-url origin https://<your_token>@github.com/<username>/<repo>.git

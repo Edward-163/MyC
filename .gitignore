@@ -3,7 +3,3 @@
 build
 
 
-#.gitignore只能忽略未被track的文件，而git本地缓存。如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
-#git rm --cached -r .
-#git add .
-#git commmit -m 'update ignore'
