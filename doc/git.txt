@@ -14,3 +14,6 @@ https://vue3js.cn/interview/git/HEAD_tree_index.html#%E4%B8%80%E3%80%81head
 github生成的token可以直接在setting中添加,比gitBash在远程url中添加加token要更方便些.
 早上到公司添加第二个token的时候提示Ed..账号已添加,token不让加了?!!
 git remote set-url origin https://<your_token>@github.com/<username>/<repo>.git
+
+
+github限制25M文件,太大gitBash推送会卡住,上传大文件[25M,100M]还要专门下载git lfs

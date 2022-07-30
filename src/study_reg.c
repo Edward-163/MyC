@@ -23,7 +23,7 @@ void TestCRegex()
     const size_t nmatch = 1;
     regex_t reg;
     const char * pattern = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*.\\w+([-.]\\w+)*$";
-    char * buf = "jeffrey.jpng@huawei.com";
+    char * buf = "hyj@qq.com";
     regcomp(&reg, pattern, cflags); // 编译正则模式
     status = regexec(&reg, buf, nmatch, pmatch,0); // 执行正则表达式和缓存的比较
     if (status == REG_NOMATCH )

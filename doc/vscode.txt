@@ -1,5 +1,5 @@
 无法打开源文件
 解决
-正确安装mingw64(Gnu Compiler collection 8.1.0以上传),配置好全局PATH,开关vscode,它会自己检测gcc目录
-
+正确安装mingw64(Gnu Compiler collection 8.1.0选x86_64-win32-seh),配置好全局PATH,开关vscode,它会自己检测gcc目录
+https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/
 
