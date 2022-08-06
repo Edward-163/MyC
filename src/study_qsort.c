@@ -18,7 +18,7 @@ int cmp2(const void *a, const void *b)
 {
     return *(char *) a - *(char *) b;
 }
-
+/// java是把元素传进来比较,C语言是原数组传进来比较
 int cmp3(int **a, int **b)
 {
     /// *优先级比[]低

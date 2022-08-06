@@ -61,11 +61,145 @@ image.png
 1 <= num < 10000
 2 <= capacity < 10000
  */
+int *g_left;
+int *g_parent;
+int g_size;
+int g_cap;
+
+// —— 初始化系统.
+void BikeManager(int *preNode, int psize, int capacity)
+{
+    g_parent = preNode;
+    g_size = psize;
+    g_cap = capacity;
+    g_left = malloc(sizeof(int) * psize);
+    for (int i = 1; i < psize; i++) {
+        g_left[i] = capacity / 2;
+    }
+}
+
+// 共有 preNode.length 个节点，节点编号从 0 开始；节点 0 是根节点仓库，其他节点为租借点。
+// preNode[i] 表示节点 i 的父节点编号，preNode[0] 约定为 -1。
+// 租借点的容量为 capacity，初始时均有 ⌊capacity / 2⌋ 辆共享单车。
+// —— 在租借点 nodeId 处租借出 num 辆共享单车，返回借出后此节点剩余的共享单车数量.
+int rentBikes(int nodeId, int num)
+{
+    // 需要int* left
+    if (num > g_left[nodeId]) {
+        rentBikes(g_parent[nodeId], num - g_left[nodeId]);
+        g_left[nodeId] = 0;
+    } else {
+        g_left[nodeId] -= num;
+    }
+    return g_left[nodeId];
+}
+
+// 若节点 nodeId 处的共享单车不足 num 辆，则不足的部分向其父节点索取，这一过程将向其父节点递归求解，直到成功借出。
+// —— 在租借点 nodeId 处归还 num 辆共享单车，返回归还后此节点的共享单车数量.
+int returnBikes(int nodeId, int num)
+{
+    // 需要随时可以访问的(记录父子关系)数组
+    if (num > g_cap - g_left[nodeId]) {
+        returnBikes(g_parent[nodeId], num - (g_cap - g_left[nodeId]));
+        g_left[nodeId] = g_cap;
+    } else {
+        g_left[nodeId] += num;
+    }
+    return g_left[nodeId];
+}
+
+// 若节点 nodeId 放满共享单车后还有剩余，则将多余的共享单车归还到其父节点，这一过程同样将向其父节点递归求解，直到成功归还。
+// —— 重置租借点的共享单车数量，并返回被重置的节点数量。对于当前共享单车数量为 0 或者 capacity 的租借点，将它们的共享单车数量重置为 ⌊capacity / 2⌋，其他节点不重置.
+int reset()
+{
+    int ans = 0;
+    for (int i = 1; i < g_size; i++) {
+        if (g_left[i] == 0 || g_left[i] == g_cap) {
+            g_left[i] = g_cap / 2; // 2 divide
+            ans++;
+        }
+    }
+    return ans;
+}
+
+typedef struct {
+    int idx;
+    int leftnum;
+} Ele;
+
+int cmp(Ele *a, Ele *b)
+{
+    if (a->leftnum == b->leftnum) {
+        return a->idx - b->idx;
+    }
+    return b->leftnum - a->leftnum;
+}
+
+// —— 按规则返回 top 5 的租借点编号，若租借点不足 5 个则按实际数量返回。规则：优先按剩余单车数量降序；若数量相同，则按编号升序.
+int *getTop5Nodes(int *rsize)
+{
+    // 直接用left排序,因为不确定(没研究过qsort的源码)left[i]与left[i+1]相等时,会不会改动i与i+1的顺序,先试一下
+    Ele *eles = malloc(sizeof(Ele) * (g_size - 1));
+    for (int i = 1; i < g_size; i++) {
+        Ele ele = {i, g_left[i]};
+        eles[i - 1] = ele;
+    }
+    qsort(eles, g_size - 1, sizeof(Ele), cmp);
+    int *ans = malloc(sizeof(int) * (g_size - 1));
+    int min = g_size - 1 > 5 ? 5 : g_size - 1; // 5 top5
+    for (int i = 0; i < min; ++i) {
+        ans[i] = eles[i].idx;
+    }
+    *rsize = min;
+    return ans;
+}
 
 int main()
 {
     // @formatter:off
+    // 差不多一个小时,写完加调试,幸运的是直接过,
+    // ["BikeManager","rentBikes","returnBikes","reset","getTop5Nodes"]
+    // [[[-1,0,0,0],10],[1,3],[2,6],[],[]]
+    // 输出：[null,2,10,1,[2,3,1]]
+    int prenode[]={-1,0,0,0};
+    int psize=sizeof(prenode)/sizeof(prenode[0]);
+    int cap=10;
+    BikeManager(prenode,psize,cap);printf("null \n");fflush(stdout);
+    printf("%d \n",rentBikes(1,3));fflush(stdout);
+    printf("%d \n",returnBikes(2,6));fflush(stdout);
+    printf("%d \n",reset());fflush(stdout);
+    int rsize;
+    int *ans = getTop5Nodes(&rsize);
+    for (int i = 0; i < rsize; ++i){
+        printf("%d ",ans[i]);fflush(stdout);
+    }
+    printf("-------------\n");fflush(stdout);
+
+
+    // ["BikeManager","rentBikes","rentBikes","getTop5Nodes","returnBikes","rentBikes","reset","rentBikes","getTop5Nodes"]
+    // [[[-1,0,1,1,5,0,1,0],41],[2,31],[3,45],[],[5,29],[5,100],[],[3,12],[]]
+    // 输出：[null,0,0,[4,5,6,7,1],41,0,4,8,[1,2,4,5,6]]
     
+    int prenode2[]={-1,0,1,1,5,0,1,0}; // C语言不好复用数组??
+    psize=sizeof(prenode2)/sizeof(prenode2[0]);
+    cap=41;
+    BikeManager(prenode2,psize,cap);printf("null \n");fflush(stdout);
+    printf("%d \n",rentBikes(2,31));fflush(stdout);
+    printf("%d \n",rentBikes(3,45));fflush(stdout);
+    ans = getTop5Nodes(&rsize);
+    for (int i = 0; i < rsize; ++i){
+        printf("%d ",ans[i]);fflush(stdout);
+    }
+    printf("\n");fflush(stdout);
+    printf("%d \n",returnBikes(5,29));fflush(stdout);
+    printf("%d \n",rentBikes(5,100));fflush(stdout);
+    printf("%d \n",reset());fflush(stdout);
+    printf("%d \n",rentBikes(3,12));fflush(stdout);
+    ans = getTop5Nodes(&rsize);
+    for (int i = 0; i < rsize; ++i){
+        printf("%d ",ans[i]);fflush(stdout);
+    }
+    printf("\n");fflush(stdout);
     return 0;
     // @formatter:on
 }

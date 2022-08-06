@@ -25,7 +25,7 @@ int cmp(const void* a,const void* b){
     int* aa=*(int**)a;
     int* bb=*(int**)b;
     return aa[1]-bb[1];
-    /// 最开始我还在想转int**后,我不知道下标咋办?? 后来我好像发现模板了,*(传进来指针的类型)a=="数组的元素的内容"
+    /// 最开始我还在想转int**后,我不知道下标咋办?? 后来我好像发现规律模板了,*(传进来指针的类型)a=="数组的元素的内容"
     return (*(int**)a)[1]-(*(int**)b)[1];
 }
 
@@ -49,6 +49,7 @@ int* fn(int** arr,int arrSize,int num){
     return res;
 }
 int main() {
+    // @formatter:off
     int arr[][2]={{3,3},{-2,4},{5,-1}};
     int arrSize=sizeof(arr)/sizeof(arr[0]);
     int* parr[arrSize];
@@ -61,4 +62,5 @@ int main() {
         printf("%d ", pInt[i]);fflush(stdout);
     }
     return 0;
+    // @formatter:on
 }
