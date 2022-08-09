@@ -78,10 +78,138 @@ l  补录：部门0 先选人，应聘者 4 和 5 与此前最后录取的应聘
 常规录取阶段，三个部门分别录取应聘者0、1、2；
 补录阶段，部门0先选人，补录了应聘者3； 剩下应聘者4，满足部门1和部门2的补录条件，但部门1先选人。
  */
+typedef struct Dept{
+    int num; // 招人数
+    int exam;
+    int inte;
+    int* idxArr;
+    int arrSize;
+    int pickOver;
+}Dept;
+typedef struct Cand{
+    int idx; // third
+    int exam; // second
+    int inte; // first
+    int picked;
+}Cand;
+int cmp(Cand* a,Cand* b){
+    if(a->inte == b -> inte){
+        if(b->exam==a->exam){
+            return a->idx-b -> idx;
+        }
+        return b->exam-a->exam;
+    }
+    return b->inte-a->inte;
+}
 int main()
 {
     // @formatter:off
-    
+    // 20分钟读题 40分钟写题,还没有校验
+    int deptnum;
+    scanf("%d",&deptnum);
+    // printf("%d \n",deptnum);fflush(stdout);
+    Dept* depts=malloc(sizeof(Dept)*deptnum);
+    for (int i = 0; i < deptnum; ++i){
+        int num;
+        int exam;
+        int inte;
+        int* idxArr=malloc(sizeof(int)*(num+1));
+        int arrSize=0;
+        int pickOver=0;
+        scanf("%d %d %d",&num,&exam,&inte);
+        Dept d={num,exam,inte,idxArr,arrSize,pickOver};
+        depts[i]=d;
+    }
+    int candNum;
+    scanf("%d",&candNum);
+    Cand* cands=malloc(sizeof(Cand)*candNum);
+    for (int i = 0; i < candNum; ++i){
+        int idx=i;
+        int exam;
+        int inte;
+        int picked=0; // 0 default not picked
+        scanf("%d %d",&exam,&inte);
+        Cand c={exam,inte,picked};
+        cands[i] = c;
+    }
+    qsort(cands,candNum,sizeof(Cand),cmp);
+
+    //
+    while(!(depts[deptnum-1].pickOver==1)){
+        for (int didx = 0; didx < deptnum; ++didx){
+            if(depts[didx].pickOver == 1){
+                continue;
+            }
+            bool noone=true; //
+            for (int cidx = 0; cidx < candNum; ++cidx){
+                if(cands[cidx].picked == 0 && cands[cidx].inte>=depts[didx].inte && cands[cidx].exam>=depts[didx].exam){
+                    if(depts[didx].arrSize==depts[didx].num
+                    && cands[cidx].inte>=cands[depts[didx].idxArr[depts[didx].arrSize-1]].inte
+                    && cands[cidx].exam>=cands[depts[didx].idxArr[depts[didx].arrSize-1]].exam){ // 特招
+                        depts[didx].pickOver=1;
+                    }
+                    depts[didx].idxArr[depts[didx].arrSize++]=cidx;
+                    cands[cidx].picked=1;
+                    noone=false;
+                    break;
+                }
+            }
+            if(noone || depts[didx].arrSize>=depts[didx].num){
+                depts[didx].pickOver = 1;
+            }
+        }
+    }
+    // print ans
+    for (int i = 0; i < deptnum; ++i){
+        for (int b = 0; b < depts[i].arrSize; ++b){
+            printf("%d ",depts[i].idxArr[b]);fflush(stdout);
+        }
+        printf("\n");fflush(stdout);
+    }
+    // 2
+    // 2 130 120
+    // 1 150 150
+    // 6
+    // 150 100
+    // 160 190
+    // 150 200
+    // 200 190
+    // 160 190
+    // 160 190
+    // 输出样例 1
+    // [2 1 4]
+    // [3]
     return 0;
     // @formatter:on
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+ */
