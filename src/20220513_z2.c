@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
+
 /*
  某次招聘活动中，共有 deptNum 个部门在招人，每个部门都设定了自己的：招聘目标人数、机考和技面的最低分要求。共有 candidateNum 个应聘者，每个应聘者都有两项能力值：机考分数和技面分数。
 招聘规则如下：
@@ -78,107 +79,135 @@ l  补录：部门0 先选人，应聘者 4 和 5 与此前最后录取的应聘
 常规录取阶段，三个部门分别录取应聘者0、1、2；
 补录阶段，部门0先选人，补录了应聘者3； 剩下应聘者4，满足部门1和部门2的补录条件，但部门1先选人。
  */
-typedef struct Dept{
-    int num; // 招人数
+typedef struct Dept {
+    int did;
+    int picknum; // 招人数
     int exam;
     int inte;
-    int* idxArr;
-    int arrSize;
-    int pickOver;
-}Dept;
-typedef struct Cand{
-    int idx; // third
+    int *arr;
+    int arrsize;
+    int lastCandIdx;
+    int over;
+} Dept;
+typedef struct Cand {
+    int cid; // third
     int exam; // second
     int inte; // first
     int picked;
-}Cand;
-int cmp(Cand* a,Cand* b){
-    if(a->inte == b -> inte){
-        if(b->exam==a->exam){
-            return a->idx-b -> idx;
+} Cand;
+
+int cmp(Cand *a, Cand *b)
+{
+    if (a->inte == b->inte) {
+        if (b->exam == a->exam) {
+            return a->cid - b->cid;
         }
-        return b->exam-a->exam;
+        return b->exam - a->exam;
     }
-    return b->inte-a->inte;
+    return b->inte - a->inte;
 }
+
+void foo(int deptsize, Dept *depts, int candsize, Cand *cands)
+{
+    for (int d = 0; d < deptsize; ++d) {
+        if (depts[d].over == 1 || depts[d].arrsize >= depts[d].picknum) {
+            continue;
+        }
+        bool nochoice = true;
+        for (int c = 0; c < candsize; ++c) {
+            if (cands[c].picked == 1 || cands[c].inte < depts[d].inte || cands[c].exam < depts[d].exam) {
+                continue;
+            }
+            depts[d].arr[depts[d].arrsize++] = cands[c].cid;
+            depts[d].lastCandIdx = c;
+            cands[c].picked = 1;
+            nochoice = false;
+            break;
+        }
+        if (nochoice || depts[d].arrsize >= depts[d].picknum) {
+            depts[d].over = 1;
+        }
+    }
+}
+
+void Bulu(int deptsize, Dept *depts, int candsize, Cand *cands)
+{// 补录
+    for (int d = 0; d < deptsize; ++d) {
+        int lastCandId = depts[d].lastCandIdx;
+        for (int c = 0; c < candsize; ++c) {
+            if (cands[c].picked == 0 && depts[d].lastCandIdx != -1 && cands[c].inte == cands[lastCandId].inte &&
+                cands[c]
+                        .exam == cands[lastCandId].exam) {
+                // bug 存cid会因为cands的排序而不方便再从cands中取出
+                depts[d].arr[depts[d].arrsize++] = cands[c].cid;
+                cands[c].picked = 1;
+                break;
+            }
+        }
+    }
+}
+
+void PrintAns(int deptsize, Dept *depts)
+{// print ans
+    for (int d = 0; d < deptsize; ++d) {
+        for (int a = 0; a < depts[d].arrsize; ++a) {
+            printf("%d ", depts[d].arr[a]);
+            fflush(stdout);
+        }
+        printf("\n");
+        fflush(stdout);
+    }
+}
+
 int main()
 {
     // @formatter:off
-    // 20分钟读题 40分钟写题,还没有校验
-    int deptnum;
-    scanf("%d",&deptnum);
-    // printf("%d \n",deptnum);fflush(stdout);
-    Dept* depts=malloc(sizeof(Dept)*deptnum);
-    for (int i = 0; i < deptnum; ++i){
-        int num;
-        int exam;
-        int inte;
-        int* idxArr=malloc(sizeof(int)*(num+1));
-        int arrSize=0;
-        int pickOver=0;
-        scanf("%d %d %d",&num,&exam,&inte);
-        Dept d={num,exam,inte,idxArr,arrSize,pickOver};
-        depts[i]=d;
+    /*
+2
+2 130 120
+1 150 150
+6
+150 100
+160 190
+150 200
+200 190
+160 190
+160 190
+[2 1 4]
+[3]
+     */
+    int deptsize;
+    int round=0;
+    scanf("%d",&deptsize);
+    Dept depts[deptsize]; // 局部定义数组,元素值随机
+    for (int i = 0; i < deptsize; ++i){
+        depts[i].did=i;
+        scanf("%d %d %d",&depts[i].picknum,&depts[i].exam,&depts[i].inte);
+        depts[i].arr=malloc(sizeof(int)*(depts[i].picknum+1));
+        depts[i].arrsize=0;
+        depts[i].lastCandIdx=-1;
+        depts[i].over=0;
+        if(depts[i].picknum>round){
+            round=depts[i].picknum;
+        }
     }
-    int candNum;
-    scanf("%d",&candNum);
-    Cand* cands=malloc(sizeof(Cand)*candNum);
-    for (int i = 0; i < candNum; ++i){
-        int idx=i;
-        int exam;
-        int inte;
-        int picked=0; // 0 default not picked
-        scanf("%d %d",&exam,&inte);
-        Cand c={exam,inte,picked};
-        cands[i] = c;
+    int candsize;
+    scanf("%d",&candsize);
+    Cand cands[candsize];
+    for (int i = 0; i < candsize; ++i){
+        cands[i].cid=i;
+        scanf("%d %d",&cands[i].exam,&cands[i].inte);
+        cands[i].picked=0; // 0 not picked
     }
-    qsort(cands,candNum,sizeof(Cand),cmp);
+    qsort(cands,candsize,sizeof(Cand),cmp);
 
-    //
-    while(!(depts[deptnum-1].pickOver==1)){
-        for (int didx = 0; didx < deptnum; ++didx){
-            if(depts[didx].pickOver == 1){
-                continue;
-            }
-            bool noone=true; //
-            for (int cidx = 0; cidx < candNum; ++cidx){
-                if(cands[cidx].picked == 0 && cands[cidx].inte>=depts[didx].inte && cands[cidx].exam>=depts[didx].exam){
-                    if(depts[didx].arrSize==depts[didx].num
-                    && cands[cidx].inte>=cands[depts[didx].idxArr[depts[didx].arrSize-1]].inte
-                    && cands[cidx].exam>=cands[depts[didx].idxArr[depts[didx].arrSize-1]].exam){ // 特招
-                        depts[didx].pickOver=1;
-                    }
-                    depts[didx].idxArr[depts[didx].arrSize++]=cidx;
-                    cands[cidx].picked=1;
-                    noone=false;
-                    break;
-                }
-            }
-            if(noone || depts[didx].arrSize>=depts[didx].num){
-                depts[didx].pickOver = 1;
-            }
-        }
+    // 学别人的:1 录取和补录拆分 2 结束条件,招几轮==部门的picknum的max,我从一开始就没这么想,我第一时间想到的结束条件是所有部门都招完了
+    for(int r=0;r<round;r++){
+        foo(deptsize, depts, candsize, cands);
     }
-    // print ans
-    for (int i = 0; i < deptnum; ++i){
-        for (int b = 0; b < depts[i].arrSize; ++b){
-            printf("%d ",depts[i].idxArr[b]);fflush(stdout);
-        }
-        printf("\n");fflush(stdout);
-    }
-    // 2
-    // 2 130 120
-    // 1 150 150
-    // 6
-    // 150 100
-    // 160 190
-    // 150 200
-    // 200 190
-    // 160 190
-    // 160 190
-    // 输出样例 1
-    // [2 1 4]
-    // [3]
+
+    Bulu(deptsize, depts, candsize, cands);PrintAns(deptsize, depts);
+
     return 0;
     // @formatter:on
 }

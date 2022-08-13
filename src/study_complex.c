@@ -5,11 +5,27 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-
 /*
- 
+1、最大圈复杂度大于20 0分
+2、最大代码嵌套深度大于等于8
+3、最大圈复杂度： (10,15]扣3分，(15,20]扣5分
+4、最大单函数代码行数：超过100行扣5分
+5、安全编程规范：违反1处扣2分
+6、通用编程规范：违反1处扣1分，其中违反格式类规则最多扣5分
  */
-
+void Test_for()
+{
+    for (int i = 0; i < 1; ++i){
+        for (int i = 0; i < 2; ++i){
+            for (int i = 0; i < 3; ++i){
+                /// 最大深度4==最多3层for/if
+                // for (int i = 0; i < 4; ++i){
+                //
+                // }
+            }
+        }
+    }
+}
 int main()
 {
     // @formatter:off
@@ -37,6 +53,7 @@ int main()
     //     default :
     //     printf("%d \n",666);fflush(stdout);
     // }
+    Test_for();
     return 0;
     // @formatter:on
 }
