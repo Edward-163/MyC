@@ -7,9 +7,10 @@
 #include "uthash.h"
 
 /*
-使用尖括号< >，编译器会到系统路径下查找头文件；通常是include目录,如用minGw编译.c 我本地就是
- C:\Program Files\JetBrains\CLion 2021.3 .4\bin\mingw\x86_64-w64-mingw32\include\stdio.h
+使用尖括号< >，编译器会到系统路径下查找头文件；通常是include目录,如用minGw编译.c
 而使用双引号" "，编译器首先在当前目录下查找头文件，如果没有找到，再到系统路径下查找
+ 我本地就是
+ C:\Program Files\JetBrains\CLion 2021.3 .4\bin\mingw\x86_64-w64-mingw32\include\stdio.h
  HASH_DEL(g_hashlist,tmp)
  
  int com(const void* a,const void* b)

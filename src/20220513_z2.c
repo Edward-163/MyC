@@ -4,7 +4,9 @@
 #include <math.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include "securec.h"
 #include "uthash.h"
+
 
 /*
  某次招聘活动中，共有 deptNum 个部门在招人，每个部门都设定了自己的：招聘目标人数、机考和技面的最低分要求。共有 candidateNum 个应聘者，每个应聘者都有两项能力值：机考分数和技面分数。
