@@ -12,9 +12,10 @@
 /*
 
  */
+
 int main(){
     // @formatter:off
 
-    // @formatter:on
     return 0;
+    // @formatter:on
 }
