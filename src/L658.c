@@ -28,49 +28,36 @@
  */
 #define ABS(x, y) (x)>(y)?x-y:y-x
 
-int max(int *arr, int move, int k, int x)
-{
-    int sum=0;
-    for (int i = 0; i < k; ++i){
-        sum+=ABS(arr[move],x);
-    }
-    return sum;
-}
-
-int *findClosestElements(int *arr, int arrSize, int k, int x, int *returnSize)
-{
+int *findClosestElements(int *arr, int arrSize, int k, int x, int *returnSize) {
     if (x < arr[0]) {
         *returnSize = k;
         return arr;
-    } else if (x > arr[arrSize - 1]) {
-        *returnSize = k;
-        return arr + arrSize - k; // idx的小把戏
     }
 
-    int move = arrSize - k;
-    int m = max(arr, move, k, x);
+    // arrs-k arrs-k+1.. arrs-1 arrs
+    int ansidx = arrSize - k;
+
     /// 考察重点:滑窗从左往右,还是从右往左
-    for (int a = move - 1; a >= 0; a--) {
-        int newm = max(arr, a, k, x);
-        /// bug 大了是坚决不行,小了可以,相等尝试往左移动(前提是滑窗从右往左,而不是从左往右)
-        if (newm > m) {
-            break;
+    /// bug 大了是坚决不行,小了可以,相等尝试往左移动(前提是滑窗从右往左,而不是从左往右)
+    for (int a = arrSize - k - 1; a >= 0; a--) {
+        int addLeftNum = ABS(arr[a], x);
+        int subRighNum = ABS(arr[a + k], x);
+        if (addLeftNum - subRighNum <= 0) {
+            ansidx = a;
         } else {
-            m = newm;
-            move = a;
+            break;
         }
     }
     *returnSize = k;
-    return arr + move;
+    return arr + ansidx;
 }
 
-int main()
-{
+int main() {
     // @formatter:off
-    // int arr[]={1,2,3,4,6};
+//     int arr[]={1,2,3,4,5};
     int arr[]={1,1,2,2,2,2,3,3};
     int size=sizeof(arr)/sizeof(arr[0]);
-    int k=3;
+    int k=4;
     int x=3;
     int rsize;
     int *ans = findClosestElements(arr,size,k,x,&rsize);
