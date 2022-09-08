@@ -40,121 +40,68 @@ stockPrice.update(4, 2);  // 时间戳为 [1,2,4] ，对应价格为 [3,5,2] 。
 stockPrice.minimum();     // 返回 2 ，最低价格时间戳为 4 ，价格为 2 。
  手搓大小堆
  */
-typedef struct Queue { // 真名
-    int price;
-    struct Queue *pre;
-    struct Queue *aft;
-} Queue; // 别名
-Queue *g_head;
-Queue *g_tail;
-
-void insert(int price)
-{
-    Queue new = {price, NULL, NULL};
-    if (price <= g_head->price) {
-        new.aft = g_head;
-        g_head->pre = &new;
-        g_head = &new;
-    } else if (price >= g_tail->price) {
-        new.pre = g_tail;
-        g_tail->aft = &new;
-        g_tail = &new;
-    } else {
-        Queue *move = g_head;
-        while (move != g_tail) {
-            // 匿名结构体下行会报错
-            // if(g_head->price<price && price <= g_head->aft-> price){
-            Queue *next = move->aft;
-            if (move->price < price && price <= next->price) {
-                move->aft = &new;
-                new.pre = move;
-                new.aft = next;
-                next->pre = &new;
-                break;
-            }
-        }
-    }
-}
-
-void delete(int price)
-{
-    if (price == g_head->price) {
-        g_head = g_head->aft;
-    } else if (price == g_tail->price) {
-        g_tail = g_tail->pre;
-    } else {
-        Queue *move = g_head;
-        while (move != g_tail) {
-            if (price == move->price) {
-                move->pre->aft = move->aft;
-                move->aft->pre = move->pre;
-                break;
-            }
-        }
-    }
-}
-
 typedef struct {
-    int timestamp;
-    int price;
-    int lasttime;
-    UT_hash_handle hh;
+    int len;
 } StockPrice;
-StockPrice *g_hash;
-
+int g_arr[100002][2];
 StockPrice *stockPriceCreate()
 {
-    g_hash = NULL;
-    StockPrice *obj = malloc(sizeof(StockPrice));
-    printf("null \n");
-    fflush(stdout);
+    StockPrice * obj=malloc(sizeof(StockPrice));
+    obj->len=0;
+    printf("null \n");fflush(stdout);
     return obj;
 }
 
 void stockPriceUpdate(StockPrice *obj, int timestamp, int price)
 {
-    StockPrice *tmp = NULL;
-    HASH_FIND_INT(g_hash, &timestamp, tmp);
-    if (tmp == NULL) {
-        tmp = malloc(sizeof(StockPrice));
-        tmp->timestamp = timestamp;
-        tmp->price = price;
-        if (g_hash == NULL) {
-            obj->lasttime = timestamp; // init
-            Queue q = {price, NULL, NULL};
-            g_head = &q;
-            g_tail = &q;
-        }else{
-            if (timestamp > obj->lasttime) {
-                obj->lasttime = timestamp;
-            }
-            insert(price);
-        }
-        HASH_ADD_INT(g_hash, timestamp, tmp); // 双节点正常
-    } else {
-        delete(tmp->price);
-        tmp->price = price;
-        insert(price);
+    printf("null \n");fflush(stdout);
+
+    if(obj->len==0 || timestamp>g_arr[obj->len-1][0]){
+        g_arr[obj->len][0]=timestamp;
+        g_arr[obj->len][1]=price;
+        obj->len++;
+        return;
     }
-    printf("null \n");
-    fflush(stdout); // 双节点正常,走出函数就不正常了!!
+
+    int left=0;
+    int righ=obj->len-1;
+    int mid=(left+righ)/2;
+    while(g_arr[mid][0]!=timestamp){
+        if(g_arr[mid][0]<timestamp){
+            left=mid+1;
+        }else if(g_arr[mid][0]>timestamp){
+            righ=mid-1;
+        }
+        mid=(left+righ)/2;
+    }
+    g_arr[mid][1]=price;
 }
 
 /// 这种没有维护time max min,直接暴力排序,超时了
 // 考察点:把max换小,倒数第二大是谁?把倒数第二大换小,倒数第三小是谁?
 int stockPriceCurrent(StockPrice* obj){
-    StockPrice * tmp=NULL;
-    HASH_FIND_INT(g_hash,&(obj->lasttime),tmp);
-    return tmp->price;
+    return g_arr[obj->len - 1][1];
 }
 int stockPriceMaximum(StockPrice *obj)
 {
-    return g_tail->price;
+    int max=g_arr[0][1];
+    for(int a=1;a<obj->len;a++){
+        if(g_arr[a][1]>max){
+            max=g_arr[a][1];
+        }
+    }
+    return max;
 }
 
 int stockPriceMinimum(StockPrice *obj)
 {
-    return g_head->price;
+    int min=g_arr[0][1];
+    for(int a=1;a<obj->len;a++){
+        if(g_arr[a][1]<min){
+            min=g_arr[a][1];
+        }
+    }
+    return min;
 }
 
 void stockPriceFree(StockPrice *obj)

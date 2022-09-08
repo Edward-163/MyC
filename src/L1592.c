@@ -25,7 +25,7 @@ char * reorderSpaces(char * s){
         sidx++;
     }
 
-    int spacePadding=spaceCount/ fmax(wordCount-1,1);
+    int spacePadding=spaceCount/ fmax(wordCount-1,1); /// fmax
 
     char* ans=malloc(sizeof(char)*(sidx+1));
     for (int i = 0; i < sidx + 1; ++i){
