@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "uthash.h"
-
+#include "securec.h"
 /*
  
  */
@@ -13,6 +13,13 @@
 int main()
 {
     // @formatter:off
+    /// scanf_s对于数组来说要追加上其的字节长度 20220819_z2
+    char c;
+    int cc[1];
+    scanf_s("%d",cc,1); // 1居然可以?? 应该写4 或者稳妥点用sizeof
+    // scanf_s("%d",cc,sizeof(cc)); //
+    printf("%d \n",cc[0]);fflush(stdout);
+
     /// https://blog.csdn.net/zhinengxiong6/article/details/111306916 指针不能作为scanf参数
     char* point;
     scanf("%s",point);
@@ -34,6 +41,8 @@ int main()
     while(scanf("")){
 
     }
+
+
     return 0;
     // @formatter:on
 }
