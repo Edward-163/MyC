@@ -22,9 +22,9 @@ message(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 message(PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
 message(PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 # 全局递归搜索/src目录下的A.c,并把绝对路径追加到abc变量(看下面的例子,此处abc应该是个集合变量)中
-file(GLOB_RECURSE abc ${PROJECT_SOURCE_DIR}/src/A.c)
-# message相当于cmake的打印语句 C:/Users/h30029170/CLionProjects/chyj/bin/A.c
-message(${abc})
+#file(GLOB_RECURSE abc ${PROJECT_SOURCE_DIR}/src/Hello.c)
+# message相当于cmake的打印语句 C:/Users/h30029170/CLionProjects/chyj/bin/Hello.c
+#message(${abc})
 # 遍历项目根目录下所有的.c文件的绝对路径,并追加到files集合中    https://zhuanlan.zhihu.com/p/157646534
 file(GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/src/*.c)
 foreach (file ${files})

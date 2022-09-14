@@ -1,10 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
-#include <ctype.h>
-#include <stdbool.h>
-#include <uthash.h>
 
 
 /*
@@ -31,67 +27,77 @@
 // num生产线数量，periods下标是产品编号，内容是每个产品需要的生产周期，如period[0]=3 指的是0号产品需要3天才能生产出1个
 typedef struct {
     int productId;
-    int date; // 记录当前prodId从date这天开始生产的
+    int beginTime;
 } AssemLine;
 typedef struct {
-    AssemLine *asseArr;
+    AssemLine * assemLines;
     int num;
-    int *periods;
-    int *prodCount;
+    int* periods;
+    int periodSize;
+    int* periodsProduced;
 } Sys;
 Sys *g_sys;
 
 Sys* ProductionLineMgmtSys(int num, int *periods, int periodSize)
 {
-    g_sys = malloc(sizeof(Sys));
-    AssemLine *asseArr = malloc(sizeof(AssemLine) * num); // idx==asseId val==struct(prodId+date)
-    for (int i = 0; i < num; ++i) {
-        asseArr[i].productId = -1;
+    g_sys=malloc(sizeof(Sys));
+    AssemLine * assemLines=malloc(sizeof(AssemLine)*num);
+    for (int i = 0; i < num; ++i){
+        assemLines[i].productId=-1;
+        assemLines[i].beginTime=-1;
     }
-    g_sys->asseArr = asseArr;
-    g_sys->num = num;
-    g_sys->periods = periods;
-    int *prodCount = malloc(sizeof(int) * periodSize);
-    memset(prodCount, 0, sizeof(int) * periodSize);
-    g_sys->prodCount = prodCount;
+    g_sys->num=num;
+    g_sys->assemLines=assemLines;
+    g_sys->periods=periods;
+    g_sys->periodSize=periodSize;
+    int* periodsProduced=malloc(sizeof(int)*periodSize);
+    memset(periodsProduced,0,sizeof(int)*periodSize);
+    g_sys->periodsProduced=periodsProduced;
     return g_sys;
 }
 
 // i)若该流水线未被占用，则从此开始生产 时间开始生产该编号的产品，并返回1；
-// ii)若该流水线正在被占用，且恰好是同一产品，则该流水线继续生产该产品，并返回0；
+// ii)若该流水线正在被占用，且恰好是同一产品，则该流水线继续生产该产品，并返回0；    综上两条,流水线应该有productId
 // iii)若该流水线正在被占用，并且是 另外一种产品，则直接在此开始生产时间开始生产新的产品，并返回-1；
 int produce(int date, int assemblyId, int productId)
 {
-    if (g_sys->asseArr[assemblyId].productId == -1) {
-        g_sys->asseArr[assemblyId].productId = productId;
-        g_sys->asseArr[assemblyId].date = date;
+    if(g_sys->assemLines[assemblyId].productId==-1){
+        g_sys->assemLines[assemblyId].productId=productId;
+        g_sys->assemLines[assemblyId].beginTime=date;
         return 1;
-    } else if (g_sys->asseArr[assemblyId].productId == productId) {
+    }
+    if(g_sys->assemLines[assemblyId].productId==productId){
+
         return 0;
-    } else {
-        // 切换prodId时候,需要把旧的prodId计算下产量
-        int datediff = date - g_sys->asseArr[assemblyId].date;
-        int lifecycle = g_sys->periods[g_sys->asseArr[assemblyId].productId];
-        int num = datediff / lifecycle;
-        g_sys->prodCount[g_sys->asseArr[assemblyId].productId] += num;
-        g_sys->asseArr[assemblyId].productId = productId;
-        g_sys->asseArr[assemblyId].date = date;
+    }else{
+        int dateDiff=date-(g_sys->assemLines[assemblyId].beginTime);
+        int oldproductId=g_sys->assemLines[assemblyId].productId;
+        int period=g_sys->periods[oldproductId];
+        /// bug
+//        int period=g_sys->periods[productId];
+        int producedCount=dateDiff/period;
+        g_sys->periodsProduced[oldproductId]+=producedCount;
+        g_sys->assemLines[assemblyId].productId=productId;
+        g_sys->assemLines[assemblyId].beginTime=date;
         return -1;
     }
 }
 
 int getProductCount(int date, int productId)
 {
-    int lifecycle = g_sys->periods[productId];
-    int sum = 0;
-    for (int i = 0; i < g_sys->num; ++i) {
-        if (g_sys->asseArr[i].productId == productId) {
-            int datediff = date - g_sys->asseArr[i].date;
-            int num = datediff / lifecycle;
-            sum += num;
+    int producedCount =0;
+    for (int i = 0; i < g_sys->num; ++i){
+        if(g_sys->assemLines[i].productId==productId){
+            int dateDiff=date-(g_sys->assemLines[i].beginTime);
+            int period=g_sys->periods[productId];
+            producedCount += dateDiff / period;
+            // 此函数相当于临时抽查下数量,它并不需要累加
+//            g_sys->periodsProduced[productId]+=producedCount;
+            /// bug 可能多条产线生产同一产品
+//            break;
         }
     }
-    return sum + g_sys->prodCount[productId];
+    return g_sys->periodsProduced[productId]+producedCount;
 }
 
 int main()

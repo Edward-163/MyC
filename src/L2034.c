@@ -40,54 +40,57 @@ stockPrice.update(4, 2);  // 时间戳为 [1,2,4] ，对应价格为 [3,5,2] 。
 stockPrice.minimum();     // 返回 2 ，最低价格时间戳为 4 ，价格为 2 。
  手搓大小堆
  */
-typedef struct {
-    int len;
+typedef struct { /// 9/18 timeout
+    int time;
+    int price;
+    UT_hash_handle hh;
 } StockPrice;
-int g_arr[100002][2];
+StockPrice *g_hash;
+int g_current;
 StockPrice *stockPriceCreate()
 {
+    g_hash=NULL;
+    g_current=0;
     StockPrice * obj=malloc(sizeof(StockPrice));
-    obj->len=0;
-    printf("null \n");fflush(stdout);
+//    printf("null \n");fflush(stdout);
     return obj;
 }
 
 void stockPriceUpdate(StockPrice *obj, int timestamp, int price)
 {
-    printf("null \n");fflush(stdout);
-
-    if(obj->len==0 || timestamp>g_arr[obj->len-1][0]){
-        g_arr[obj->len][0]=timestamp;
-        g_arr[obj->len][1]=price;
-        obj->len++;
-        return;
+//    printf("null \n");fflush(stdout);
+    if(timestamp>g_current){
+        g_current=timestamp;
     }
 
-    int left=0;
-    int righ=obj->len-1;
-    int mid=(left+righ)/2;
-    while(g_arr[mid][0]!=timestamp){
-        if(g_arr[mid][0]<timestamp){
-            left=mid+1;
-        }else if(g_arr[mid][0]>timestamp){
-            righ=mid-1;
-        }
-        mid=(left+righ)/2;
+    StockPrice * tmp=NULL;
+    HASH_FIND_INT(g_hash,&timestamp,tmp);
+    if(tmp==NULL){
+        tmp= malloc(sizeof(StockPrice));
+        tmp->time=timestamp;
+        tmp->price=price;
+        HASH_ADD_INT(g_hash,time,tmp);
+    }else{
+        tmp->price=price;
     }
-    g_arr[mid][1]=price;
 }
 
 /// 这种没有维护time max min,直接暴力排序,超时了
 // 考察点:把max换小,倒数第二大是谁?把倒数第二大换小,倒数第三小是谁?
 int stockPriceCurrent(StockPrice* obj){
-    return g_arr[obj->len - 1][1];
+    StockPrice * tmp=NULL;
+    HASH_FIND_INT(g_hash,&g_current,tmp);
+    int price=tmp->price;
+    return price;
 }
 int stockPriceMaximum(StockPrice *obj)
 {
-    int max=g_arr[0][1];
-    for(int a=1;a<obj->len;a++){
-        if(g_arr[a][1]>max){
-            max=g_arr[a][1];
+    int max=0;
+    StockPrice * el=NULL;
+    StockPrice * tmp=NULL;
+    HASH_ITER(hh,g_hash,el,tmp){
+        if(el->price>max){
+            max=el->price;
         }
     }
     return max;
@@ -95,10 +98,12 @@ int stockPriceMaximum(StockPrice *obj)
 
 int stockPriceMinimum(StockPrice *obj)
 {
-    int min=g_arr[0][1];
-    for(int a=1;a<obj->len;a++){
-        if(g_arr[a][1]<min){
-            min=g_arr[a][1];
+    int min=INT_MAX;
+    StockPrice * el=NULL;
+    StockPrice * tmp=NULL;
+    HASH_ITER(hh,g_hash,el,tmp){
+        if(el->price < min){
+            min=el->price;
         }
     }
     return min;
