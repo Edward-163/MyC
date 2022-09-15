@@ -22,3 +22,13 @@ git diff    // This form is to view the changes you made relative to the index �
 git diff --staged   // 查看staged changes 等同--cached 说白了查看 工作区-->index(中的改变)
 git diff commit1 commit2    // (1,2]
 git diff > 0003.patch
+
+
+// git pull 强制覆盖本地  -f 实操并未达到我想要的效果(远程代码直接覆盖本地),每次还得处理冲突,
+// git fetch从远程下载最新的，而不尝试合并或rebase任何东西。
+git fetch --all
+// 然后git reset将主分支重置为您刚刚获取的内容。 --hard选项更改工作树中的所有文件以匹配origin/master中的文件。
+git reset --hard origin/master
+
+
+
