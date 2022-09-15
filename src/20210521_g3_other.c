@@ -127,11 +127,12 @@ int *RentingSystemQueryRoom(RentingSystem *obj, int area, int price, int rooms, 
 {
     int i = 0;
     int cnt = 0;
-    int rec[CAP][4] = {0};
+    int rec[CAP][4] = {0}; /// 感觉{}仅仅是分配空间作用,附加全元素初始化??
     memset_s(order, sizeof(order), 0, sizeof(order));
     rs = obj;
     for (i = 0 ; i < CAP; i++) {
         if (obj[i].valid && obj[i].area >= area && obj[i].price <= price && obj[i].rooms == rooms) {
+            /// 人家是先把要排序的字段计算好,再把核心的字段组合元素,用元素排序,"先计算再组装"比我的"先组装再排序"清晰多了
             rec[cnt][0] = i;
             rec[cnt][1] = obj[i].area;
             rec[cnt][2] = obj[i].price;
@@ -157,7 +158,31 @@ void RentingSystemFree(RentingSystem *obj)
 int main()
 {
     // @formatter:off
-    
+    /*["RentingSystem","addRoom","addRoom","queryRoom","deleteRoom"]
+    [[],[3,24,200,2,[0,1]],[1,10,400,2,[1,0]],[1,400,2,[1,1],[[3,1],[2,-1]]],[3]]
+    输出：[null,true,true,[1,3],true]
+    */
+    RentingSystem *obj = RentingSystemCreate();
+    int address[]={0,1};
+    int addrSize=sizeof(address)/sizeof(address[0]);
+    RentingSystemAddRoom(obj,3,24,200,2,address,addrSize);
+    int address2[]={1,0};
+    int addrSize2=sizeof(address2)/sizeof(address2[0]);
+    RentingSystemAddRoom(obj,1,10,400,2,address2,addrSize2);
+    int arr[][2]={{3,1},{2,-1}};
+    int arrSize=sizeof(arr)/sizeof(arr[0]);
+    int* orderby[arrSize];
+    for (int i = 0; i < arrSize; ++i){
+        orderby[i]=arr[i];
+    }
+    int address3[]={1,1};
+    int addrSize3=sizeof(address3)/sizeof(address3[0]);
+    int retSize=0;
+    int *ans = RentingSystemQueryRoom(obj,1,400,2,address3,addrSize3,orderby,arrSize,&retSize);
+    for (int i = 0; i < retSize; ++i){
+        printf("%d ",ans[i]);fflush(stdout);
+    }
+    printf("\n");fflush(stdout);
     return 0;
     // @formatter:on
 }
