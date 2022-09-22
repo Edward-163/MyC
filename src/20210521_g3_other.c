@@ -16,7 +16,7 @@ deleteRoom(int id)
 若存在编号为 id 的房源，删除此房源并返回 true；若不存在，返回 false。
 查询系统中符合筛选条件的房源，并按排序要求返回房源编号的序列。其中：
 Ø  筛选条件：面积大于等于 area，月租金小于等于 price，卧室数为 rooms 的房源；
-Ø  排序要求：按orderBy中的排序条件依次进行排序；若按orderBy排序结果仍相同（含orderBy为空），则按房源编号升序排列。
+Ø  排序要求：按orderBy中的排序条件依次进行排序；若按orderBy排序结果仍相同（含orderBy为空???），则按房源编号升序排列。
 orderBy的元素格式为 [parameter,order]。
 ²  parameter取值范围[1,3]， 1（表示 area）、2（表示 price）、3（表示房源坐标与address的曼哈顿距离）；
 ²  order取值仅为 1 和 -1，1（表示升序）、-1（表示降序）。
@@ -75,7 +75,7 @@ typedef struct {
     int addr[2];
 } RentingSystem;
 #define CAP 1001
-#define ABS(a) (a) > 0 ? (a) : -(a)
+#define ABS(a) (a) > 0 ? (a) : -(a)     // stdlib.h中有abs(int i)
 int order[3] = {0};
 RentingSystem *rs = NULL;
 RentingSystem *RentingSystemCreate()
@@ -108,6 +108,7 @@ int cmp(const void *a, const void *b)
 {
     int *ai = (int *)a;
     int *bi = (int *)b;
+    /// 要理解order[i]整个值只是int[4] rec[ridx]中的ridx
     if (order[0] != 0 && ai[ABS(order[0])] == bi[ABS(order[0])]) {
         if (order[1] != 0 && ai[ABS(order[1])] == bi[ABS(order[1])]) {
             return (ai[ABS(order[2])] - bi[ABS(order[2])]) * order[2];
@@ -115,7 +116,7 @@ int cmp(const void *a, const void *b)
             return (ai[ABS(order[1])] - bi[ABS(order[1])]) * order[1];
         }
     } else {
-        return (ai[ABS(order[0])] - bi[ABS(order[0])]) * order[0];
+        return (ai[ABS(order[0])] - bi[ABS(order[0])]) * order[0]; /// 为0,qsort就是"保持完全不动"??待证明
     }
 }
 /*

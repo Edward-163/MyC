@@ -3,6 +3,18 @@ git rm --cached -r .
 git add .
 git commmit -m 'update ignore'
 
+// 前开后闭,注意中间有.. 注意中间有.. 注意中间有..
+git format-patch e4d14012cf3436f8c7f7306aa0bbd113effc7728~1..e4d14012cf3436f8c7f7306aa0bbd113effc7728 // 0001-virtiofs-add-vhost_user_fs-package.patch
+git format-patch 35b1ce814ca6fea6a1207b4b935c55b229f3b6c3 –stdout          //--stdout输出到console查看,实践测试,不写第二个commitId,默认是HEAD
+git format-patch HEAD^       //生成(HEAD^,HEAD]之间的patch,也就是head指向的commitId的patch,一般来说也就是最近一次提交的patch
+git format-patch HEAD^^     //生成(HEAD^^,HEAD]之间的patch ,一般来说也就是最近2次提交的patch
+git format-patch HEAD -1 –stdout        //生成(HEAD^,HEAD]之间的patch,也就是head指向的commitId的patch,一般来说也就是最近一次提交的patch
+等价
+git format-patch HEAD^..HEAD  –stdout
+git format-patch HEAD -2 –stdout        //生成(HEAD^^,HEAD]之间的patch ,一般来说也就是最近2次提交的patch
+等价
+git format-patch HEAD^^..HEAD  –stdout
+
 
 git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir(工作区)
 git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
@@ -30,5 +42,9 @@ git fetch --all
 // 然后git reset将主分支重置为您刚刚获取的内容。 --hard选项更改工作树中的所有文件以匹配origin/master中的文件。
 git reset --hard origin/master
 
-
+git stash save 'hyj'
+git stash list
+git stash apply stash@{编号,0是栈顶}
+git stash drop stash@{编号,0是栈顶}
+git stash pop                           // 不推荐,==apply栈顶+drop栈顶
 

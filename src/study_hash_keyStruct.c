@@ -61,7 +61,7 @@ int main() {
     Hash* el;
     Hash* tmp4;
     HASH_ITER(hh, g_hash, el, tmp4){
-        printf("%d %d \n",el->key.userId,el->key.projectId );fflush(stdout);
+        printf("%d %d \n",el->key.userId,el->key.projectId);fflush(stdout);
     }
     return 0;
 }

@@ -1,4 +1,15 @@
 #include <stdio.h>
+
+void partialInit(){
+    // 可以只给一部分元素赋值，这叫“不完全初始化”。例如：
+    // 定义的数组 a 有 5 个元素，但花括号内只提供两个初值，这表示只给前面两个元素 a[0]、a[1] 初始化，而后面三个元素都没有被初始化。不完全初始化时，没有被初始化的元素自动为 0。
+    int a[5] = {1, 2};
+    for (int i = 0; i < 5; ++i){
+        printf("%d ",a[i]);fflush(stdout);
+    }
+    printf("\n");fflush(stdout);
+    printf("%s \n","不完全初始化结束<<<<<<<<<");fflush(stdout);
+}
 void fn(char* p){
 //    p[1]='b';//sig
 //    *(p+1)=' ';//sig
@@ -6,6 +17,7 @@ void fn(char* p){
     printf("%c",p[1]);
 }
 int main(){
+    partialInit();
     /**
      在C和C字符串中,字面值是无名对象,左值.由于它是一个对象,您可以使用指针指向它.同时{1,2,3,4}只是一个不代表对象的句法结构.它只是形成聚合初始化器语法的正式字符序列.
      */
