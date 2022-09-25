@@ -1,0 +1,58 @@
+sumatraPdf
+书籍来源
+china-pub.com
+
+1.9章
+信息是通知进程已发生某种条件的一种技术。例如，若某一进程执行除法操作，其除数为 0，则将名为SIGFPE(floating point exception浮点运算异常)的信号发送给该进程
+处理信号三种选择
+忽略改信号
+按系统默认处理(终止进程)
+提供函数,信号发生时调用它
+
+sigint(interrupt,通常是用户ctrl+C发出该信号)
+sighandler_t signal(int signum, sighandler_t handler)
+例
+if(signal(SIGINT,sig_int_callback) != SIG_ERR){
+    ...其他代码
+}
+void sig_int_callback(){
+    printf("%s \n","接收到sigint信号");fflush(stdout);
+}
+
+
+3章
+STDIN_FILENO    STDOUT_FILENO   STDERR_FILENO   默写名字不过分吧
+int open(const char *pathname, int flags, mode_t mode);
+参2保底 flags must include one of the following access modes: O_RDONLY, O_WRONLY, or O_RDWR
+参3 创建文件时mod权限,如777最终转化成一个8进制数,
+例
+open("/path/to/dir", O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
+
+
+4章
+int fstat(int filedes_fd, struct stat *buf);
+int stat(const char *path, struct stat *buf);
+int lstat(const char *path, struct stat *buf);
+当file是一个符号链接时，lstat返回的是该符号链接本身的信息；而stat返回的是该链接指向的文件的信息
+
+4.4章
+实际uid
+实际gid
+euid
+egid
+supplemental gid
+上面3行用于文件存取许可权(就是mod,如777)检查,如，为了打开文件/ u s r / d i c t / w o r d s，需要具有对目录/, /usr, /usr/dict的执行许可权。然后，
+需要对该文件本身的适当许可权，这取决于以何种方式打开它 (只读，读-写等)
+
+保存设置uid
+保存设置gid
+
+粘(zhan)住位
+如果一个可执行程序文件的这一位被设置了，那么在该程序第一次执行并结束时，该程序正文
+的一个文本被保存在交换区。 (程序的正文部分是机器指令部分。 )这使得下次执行该程序时能
+较快地将其装入内存区
+现今较新的
+U N I X系统大多数都具有虚存系统以及快速文件系统，所以不再需要使用这种技术。
+
+4.14
+inode介绍
