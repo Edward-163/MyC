@@ -3,6 +3,13 @@ git rm --cached -r .
 git add .
 git commmit -m 'update ignore'
 
+git cherry-pick 其他分支名 commitA^..commitB     // 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
+
+git diff    // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变-->index
+git diff --staged   // 查看staged changes 等同--cached 说白了查看 工作区-->index(中的改变)
+git diff commit1 commit2    // (1,2]
+git diff > 0003.patch
+
 // 前开后闭,注意中间有.. 注意中间有.. 注意中间有..
 git format-patch e4d14012cf3436f8c7f7306aa0bbd113effc7728~1..e4d14012cf3436f8c7f7306aa0bbd113effc7728 // 0001-virtiofs-add-vhost_user_fs-package.patch
 git format-patch 35b1ce814ca6fea6a1207b4b935c55b229f3b6c3 –stdout          //--stdout输出到console查看,实践测试,不写第二个commitId,默认是HEAD
@@ -30,10 +37,7 @@ git remote set-url origin https://<your_token>@github.com/<username>/<repo>.git
 
 github限制25M文件,太大gitBash推送会卡住,上传大文件[25M,100M]还要专门下载git lfs
 
-git diff    // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变-->index
-git diff --staged   // 查看staged changes 等同--cached 说白了查看 工作区-->index(中的改变)
-git diff commit1 commit2    // (1,2]
-git diff > 0003.patch
+
 
 
 // git pull 强制覆盖本地  -f 实操并未达到我想要的效果(远程代码直接覆盖本地),每次还得处理冲突,
