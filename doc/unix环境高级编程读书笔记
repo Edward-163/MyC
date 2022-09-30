@@ -3,7 +3,7 @@ sumatraPdf
 china-pub.com
 
 1.9章
-信息是通知进程已发生某种条件的一种技术。例如，若某一进程执行除法操作，其除数为 0，则将名为SIGFPE(floating point exception浮点运算异常)的信号发送给该进程
+信息是通知进程已发生某种条件的一种技术。例如，若某一进程执行除法操作，其除数为 0，则将名为 SIGFPE(floating point exception浮点运算异常)的信号发送给该进程
 处理信号三种选择
 忽略改信号
 按系统默认处理(终止进程)

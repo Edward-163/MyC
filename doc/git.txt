@@ -22,6 +22,12 @@ git format-patch HEAD -2 –stdout        //生成(HEAD^^,HEAD]之间的patch ,�
 等价
 git format-patch HEAD^^..HEAD  –stdout
 
+// 自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
+// 第一步,把自己的远程更新为官方远程
+// 第二步,把自己12个补丁"追加"到自己的最新的远程,需要用到rebase,待补充rebase动图
+git remote add origin_o https://gitee.com
+git fetch origin_o
+git rebase -i origin_o/dev
 
 git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir(工作区)
 git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
@@ -45,6 +51,8 @@ github限制25M文件,太大gitBash推送会卡住,上传大文件[25M,100M]还�
 git fetch --all
 // 然后git reset将主分支重置为您刚刚获取的内容。 --hard选项更改工作树中的所有文件以匹配origin/master中的文件。
 git reset --hard origin/master
+
+
 
 git stash save 'hyj'
 git stash list
