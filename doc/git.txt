@@ -27,7 +27,11 @@ git format-patch HEAD^^..HEAD  –stdout
 // 第二步,把自己12个补丁"追加"到自己的最新的远程,需要用到rebase,待补充rebase动图
 git remote add origin_o https://gitee.com
 git fetch origin_o
+// 多分支变基,找出当前分支和origin_o/dev分支的共同祖先节点,从此点开始提取当前分支的提交,并追加到origin_o/dev分支的末尾
 git rebase -i origin_o/dev
+
+// 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
+git rebase -i HEAD~2
 
 git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir(工作区)
 git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
