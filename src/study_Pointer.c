@@ -35,7 +35,8 @@ void pointerStr(){
     char ch;
     int len=0;
     int i=0;
-    while((ch=pointer[++i])!='\0'){
+    // while((ch=pointer[++i])!='\0'){
+    while((ch=pointer[i++])!='\0'){
         if(ch=='a')continue;
         len++;
     }
@@ -54,8 +55,40 @@ void arrLenLiteralFlower(){
 
 }
 
+void pointerCat(){
+    char s[10]="helloY";
+    char * p1=s;
+    char * p2=&s[2]; // lloy
+    strcat(p1,p2); // strcat(dest,src)
+    printf("%s \n",p1);fflush(stdout);
+}
+
+char * return_char_pointer(){
+    char * p="hello world";
+    return p;
+}
+char * return_const_char_pointer(){
+    const char * p="hello world";
+    return p;
+}
+
+void pointSubPoint(){
+    int a[ ]={0,1,2,3,4,5,6,7,8,9}, *p=a,i;
+    i=9;
+
+    printf("%d \n",a[p-a]);fflush(stdout);
+    // *(&a[i]);
+    // p[i];
+    // a[10];
+
+}
+
 int main(){
+    pointSubPoint();
     // pointerStr();
+    printf("%s \n",return_char_pointer());fflush(stdout); // 加不加const没影响
+    printf("%s \n",return_const_char_pointer());fflush(stdout);
+    pointerCat();
     arrLenLiteralFlower();
     partialInit();
     /**

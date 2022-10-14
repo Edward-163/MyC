@@ -11,6 +11,8 @@
  */
 
 int main() {
+    int i = atoi("50asdfasdfasd9"); /// 首字母不是数组会直接返0  实践证明:"尽可能多地"解析出数字,一旦出现非数字字符就中断解析
+    printf("%d \n",i);fflush(stdout);
     int val=16;
     char dstBuf[99];
 //    char dstBuf[1];/// 故意缩短,奇怪的是到转10进制的时候才报错??
