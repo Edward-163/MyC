@@ -56,7 +56,8 @@ git fetch --all
 // 然后git reset将主分支重置为您刚刚获取的内容。 --hard选项更改工作树中的所有文件以匹配origin/master中的文件。
 git reset --hard origin/master
 
-
+git reflog -9 // 通常错误操作会是HEAD@{0},所以通常回到错误的前一个记录上
+git reset --mixed HEAD@{1}
 
 git stash save 'hyj'
 git stash list
