@@ -36,23 +36,24 @@ int lstat(const char *path, struct stat *buf);
 当file是一个符号链接时，lstat返回的是该符号链接本身的信息；而stat返回的是该链接指向的文件的信息
 
 4.4章
-实际uid
-实际gid
-euid
-egid
+实际uid      实际gid        实际是以谁用户来运行进程的?
+euid        egid
 supplemental gid
 上面3行用于文件存取许可权(就是mod,如777)检查,如，为了打开文件/ u s r / d i c t / w o r d s，需要具有对目录/, /usr, /usr/dict的执行许可权。然后，
 需要对该文件本身的适当许可权，这取决于以何种方式打开它 (只读，读-写等)
+通常起一个程序euid==uid,当程序需要切换至root(uid==0)的时候,uid就变为0,而euid还是不变
 
 保存设置uid
 保存设置gid
 
-粘(zhan)住位
+粘(zhan)住位       知识点:文件类型和许可权限存储在st_mode中,它是个16位的二进制,前4位表示文件类型,紧接着3位是set-user-id,set-group-id,sticky位,后9位rwx-rwx-rwx就不用我说了吧
 如果一个可执行程序文件的这一位被设置了，那么在该程序第一次执行并结束时，该程序正文
 的一个文本被保存在交换区。 (程序的正文部分是机器指令部分。 )这使得下次执行该程序时能
 较快地将其装入内存区
 现今较新的
 U N I X系统大多数都具有虚存系统以及快速文件系统，所以不再需要使用这种技术。
+
+
 
 4.14
 inode介绍
