@@ -3,3 +3,36 @@
 正确安装mingw64(Gnu Compiler collection 8.1.0选x86_64-win32-seh),配置好全局PATH,开关vscode,它会自己检测gcc目录
 https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/
 
+remote-ssh
+could not establish connection ...
+到目录C:\Users\User Name\.ssh下，其中User Name是电脑用户名，找到known_hosts文件，将其删除
+
+failed to install vscode server
+
+
+首次remoteSSH vscode右下角弹窗显示: 在家目录下安装.vscode-server,就一直读条卡死了=============================
+1 Help > about > 获取commitId
+2 替换掉${commitId}
+    # arm版本，下载文件名vscode-server-linux-arm64.tar.gz
+    https://update.code.visualstudio.com/commit:${commitID}/server-linux-arm64/stable
+    # x86版本，下载文件名vscode-server-linux-x64.tar.gz
+    https://update.code.visualstudio.com/commit:${commitID}/server-linux-x64/stable
+
+3
+建立空的$HOME/.vscode-server/bin文件夹
+rm -rf ~/.vscode-server
+mkdir -p ~/.vscode-server/bin
+上传vscode-server-linux-arm64.tar.gz到$HOME/.vscode-server/bin文件夹中并解压，注意替换命令中${commitID}为步骤1中commitID
+cd ~/.vscode-server/bin
+tar -zxf vscode-server-linux-arm64.tar.gz
+mv vscode-server-linux-arm64 ${commitID}
+
+4 不确定需不需要这步
+修改/etc/ssh/sshd_config文件，打开以下配置，然后systemctl restart sshd重启sshd服务。
+AllowTcpForwarding yes
+AllowAgentForwarding yes
+
+5 免密登录,必备技能,win环境vscode,linux单板
+cmd中ssh-keygen      // 会生成rsa和rsa.pub
+linux中vim ~/.ssh/authorized_keys
+rsa.pub追加到authorized_keys文件中
