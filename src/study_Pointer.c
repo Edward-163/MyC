@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-
+void pointerTrans(){
+    int a[2] = {1, 2};
+    char *p=(char*)a;
+    /// 想指向a[1],正确的是??
+    // ((int*)p)++; // 错
+    p+=sizeof(int); // 对
+}
 void partialInit(){
-    // 可以只给一部分元素赋值，这叫“不完全初始化”。例如：
-    // 定义的数组 a 有 5 个元素，但花括号内只提供两个初值，这表示只给前面两个元素 a[0]、a[1] 初始化，而后面三个元素都没有被初始化。不完全初始化时，没有被初始化的元素自动为 0。
+    // 可以只给一部分元素赋值，这叫“不完全初始化” 部分初始化。例如：
+    /// 定义的数组 a 有 5 个元素，但花括号内只提供两个初值，这表示只给前面两个元素 a[0]、a[1] 初始化，而后面三个元素都没有被初始化。不完全初始化时，没有被初始化的元素自动为 0 !!
     int a[5] = {1, 2};
     for (int i = 0; i < 5; ++i){
         printf("%d ",a[i]);fflush(stdout);
@@ -87,7 +93,7 @@ int main(){
     pointSubPoint();
     // pointerStr();
     printf("%s \n",return_char_pointer());fflush(stdout); // 加不加const没影响
-    printf("%s \n",return_const_char_pointer());fflush(stdout);
+    // printf("%s \n",return_const_char_pointer());fflush(stdout);
     pointerCat();
     arrLenLiteralFlower();
     partialInit();
@@ -104,8 +110,10 @@ int main(){
 //    Fn(g_arr);
 
     /**
+     野指针：未初始化的指针叫做野指针。⽤ gcc -Wall 编译, 会出现 used uninitialized 警告。
+     悬空指针：当指针指向的对象被释放，但是该指针没有任何改变，以至于其仍然指向已经被回收的内存地址，这种情况下的指针叫做悬空指针
      p只是声明了指向int型的指针，声明指针系统是不会分配内存的，所以*p没有内存来存常量9的值，自然发生错误，int *p = NULL; p = (int*)malloc(sizeof(int )); *p = 9这样就不会有错
-     永润不要对NULL解引用!!
+     永润不要对 NULL解引用 空指针解引用
      */
      int * p=NULL;
      *p=9;//sig
