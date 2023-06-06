@@ -30,8 +30,8 @@ int Find(int move)
 
 void Union(int row, int col)
 {
-    int rowroot = Find(row);
-    int colroot = Find(col);
+    int rowroot = Find(row); // row代表第一个城市
+    int colroot = Find(col); // col代表第二个城市,我只想确认第一个城市的祖宗和第二个城市的祖宗是不是同一个
     if (rowroot != colroot) {
         g_parent[rowroot] = colroot;
     }
