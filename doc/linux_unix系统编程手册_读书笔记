@@ -1,2 +1,20 @@
 在看virtiofsd_rust的sandbox之namespace的时候死活看不懂,网上查询的资料有限,所以来找找看有没有详细介绍系统调用的书
+google pivot_root都快翻烂了,还是没找到有效的使用介绍.
+
+9章
+每个进程都有一套用数字表示的 用户id 和 组id,这些id成为进程凭证
+
+
+14章
+设备分2类
+chardev
+块设备
+
+14.8单目录层级和挂载点       (转28.2.1介绍CLONE_NEWNS)
+// 将由source指定设备所包含的文件系统,挂载到target指定的目录下
+mount(source,target,fstype,flags,data)
+
+14.9.5把绑定挂载解释清楚了,大致意思是把srcDir下一层(有种和..反着来的意思)目录or文件,复制给tarDir下
+因为不是--rbind递归挂载,到下一层就就结束了,
+mount --bind srcDir tarDir
 
