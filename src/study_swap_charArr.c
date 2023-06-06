@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 /*
- 
+ 调用函数的传参过程相当于用实参定义并初始化形参        一站式23.2
  */
 void swap(char* s1,char* s2){
     char* tmp=s1;
@@ -31,9 +31,9 @@ int main()
     /// 目前网上海尔解决办法是,开辟新空间,利用strcpy交换
     // swap(s1,s2);
     // swap2(s1,s2);
-    // swap2(&s1,&s2);
-    swap3(&s1,&s2);
-    printf("%s  \n %s",s1,s2);fflush(stdout);
+    swap2(&s1,&s2);
+    // swap3(&s1,&s2);
+    printf("%s   %s",s1,s2);fflush(stdout);
     return 0;
     // @formatter:on
 }
