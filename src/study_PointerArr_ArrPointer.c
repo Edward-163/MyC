@@ -25,6 +25,7 @@ void PrintArrayD(int array[][3]) {
    解析A int* g_arr[3],[]优先级为1,很高,所以该写法是"指针数组",该数组有3个元素,元素类型是指针
         如果把int hyj[]理解为形参名hyj,类型是int[],卧槽这不就是java数组的写法么...那么int* g_arr[3]就可以理解为,形参名arr,类型是int*[],又因为数组作为函数参数会退化,所以int** g_arr
    解析B 把int (*g_arr)[3]理解为int hyj[3],得出*g_arr==hyj, 已知声明了指针变量*g_arr,hyj是数组,则arr指向hyj数组(含有3个int), 所以arr是数组指针,
+        不要把hyj理解为指针,hyj就是连续的开辟的3个int内存方格,而arr指向了这3个方格至于arr++嘛,就是指向下一次连续的开辟的3个int内存方格,和下面的画图对应上
         形参名arr,类型int (*g_arr)[3],这个没有解释
         int g_arr[2][3]理解为int[3] g_arr[2]:arr是长度为2的数组,数组的元素type为int[3]
         http://c.biancheng.net/view/227.html    悟了悟了
@@ -51,7 +52,7 @@ int main() {
     int arr[][3]={{1,2,3},{4,5,6}};
     PrintArrayA(arr);fflush(stdout);
 
-    /// 这是常见的列相同的二维数组转一维数组的方式
+    /// 这是常见的列相同的二维数组转指针数组(一维数组)的方式
     int* parr[2];
     for (int i = 0; i < 2; ++i){
         parr[i]=arr[i];
