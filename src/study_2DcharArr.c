@@ -14,11 +14,12 @@
 int main()
 {
     // @formatter:off
-    char tmp[9];
+    char tmp[9]; // 因为这是定义,所以会分配空间,要区分c和java的声明定义
+    // char tmp[9];
     for (int i = 0; i < 9; ++i){
         printf("%c ",tmp[i]);fflush(stdout);
     }
-    printf("字符数组不赋值,,会开辟空间,有随机内容,存放区域??已知初始化的字符数组存放于栈 <<<<<<<<<<<<<<\n");fflush(stdout);
+    printf("字符数组不初始化,会分配空间,有随机内容,存放区域??已知初始化的字符数组存放于栈 <<<<<<<<<<<<<<\n");fflush(stdout);
     /** 之前还在苦恼c的二维数组的动态列长度,今天误打误撞再套一层{},结果是可行的,猜测{}在c中就是返回指针的意思??,char str[]="hyj" L648
         char* str={"hyj"}; // 悟了悟了
      */
