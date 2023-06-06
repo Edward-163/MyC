@@ -1,0 +1,150 @@
+通用配置文件      /etc/profile.d/
+个人配置文件      ~/.bashrc           敲alias展示结果来源于此
+`~/.bashrc` 是 Bash shell 的配置文件，它包含了一些用户自定义的环境变量、别名、函数和命令等。当用户登录到一个 Bash shell 时，Bash 会自动执行 `~/.bashrc` 文件中的命令，
+以设置用户的环境变量和自定义命令等。这个文件通常用于设置用户的个性化环境，比如设置命令别名、添加 PATH 环境变量、定义 shell 函数等。
+注意             改完记得source file // source命令 "从file中读取并执行命令"
+
+&&  第一个命令退出码0才执行第二个命令,以此类推
+确认I层内存总体使用量，命令：cd /sys/fs/cgroup/memory/system.slice/fsp && cat memory.usage_in_bytes && cat memory.limit_in_bytes
+
+
+ 
+chown root:root b.txt // 改变文件的所有者:所有者组
+chown root a.txt //
+chown :root c.txt //
+
+linux 2个特殊的文件 /dev/null /dev/zero
+/dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
+/dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
+
+dd命令
+dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
+if      input file
+of      output file
+ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
+obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
+bs=bytes：同时设置读入/输出的块大小为bytes个字节。
+iflag=direct 绕开fs的缓存
+oflag=direct
+
+df -h // disk free
+du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
+du -hs * // 显示当前目录,每个子项的大小
+
+// export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
+// 在 shell 中执行程序时，shell 会提供一组环境变量。export 可新增，修改或删除环境变量，供后续执行的程序使用。export 的效力仅限于该次登陆操作。
+linux配置path,全用户有效,举例:配置rust的path
+vim /etc/profile
+export PATH="$PATH:~/.cargo/bin"
+export -p //列出当前的环境变量值
+source /etc/profile
+
+find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
+
+grep 高级实操
+背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
+#ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
+# error FIPS is disabled.
+#endif
+/// -r递归目录(grep最后可以接单个文件,多个文件,或者目录配合-r) -n显示行号 -w单词匹配 -v反转查找
+/// 当前目录下有很多补丁,从补丁从查找谁用到openssl_fips这个宏,并且把ifdef给排除掉,最后一个grep仅仅是为了颜色高亮,因为第二个grep -v会把高亮抹掉
+[root@localhost openssl_virtual]# grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS        //r递归目录 n行号 w单词匹配  E拓展表达式 v取反
+
+-A3     // 多展示后面3行
+-B3     // 多展示前面3行
+-C3     // 多展示后面前后各3行
+
+ip a
+ip a s // 感觉这两个命令用来查询网卡信息,没区别呀...
+
+iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
+iostat -dx 1 // 每1秒刷新一次,无效刷
+-d 只显示disk统计信息
+-m 已 MB 单位显示
+-x 展示拓展信息
+
+journalctl
+journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
+应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
+
+mount
+mount -o remount,ro /dev/mapper/cpsVG-image
+-o 后面接逗号分割options
+remount选项代表重新挂
+ro选下来代表只读
+
+-o remount：将一个已经挂下的档案系统重新用不同的方式挂上。例如原先是唯读的系统，现在用可读写的模式重新挂上。
+
+pgrep ssh // 查看ssh进程相关的进程号
+pgrep -l ssh
+
+
+// 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
+/proc/cmdline
+/proc/meminfo |grep -i huge*
+/proc/mounts
+
+ps查找进程时顺保留首行
+ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
+ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
+ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相同
+
+realpath 某文件 // 显示文件路径
+
+例如:find /lib64/ -name "librdmacm.so.1"
+/lib64/librdmacm.so.1
+rpm -qf /lib64/librdmacm.so.1
+
+sh -x // 进入跟踪方式，显示所执行的每一条命令
+sh -x a.sh > /home/t.txt // 我发现文本没内容
+sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
+
+size命令
+size命令用于查看目标文件、库或可执行文件中各段及其总和的大小，是 GNU 二进制工具集 GNU Binutils 的一员。
+size hello.o
+[root@localhost test]# size hello.o
+   text	   data	    bss	    dec	    hex	filename
+    115	     80	      0	    195	     c3	hello.o
+
+// -C 指定解压后目录
+tar -zxvf  ?.gz  -C  ./
+
+top命令   动态检测进程运行状态
+有点特殊,直接敲top,帮张信息按h查看,但似乎没用??
+top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)降序
+直接按1,查看所有cpu占用详情
+
+
+// unix name 通常带-a 显示系统信息(内核版本啥的)
+uname -a
+
+// 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
+who
+
+/etc/yum.repo.d/??.repo
+yum search git
+yum install git
+yum list installed |grep git*
+yum remove git
+
+
+
+grep "ip_local_reserved_ports" -nr /usr/lib		// -n 显示num  -r 递归目录
+lsof -i:49208  // 山哥说只要有输出,本机在用此端口,   770是指对端ip
+netstat -tunlp 49208
+sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
+ip a  // Linux系统中用于查看IP地址信息的命令
+
+/etc/fstab
+磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
+根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了。
+
+timeout -s KILL 600 reboot // 执行reboot命令(或其他脚本),只让他执行600s,超过600s后向命令(或脚本)发送-s KILL 信号
+
+zgrep -a "TLS handshake" ./logdump*
+-a, --text
+treat all files as text
+
+& 表示任务后台执行，与nohup命令功能差不多。   通常放在命令的末尾
+&& 表示前一条命令执行成功时，才执行后一条命令。
+|| 表示上一条命令执行失败后，才执行下一条命令。
