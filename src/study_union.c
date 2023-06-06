@@ -8,6 +8,12 @@
 /*
  
  */
+typedef union {
+    char c;
+    unsigned long k;
+    int i;
+}Test;
+
 int check(){
     union w{
         int a;
@@ -16,6 +22,7 @@ int check(){
     c.a=1;
     return c.b==1;
 }
+
 int main()
 {
     // @formatter:off
@@ -29,7 +36,13 @@ int main()
      ox 1 0 0 0
      显然b==1
      */
-    printf("%d \n",check());fflush(stdout);
+    // printf("%d \n",check());fflush(stdout);
+
+    /// ?ж?32λ 64λ
+    printf("??????%dλ \n",8*sizeof(char*));fflush(stdout);
+    printf("??????%dλ \n",sizeof(unsigned long));fflush(stdout); // ?????,????:??win???? ???й??
+    Test u1;
+    printf("u1???????С: %d \n",sizeof(u1));fflush(stdout);
     return 0;
     // @formatter:on
 }
