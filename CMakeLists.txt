@@ -11,6 +11,9 @@ set(CMAKE_C_STANDARD 99)
 #使用尖括号< >，编译器会到系统路径下查找头文件；通常是include目录,如用minGw编译.c
 #而使用双引号" "，编译器首先在当前目录下查找头文件，如果没有找到，再到系统路径下查找
 
+# 库name全局唯一,
+# add_libraty(<name> [STATIC|SHARED] [source1] [source2...])
+
 # 指定 .h 文件所在的目录
 include_directories(${PROJECT_SOURCE_DIR}/include/uthash-2.3.0/src/)
 include_directories(${PROJECT_SOURCE_DIR}/huawei_secure_c/include)
