@@ -1,0 +1,49 @@
+基础
+w   word 向右单词头
+b   back 向左单词头
+e   end  向右单词尾
+
+win git自带的vim的配置文件是C:\Program Files\Git\etc\vimrc
+而linux环境下vimrc前面一般都加上. 表示隐藏
+
+:help mouse     // 查看文档帮助
+:set mouse=a // 开启鼠标定位(所有模式,具体不关心哪些模式)
+不同的vim默认的设置是不同的,例如git自带的vim光标是竖线,单板上下载的vim光标默认的方块,cursor设置可以自己修改,只不过有点极客折腾,能用就行
+:help cursor
+
+:set nu hls // nu代表num,hightLightSearch,实用!!
+
+vim中有光标位置list
+ctrl o  上一个位置
+ctrl i  下一个位置
+
+
+范围删除
+:3,6d   // 删除[3,6]行
+
+vim命令行模式:vsp 文件名
+如  先打开cpyfrom0901testsucc目录下的client.rs
+:vsp /mnt/sdc/hyj/stratovirt_0906splitPatch/virtio/src/vhost/user/client.rs
+
+
+
+https://github.com/dofy/learn-vim
+这个项目不错
+ `*` 向后查找光标当前所在单词(注意把光标放在单词上,实践证明不一定非要放在单词头,此方法定位函数名实在太棒了)      相当于idea选中后F3
+ `#` 向前查找光标当前所在单词
+
+ %  匹配定义,用来快速跳转()[]{}这些配对的符号贼好使     相当于idea ctrl+M
+
+ :Ex     vim中直接打开目录树,这玩意也好使!!       相当于idea alt+1
+
+ :ls     列出vim buffer区中的文件,再:b数字        相当于alt+tab
+
+ J      当前行与下一行合并       相当于idea ctrl+shift+j
+
+ >>     缩进整行      相当于tab
+ <<     逆缩进整行     相当于shift+tab
+
+
+vim --version |grep clipboard // 单板自带的vim不支持系统剪切板,https://blog.csdn.net/duandianr/article/details/50445496
+yum update -y vim // 升级后还是不支持clipboard
+yum remove vim
