@@ -1,0 +1,261 @@
+# shell终端提示符一般表示root
+$ 一般表示非root
+
+5.2.1   进程列表
+直接敲bash或者执行shell脚本都会创建子shell来直接,还有一个创建子shell的方法是进程列表,使用方式用()把多个命令括起来,如
+(commandA;commandB)     // 会创建子shell来执行这两个命令
+
+5.2.2   后台模式:命令执行时让出cli,使用方式:命令末尾加&
+sleep 3
+sleep 3& // 输出 [后台job号] 后台进程号
+jobs    // 该命令用于查看后台所有jobs
+
+5.3.1   内建命令
+外部命令:不是shell程序的一部分,如ps -f命令,外部命令执行时会衍生出子进程,由子进程执行外部命令
+内建命令:如cd
+type cd     // type命令用于查看是不是内建命令
+
+6.1.1   查看全局变量printenv        env
+printenv        // 展示全局变量键值对
+printenv SHELL  // 展示全局变量SHELL的值
+
+
+直接11章 shell脚本
+
+硬盘（hard disk）指的是用来存储数据的装置。物理上以金属光盘呈现，两面均可以存储数据，磁道、扇区。
+硬盘驱动器（hard disk drive, HDD）指的是个人计算机中控制硬盘寻址以及存取数据的装置，通过硬盘驱动器，计算机才能访问硬盘中存储的数据。物理上指囊括磁盘的外壳，包含接口、磁头等。
+尽管硬盘和硬盘驱动器是两个概念，但由于两者通常被封装在一起，所以默认硬盘和硬盘驱动器都是指二者结合在一起所形成的设备。
+
+shell脚本首行特殊,不算是注释,!表示指定用哪个shell来执行脚本内容
+#!/bin/bash
+# echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       // 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
+echo -n "不要换行,date结果会输出在右侧"
+date
+
+
+
+环境变量
+set
+可以查看当前环境变量,而在环境变量名前面加个$就可以使用它,注意脚本中会把$??替换掉,所以想特意打印美元符,$前面还要加\
+echo $HOME
+
+局部自定义变量    注意等号左右不能空格,直接赋值,使用变量时前面也要加个$,如$var ${var} 后者可以这么写但不推荐
+var=1   // 直接写就当赋值成功
+va2="hyj"
+
+另一个局部变量,用local修饰,多用于函数内
+function fun(){
+    local module=
+    ...
+}
+
+全局变量的导入用export命令
+
+
+'' 单引号 中任何字符原样输出,单引号中str中变量无效
+"" 双引号 先把变量解析出来,再输出
+
+------------`` 抑音符 $()从命令输出中提取信息赋给变量,有2种书写格式,如把date命令的结果直接赋给变量d1 d2
+d1=`date`
+d2=$(date)
+d3=$(uname -r)
+
+<
+重定向输入,文件输入到命令,如cat < /etc/passwd效果和cat /etc/passwd是相同的
+
+命令 << 分界符	表示从标准输入设备（键盘）中读入，直到遇到分界符才停止（读入的数据不包括分界符），这里的分界符其实就是自定义的字符串
+[root@localhost ~]# cat << 0
+>c.biancheng.net
+>Linux
+>0
+c.biancheng.net
+Linux
+可以看到，当指定了 0 作为分界符之后，只要不输入 0，就可以一直输入数据
+
+----------数学运算 expr 命令,它的| & :有点特殊,具体使用翻书
+expr 5 \* 2     // 输出10
+
+----------$[] 将数学运算结果赋给变量
+var=$[1+5]
+
+-------------bc
+scale=4 // 默认0,保留小数点后4位
+6.44/5
+quit // 退出bc
+---------脚本中使用bc
+var=$(echo "option0; option1...; expression" | bc)
+var=$(echo "scale=4; 6.44/5" | bc)
+EOF标识了内联重定向的起止
+var0=0
+var1=1
+var=$(bc << EOF
+a1=$var0+$var1
+a2=$var0-$var1
+a1+a2
+EOF
+)
+
+-----11.8 退出码
+echo $? // 正常返0,
+1       一般未知错误
+2       不适合shell的命令
+127     没找到命令
+130     ctrl+C
+
+
+
+------------if then语句
+if command // 若推出码为0,执行then
+then
+    commands
+else
+    commands
+fi
+
+多ifthen嵌套写法有点丑,一般采用下面
+if command
+then
+    commaneds
+elif command
+then
+    commands
+fi
+
+----------test condition 条件成立,退出并返回退出码0,若不写条件or不成立,则退出码非0
+----------方括号 []
+bash shell提供方括号,代替test
+if [condition]
+then
+    commands
+fi
+
+test中数值(只能整形比较)比较  注意:[ ]内部的前后要加空格!!!
+if [ $var -gt 5 ]
+
+test支持字符串的比较
+if [-n $str1] // 检查长度是否非0
+if [-z $str1] // 检查长度是否0
+if [-x $file] // 检查文件可执行?
+if [ -s "$file" ]; then // -s检查文件是否存在
+   echo "exists and it is not empty"
+elif [ -f "$file" ]; then
+   echo "at least exists"
+else
+   echo "does not exist"
+fi
+字符串顺序比较时 > < 必须转义
+
+test复合条件
+if [] && []
+if [] || []
+
+------------12.6 if then 高级
+((高级数学表达式))
+[[高级字符串表达式]]    // bashShell支持较好
+
+--------case命令
+case var in
+    pattern1 | pattern2) command1;;
+    pattern3) command2;;
+    *) command3;;
+esac
+
+-------for
+for var in list
+do
+    commands
+done
+
+#!/bin/bash
+for test in aa bb
+do
+    echo study for: $test
+done
+上面list的值还算简单 aa bb ,注意复杂的list中有单引号要转义!!
+内部字段分隔符internal field separator
+bashShell默认的ifs是空格 \t \n
+只想识别换行当ifs
+IFS=$'\n'
+
+
+--------for 2
+for ((i=0,j=1;i<9;i++,j--))
+do
+   commands
+done
+
+-------while 测试命令退出码0,则循环一次
+while test command
+do
+    other commands
+done
+
+注意 while 多条测试命令多行的情况
+
+--------util 测试命令退出码非0,则循环一次 和while相反
+
+13.6中我注意到了IFS=$'\n'    IFS=:   换行作为ifs为啥多了$'
+IFS=$'\n' // 这才是真正的换行符
+IFS="\n" // 将字符n作为IFS的换行符
+IFS=$"\n" // 等价上面
+https://www.cnblogs.com/yang29643/p/15029309.html
+
+
+-----------从自定义user.csv文件中创建多个用户
+#!/bin/bash
+input="user.csv"
+while IFS=',' read -r userid name
+do
+    useradd -c "$name" -m "$userid"
+done < "$input"
+
+--------------positional param位置参数,默认空格分隔参数,想在参数中包含空格,请用""包裹
+$0  程序名     通常配合basename使用,剥离路径的影响
+$1  第一个参数
+$2  第二个参数
+$#  携带了几个参数
+$*  代表输入的所有参数,但把所有参数当成一个参数     必须用双引号包裹!!
+$@  代表输入的所有参数,会把参数单独处理
+echo $$  返回登录shell的PID
+
+shift 2     // $1 $2 ...当成一个队列,整个队列往左移动(本质是删除)2下,不写数字默认移动1
+
+-- 双折线
+linux来说,--是特殊字符用来分割选项(-a -b -C等)和参数列表
+
+
+----------getopt
+getopt ab:cd -a -b test1 -cd test2 test3
+-a -b test1 -c -d -- test2 test3 // 从输出结果来看,getopt的解析还是比较智能的
+optstring定义了四个有效选项字母：a、b、c和d。冒号（:）被放在了字母b后面，因为b
+选项需要一个参数值
+
+
+
+---------read命令     有点类似scanf,从标准输入读取数据,放入变量中
+#!/bin/bash
+cat txt | while read line
+do
+    echo "line's content: $line"
+done
+
+
+--------只重定向错误
+ll stderr 2> stderr.txt // 若stderr文件不存在,会报错no such file,重定向>前的数字代表标准错误STDERR(它的fd是2),意味着错误时,stderr.txt内才还会有内容
+
+临时重定向
+echo "err info" > &2 // 将错误信息重定向到STDERR
+
+永久重定向
+exec 1 > txt01 // exec命令会启动一个新shell并将STDOUT文件描述符重定向到文件。脚本中发给STDOUT的所有输出会被重定向到文件。
+
+
+>	将标准输出重定向到文件
+1>	将标准输出重定向到文件，与>相同
+2>	将错误输出重定向到文件
+2>&1	将错误输出重定向到标准输出
+&>	将标准输出和错误输出都重定向到文件
+2>&1
+2代表着标准错误	1代表者标准输出(默认是屏幕)	>代表流向
+那么2>&1的含义也就是，将标准错误输入(也就是显示)到屏幕上
+& 符号则表示将其后面的数字视为文件描述符，而不是普通的文件名
