@@ -1,3 +1,7 @@
+short int 也可以写成 short
+long int 就是 long    // 所以整形在c中,默认省略最后的int??
+long long int
+
 union共用体:因为成员共用一块空间
 https://blog.csdn.net/m0_57180439/article/details/120417270
 由于共用空间这种特点就导致了，你改变c，i也会随之改变。这里和结构体是完全不一样的，结构体成员相互独立，但联合体不一样，改一个，其他的也会改变。
@@ -14,7 +18,18 @@ void test01(){
 }
 答:sizeof返回unsigned,而有符号-1转无符号??,在计算机补码看来,32位1拉满了都,没谁会比这个??大0xFF FF FF FF
 
-char short int unsignedInt long
+混合运算    涉及 隐式转换
+char short
+int
+unsigned Int
+long        // 我建议忘掉long,直接到long lnog,因为c语言天坑,long和int极值是一样的
+unsigned Long
+long long
+unsigned long long
+float
+double
+long double
+
 所有float都先转double运算
 赋值运算,右边转成左边
 char与short运算都转成int
@@ -26,15 +41,20 @@ __DATE__：在源文件中插入当前的编译日期 月日年
 __TIME__：在源文件中插入当前编译时间； 时分秒
 __STDC__：当要求程序严格遵循ANSI C标准时该标识被赋值为1；
 
-结构体对齐   记载于test03
+__func__ is the predefine macro, and it is used to get the name of the current function. This macro is added in C99.
+__func__是预定义宏，用于获取当前函数的名称。 此宏已添加到C99中。
+
+结构体对齐   记载于study_test03
 注意:字节对齐和编译器有关,甚至可以设置2,4,8,16,如vs默认8字节对齐,但这个设置好像不起作用,有int还是按照4字节来??涉及实际对齐字节
+有指定按指定,不指定按下面算出来??
+
     1、含有数组：数组就是多个基本类型变量，比如  char a[10],就是有a[0] 到  a[9]  共10个char类型变量；
     2、含有结构体：比较嵌套的结构体中最大与本结构体中最大，取大的那个；
     3、预编译指令#pragma pack(n)手动设置     n取1 2 4 8 16
     上面三者取最小的,就是实际对齐单位；
 成员顺序排列,因为成员要按字节对齐,所以中间可能留有空白,顺序会影响结构体大小
 short地址必须是2的倍数
-int地址必须是4的倍数
+int地址必须是4的倍数        // test05中,被推翻掉了呀
 double地址必须是8的倍数
 终极大招:预定义#pragma pack(n) 来强制修改编译器字节对齐
 https://blog.csdn.net/qq_40737025/article/details/106738762
@@ -46,4 +66,17 @@ union对齐
 union的sizeof肯定是上面的n倍,如8n
 多字段公用一片内存,sizeof与成员顺序无关
 
-inline函数
+inline函数    内联函数
+inline是加在实现上，就算加在声明上，编译器也会忽略掉。内联展开是在编译时进行的，只有链接的时候源文件之间才有关系。
+所以内联要想跨源文件必须把实现写在头文件里。如果一个inline函数会在多个源文件中被用到，那么必须把它定义在头文件中。
+
+函数宏     注意宏宇参数之间不能有空格
+#define MAX(a,b) ((a)>(b)?:(a):(b))
+
+
+/// 必须是2的幂次
+_Aligns(12) unsigned int data;
+_Aligns(2) char data;
+_Aligns(3) char data;
+_Aligns(16) unsigned int data;
+
