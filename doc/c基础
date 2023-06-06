@@ -1,0 +1,85 @@
+随着接触c越来越久,发现很多安全规范中提到的函数都是linux环境下的,如tmpnam,getenv啥的
+
+char是signed还是unsigned,由编译器决定,如 gcc的-funsigned-char
+
+https://blog.csdn.net/linuxweiyh/article/details/112978257#:~:text=printf%20%28%29%20%E7%9A%84%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F%E4%B8%BA%EF%BC%9A%20%25%20%5Bparameter%5D%20%5Bflags%5D%20%5Bwidth%5D%20%5B.precision%5D,%25zu%20%E5%AF%B9%E7%85%A7%E8%BF%87%E6%9D%A5%EF%BC%8Cz%20%E5%B1%9E%E4%BA%8E%20length%20%E5%AD%97%E6%AE%B5%EF%BC%8Cu%20%E5%B1%9E%E4%BA%8E%20type%20%E5%AD%97%E6%AE%B5%E3%80%82
+%zu 对照过来，z 属于 length 字段，u 属于 type 字段(无符号十进制)
+%d  有符号10进制     signed char;signed short
+%u  无符号10进制     unsigned char;unsigned short
+
+该表达式用来表明输出格式是长度型（size_t）的无符号整型值。其中 size_t 在不同的位数操作系统中定义是不同的：
+/*  32位 */
+typedef unsigned int    size_t;
+typedef int             ssite_t;
+/*  64位 */
+typedef unsigned long   size_t;
+typedef long            ssize_t;
+因此在程序设计的时候，如果参数是 size_t 或者 ssize_t，在进行格式化输入或输出的时候务必使用 ‘z’ 修饰符，以防止显示异常。
+
+进程内存布局  来自于unix系统编程手册6.3
+---high address
+    内核映射到进程虚拟内存,但程序无法访问
+---
+    argv,环境等?
+---
+    stack
+---
+    未分配
+---
+    heap
+---
+    bss历史原因,未初始化数据段,存放未初始化全局变量(包括static全局)和初始化为0的全局变量(包括static全局)
+---
+    data段,存放已经初始化且初始化值为非零的全局变量（包括静态变量）      static变量不是在data段就是在bss段??
+---
+    text段
+---low address
+
+也有分为5个区的
+栈
+堆
+全局/静态区(包含bss+data段)
+常量区(const char* p),由系统释放
+代码区,系统管理
+
+
+当我们使用文件指针通过fwrite()函数向文件中输入数据，假设数据为字符串“麻辣香锅”，输入完毕后文件指针的指向位置实际上是“锅”的后面，相当于光标。
+此刻如果使用fread函数是无法正常读取文件内容的，原因是fread只能读取指针往后的内容。需要将文件指针前置，这时候就需要用到fseek函数。
+int fseek(FILE *stream, long offset, int whence);
+参2 偏移字节数
+参3
+SEEK_SET    文件头
+SEEK_CUR    当前indicator位置
+SEEK_END    文件尾
+
+
+
+// realpath - return the canonicalized absolute pathname 返回规范的绝对路径
+#include <limits.h>
+#include <stdlib.h>
+char *realpath(const char *restrict path, char *restrict resolved_path);
+注意: realpath函数的参数，必须使用PATH_MAX大小的内存空间!!
+
+
+结构体中的冒号
+有些信息在存储时，并不需要占用一个完整的字节， 而只需占几个或一个二进制位。例如在存放一个开关量时，只有0和1 两种状态， 用一位二进位即可。为了节省存储空间，并使处理简便，C语言又提供了一种数据结构，称为“位域”或“位段”
+编译器也有可能在两个成员之间插入填充位，如上图的 five 和 six 之 间，这样 six 这个成员就刚好单独占一个字节了，访问效率会比较高     C一站式19.4
+
+
+
+--------------static知识点
+http://c.biancheng.net/view/301.html
+1 隐藏
+全局变量虽然属于静态存储方式，但并不是静态变量。全局变量的作用域是整个源程序，当一个源程序由多个源文件组成时，全局变量在各个源文件中都是有效的。
+如果我们希望全局变量仅限于在本源文件中使用，在其他源文件中不能引用，也就是说限制其作用域只在定义该变量的源文件内有效，而在同一源程序的其他源文件中不能使用。
+2 保持变量内容的持久性
+有时候，我们希望函数中局部变量的值在函数调用结束之后不会消失，而仍然保留其原值。即它所占用的存储单元不释放，在下一次调用该函数时，其局部变量的值仍然存在，也就是上一次函数调用结束时的值。
+3 默认初始化为 0
+在静态数据区，内存中所有的字节默认值都是 0x00。静态变量与全局变量也一样，它们都存储在静态数据区中，因此其变量的值默认也为 0。
+
+虽然结构体的成员名和变量名不在同一命名空间中，但枚举(编译阶段处理)的成员名却和变量名在同一命名空间中，所以会出现命名冲突。     c编程一站式
+
+
+硬链接 软链接==符号链接
+因为inode编号在自己文件系统外没有任何意义,所以不能跨文件系统建立链接,为了上一句的目标,unix系统实现了符号链接     unix环境高级编程 1.4.5
+所以这么记忆硬链接就是指针,软链接会新建出新的inode(毕竟可能跨系统,如ext2,ext3)
