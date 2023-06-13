@@ -10,10 +10,16 @@
 /*
  
  */
-
+void test(){
+    char *str1="123456789";
+    char str2[]="123456789";
+    printf("%d %d\n",sizeof(str1),sizeof(str2));fflush(stdout);
+}
 int main()
 {
     // @formatter:off
+    test();
+    
     char arr[]="ab";
     printf("%d \n",sizeof(arr));fflush(stdout); // 3
     return 0;
