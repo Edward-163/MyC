@@ -16,7 +16,7 @@ int main()
     /// 计算机表达10的幂是一般是用E或e
     double val = 1.0E100; // 天文数字
     /// 等于val,原因未知
-    double add = val + PI;
+    double add = val + PI; /// 天文数字再加个pi这样的小数,加和没加一样,原因未知
     printf("add - val = %1.5lf\n", add - val); // 0
 
     return 0;
