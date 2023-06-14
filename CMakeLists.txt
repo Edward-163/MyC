@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(chyj)
 #c99->c11
-#set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "-std=c99")
+# 指定C语言标准为C11
+set(CMAKE_C_STANDARD 11)
+# 指定C语言标准为C99
+# set(CMAKE_C_STANDARD 99)
 # 学习网上相对目录,引入三方头
 #引入uthash遇到的大坑,在公司修改过git的user.name和user.email,起初以为是name和email问题,
 #http.postBuffer加大也没用,git config --system --unset credential.helper没用,win删除gitee相关凭证也没用
