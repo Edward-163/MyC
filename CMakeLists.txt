@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(chyj)
+#c99->c11
 #set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "-std=c99")
 # 学习网上相对目录,引入三方头
