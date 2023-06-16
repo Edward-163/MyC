@@ -95,9 +95,13 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
 
 realpath 某文件 // 显示文件路径
 
+rpm
 例如:find /lib64/ -name "librdmacm.so.1"
 /lib64/librdmacm.so.1
 rpm -qf /lib64/librdmacm.so.1
+// 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
+rpm -Uvh 1260 --nodeps
+
 
 sh -x // 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
