@@ -79,8 +79,9 @@ ro选下来代表只读
 
 -o remount：将一个已经挂下的档案系统重新用不同的方式挂上。例如原先是唯读的系统，现在用可读写的模式重新挂上。
 
-pgrep ssh // 查看ssh进程相关的进程号
-pgrep -l ssh
+pgrep
+pgrep ssh // 只展示ssh进程的pid
+pgrep -l ssh // -l 展示 pid 和 processName
 
 
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
@@ -96,9 +97,11 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
 realpath 某文件 // 显示文件路径
 
 rpm
+rpm -qa // 查询所有包
 例如:find /lib64/ -name "librdmacm.so.1"
 /lib64/librdmacm.so.1
-rpm -qf /lib64/librdmacm.so.1
+rpm -qf /lib64/librdmacm.so.1 // 查询哪个包"拥有"此文件
+rpm -ql openssh-client-XXX // 查询此包包含哪些文件
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
 
