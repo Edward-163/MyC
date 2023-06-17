@@ -101,7 +101,7 @@ rpm -qa // 查询所有包
 例如:find /lib64/ -name "librdmacm.so.1"
 /lib64/librdmacm.so.1
 rpm -qf /lib64/librdmacm.so.1 // 查询哪个包"拥有"此文件
-rpm -ql openssh-client-XXX // 查询此包包含哪些文件
+rpm -ql openssh-client-XXX // 查询此包包含哪些文件,包名不需要打全,打一部分也可以
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
 
