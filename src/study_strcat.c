@@ -29,6 +29,14 @@ int main()
     printf("%d \n",i);fflush(stdout);
     printf("%s \n",dest2);fflush(stdout); // abchij
 
+ 
+    /// strcat不能用于内存重叠拷贝,win环境下能正常输出?
+    char s[10] = "HelloY";
+    char *s1 = s;
+    char *s2 = &s[2];
+    strcat(s1, s2);
+    printf("%s\n", s1);fflush(stdout);
+ 
     return 0;
     // @formatter:on
 }
