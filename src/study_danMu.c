@@ -29,7 +29,7 @@ int main()
      解释:单目运算 * ++ 的优先级相同,*(ptr++)的意思是,你先使用ptr,用完后++,什么才叫使用呢?这里*prt==1==a解引用就算使用
      我产生误解是因为我把*(prt++)理解为拆成两行,并认为一行效果==两行效果
      */
-    printf("%d,%d\n", tmp[0], a);
+    printf("%d,%d,*ptr=%d\n", tmp[0], a,*ptr);
     return 0;
     // @formatter:on
 }
