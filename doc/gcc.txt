@@ -1,15 +1,11 @@
 gcc是个工具链,不是单个工具
 
-源文件                  .c
-预处理                 .c>>.i
-编译compiling           .i>>.s    注意:.s称为汇编代码
-汇编assembling            .s>>.o
-链接linking               .o>>a.out或者hello
+.c源文件 > preprocess > .i > compile > .s > assemble汇编 > .o > link > a.out
 
--E                       Preprocess only; do not compile, assemble or link.
--S                       Compile only; do not assemble or link.
--c                       Compile and assemble, but do not link.
-
+-E    Preprocess only; do not compile, assemble or link.
+-S    Compile only; do not assemble or link.
+-c    Compile and assemble, but do not link.
+-o    自定义输出文件名     注意 -o 产生目标.i .s .o .out都可以,很灵活
 
 preprocess 预处理指令 
 如 gcc -E hello.c -o hello.i // 预处理完就结束
@@ -36,7 +32,7 @@ linux环境的动态链接库叫so,win环境叫dll
 https://zhuanlan.zhihu.com/p/39219541#:~:text=%E7%BC%96%E8%AF%91%E5%99%A8%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%8C%E7%BC%96%E8%AF%91%EF%BC%8C%E6%B1%87%E7%BC%96%EF%BC%8C%E9%93%BE%E6%8E%A5%E5%90%84%E6%AD%A5%E9%AA%A4%E8%AF%A6%E8%A7%A3%201%20%EF%BC%881%EF%BC%89%E9%A2%84%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5%20%E5%9C%A8%E8%AF%A5%E9%98%B6%E6%AE%B5%EF%BC%8C%E7%BC%96%E8%AF%91%E5%99%A8%E5%B0%86%E4%B8%8A%E8%BF%B0%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84stdio.h%E7%BC%96%E8%AF%91%E8%BF%9B%E6%9D%A5%EF%BC%8C%E5%B9%B6%E4%B8%94%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8Gcc%E7%9A%84%E9%80%89%E9%A1%B9%E2%80%9D-E%E2%80%9D%E8%BF%9B%E8%A1%8C%E6%9F%A5%E7%9C%8B%EF%BC%8C%E8%AF%A5%E9%80%89%E9%A1%B9%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E8%AE%A9Gcc%E5%9C%A8%E9%A2%84%E5%A4%84%E7%90%86%E7%BB%93%E6%9D%9F%E5%90%8E%E5%81%9C%E6%AD%A2%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E3%80%82%20...%202%20%EF%BC%882%EF%BC%89%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5%20%E6%8E%A5%E4%B8%8B%E6%9D%A5%E8%BF%9B%E8%A1%8C%E7%9A%84%E6%98%AF%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5%EF%BC%8C%E5%9C%A8%E8%BF%99%E4%B8%AA%E9%98%B6%E6%AE%B5%E4%B8%AD%EF%BC%8CGcc%E9%A6%96%E5%85%88%E8%A6%81%E6%A3%80%E6%9F%A5%E4%BB%A3%E7%A0%81%E7%9A%84%E8%A7%84%E8%8C%83%E6%80%A7%E3%80%81%E6%98%AF%E5%90%A6%E6%9C%89%E8%AF%AD%E6%B3%95%E9%94%99%E8%AF%AF%E7%AD%89%EF%BC%8C%E4%BB%A5%E7%A1%AE%E5%AE%9A%E4%BB%A3%E7%A0%81%E7%9A%84%E5%AE%9E%E9%99%85%E8%A6%81%E5%81%9A%E7%9A%84%E5%B7%A5%E4%BD%9C%EF%BC%8C%E5%9C%A8%E6%A3%80%E6%9F%A5%E6%97%A0%E8%AF%AF%E5%90%8E%EF%BC%8CGcc%E6%8A%8A%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91%E6%88%90%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E3%80%82,hello.s%20-o%20hello.o%EF%BC%8C%E5%85%B6%E4%B8%AD-c%E5%91%8A%E8%AF%89gcc%E8%BF%9B%E8%A1%8C%E6%B1%87%E7%BC%96%E5%A4%84%E7%90%86%E3%80%82%20...%204%20%EF%BC%884%EF%BC%89%E9%93%BE%E6%8E%A5%E9%98%B6%E6%AE%B5%20%E5%9C%A8%E6%88%90%E5%8A%9F%E7%BC%96%E8%AF%91%E4%B9%8B%E5%90%8E%EF%BC%8C%E5%B0%B1%E8%BF%9B%E5%85%A5%E4%BA%86%E9%93%BE%E6%8E%A5%E9%98%B6%E6%AE%B5%E3%80%82%20
 
 
-gcc hello.c     // 默认生成a.out,所以 -o 自定义输出文件名     注意 -o 产生目标.i .s .o .out都可以,很灵活
+gcc hello.c     // 默认生成a.out
 gcc -c hello.c // 默认生成hello.o   再一次 gcc hello.o才会生成a.out
 用到了-c，告诉gcc到汇编为止，不要进行链接。
 链接就是将目标文件、启动代码、库文件链接成可执行文件的过程，
