@@ -127,9 +127,21 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 按E  切换K M G T
 按1  查看所有cpu占用详情
 
+ulimit
+ulimit // 直接查看core文件大小,返回unlimited代表core文件大小无限制
+ulimit -c 1 // 设置core文件大小,单位blocks,block==1024字节
+ulimit -c unlimited // 设置core文件大小无限制
+强关联内容core_pattern
+cat /proc/sys/kernel/core_pattern
+/var/log/idump/core_%e_%p_%t // 代表默认生成的core文件在此目录下,且格式是"下面讲解"https://man7.org/linux/man-pages/man5/core.5.html
+%e  The process or thread's comm value, which typically is the same as the executable filename 
+%p  core掉的pid
+%t  core掉的time
 
-// unix name 通常带-a 显示系统信息(内核版本啥的)
-uname -a
+
+uname
+uname -a // unixName 通常带-a 显示系统信息(内核版本啥的)
+uname -r // 直接查看内核版本
 
 // 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
 who
