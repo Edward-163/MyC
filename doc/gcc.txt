@@ -78,3 +78,9 @@ https://blog.csdn.net/hansel/article/details/5008700
 
 
 gcc main.c stack.c -o main // 一站式 20.1多文件链接
+
+
+汇编入门
+mov $0x1,%rax // $代表当前指令的地址,把0x1存放入寄存器%rax中,rax=0x1
+add %rbx,%rax // 寄存器%rax加上寄存器%rbx的内容,rax=rax+rbx
+sub %rbx,%rax
