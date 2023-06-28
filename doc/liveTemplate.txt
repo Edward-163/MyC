@@ -8,3 +8,5 @@ psl
 printf("%s \n",);fflush(stdout);
 pl
 printf("\n");fflush(stdout);
+ptl
+printf("%s \n", ?"true":"false");fflush(stdout);
