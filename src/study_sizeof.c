@@ -13,6 +13,8 @@
 void sizeof_bool(){
     bool b;
     printf("sizeof(bool)=%d \n",sizeof(b));fflush(stdout);
+    unsigned long ul;
+    printf("sizeof(unsigned long)=%d \n",sizeof(ul));fflush(stdout);
 }
 void test(){
     char *str1="123456789";
