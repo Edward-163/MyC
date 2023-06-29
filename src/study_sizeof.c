@@ -10,6 +10,10 @@
 /*
  
  */
+void sizeof_bool(){
+    bool b;
+    printf("sizeof(bool)=%d \n",sizeof(b));fflush(stdout);
+}
 void test(){
     char *str1="123456789";
     char str2[]="123456789";
@@ -18,6 +22,7 @@ void test(){
 int main()
 {
     // @formatter:off
+    sizeof_bool();
     test();
     
     char arr[]="ab";
