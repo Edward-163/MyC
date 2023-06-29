@@ -1,0 +1,29 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <ctype.h>
+#include <stdbool.h>
+// #include "uthash.h"
+// #include "securec.h"
+
+/*
+ 
+ */
+void test01()
+{
+    int i = -1;
+    // int i=3;
+    /// 考点:sizeof返回类型unsigned int   比较符号时自动类型转换
+    for (; i < sizeof(int); i++) {
+        printf("%d \n", i);fflush(stdout);
+    }
+    printf("%s \n","over");fflush(stdout);
+}
+int main()
+{
+    // @formatter:off
+    test01();
+    return 0;
+    // @formatter:on
+}
