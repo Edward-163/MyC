@@ -12,7 +12,10 @@ int main()
 {
     // @formatter:off
     int a;
-    a=1,2; // 相当于a=1;2;
+    /// 注意:相当于a=1;2;
+    /// 注意:相当于a=1;2;
+    /// 注意:相当于a=1;2;
+    a=1,2; 
     printf("%d \n",a);fflush(stdout);
     int b=(3,4); // 逗号运算从左到右,左边都是准备,最右边才是结果
     printf("%d \n",b);fflush(stdout);
