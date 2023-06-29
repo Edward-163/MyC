@@ -24,25 +24,44 @@ double地址通常是8的倍数
 结构体A应从offset为A内部最大成员的整数倍的地方开始存储
 结构体嵌套有点绕!!
  */
+/// 以下n代表内存补齐填充空格
 // #pragma pack(2)
 // #pragma pack(1)
 struct s0 {
+    /*
+     c c n n
+     i i i i
+     */
     char c1;
     char c2;
-    int a; /// 按4对齐 (1+1+2,4)
+    int i; /// 按4对齐 (1+1+2,4)
 };
 struct s1 {
+    /*
+     c n n n
+     i i i i
+     c n n n
+     */
     char c1;
-    int a; /// 按4对齐 (1+3,4,1+3)
+    int i; /// 按4对齐 (1+3,4,1+3)
     char c2;
 };
 struct s2 {
-    char c1[3]; /// 实践证明,char[5] char[8]对齐单位还是1,只不过实际大小才和5,8相关,例:这里随便加个int,就按4对齐
-    // short s;
-    // int i;
+    /*
+     i i i i
+     s s c c
+     c c c n
+     */
+    int i;
+    short s;
+    char c1[5]; /// 实践证明,char[5] char[8]对齐单位还是1,只不过实际大小才和5,8相关,例:这里随便加个int,就按4对齐
 };
 struct s3 {
-    /// 按8对齐 (5+1+2,4+4)
+    /*
+     c c c c
+     c n s s
+     i i i i
+     */
     char c1[5]; // 假设从0x0000到0x0004地址全被占用,因为有int,按4字节对齐,留白3字节(地址0x0005开始)
     short s; // short从哪里开始分配??0x0005还是0x0006开始??因为short地址必须是2的倍数,所以从0x0006开始,留白1字节(地址0x0005)
     int i;
@@ -75,15 +94,24 @@ void struct_nest()
 {
 #pragma pack(8)
     struct A {
-        short a;
-        int b;
+        /*
+         ss ss n  n  n n n n
+         ii ii ii ii n n n n
+         */
+        short ss;
+        int ii;
     };
     struct B {
-        char e[2];
-        int f; /// 指定8对齐 (1*2+4+2,8+8,8) 这里的int也是直接跟随在char数组后面,这里int地址就不是4的倍数
-        short g;
-        struct A j;
-        double i;
+        /*
+         c c i i i i s s
+         A
+         d d d d d d d d 
+         */
+        char c[2];
+        int i; /// 指定8对齐 (1*2+4+2,8+8,8) 这里的int也是直接跟随在char数组后面,这里int地址就不是4的倍数
+        short s;
+        struct A aa;
+        double d;
     };
     printf("B大小是%d \n", sizeof(struct B));fflush(stdout);
 }
@@ -106,7 +134,7 @@ void pragma_pack1()
 int main()
 {
     // @formatter:off
-    // sizeof_struct();
+    sizeof_struct();
     struct_nest();
     pragma_pack1();
     return 0;
