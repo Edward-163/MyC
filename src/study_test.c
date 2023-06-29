@@ -8,14 +8,6 @@
 /*
  
  */
-void test01()
-{
-    int i = -1;
-    // int i=3;
-    for (; i < sizeof(int); i++) {
-        printf("%d \n", i);fflush(stdout);
-    }
-}
 
 void test02()
 {
