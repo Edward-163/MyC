@@ -44,10 +44,22 @@ int union_litterEndian_bigEndian(){
     c.a=1;
     return c.b==1;
 }
-
+void sizeof_union(){
+    union U0{
+        unsigned int ui; /// 按4对齐 12
+        char c[9];
+    };
+    union U1{
+        double d; /// 按8对齐 16
+        char c[9];
+    };
+    printf("U0=%d \n",sizeof(union U0));fflush(stdout);
+    printf("U1=%d \n",sizeof(union U1));fflush(stdout);
+}
 int main()
 {
     // @formatter:off
+    sizeof_union();
     // int w = x.u.w; /// clion提示居然把w当做int??
     printf("%d \n",union_litterEndian_bigEndian());fflush(stdout);
     Test u1;
