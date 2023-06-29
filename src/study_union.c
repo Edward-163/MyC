@@ -14,7 +14,29 @@ typedef union {
     int i;
 }Test;
 
-int check(){
+struct {
+  union {
+      int t1;
+      int t2;
+      struct {
+        int p;
+        int q;
+      }w;
+  }u;
+  int i;
+}x;
+
+int union_litterEndian_bigEndian(){
+    /**
+     此union占4字节,软件编程知识中有介绍union
+     大字节序
+     0x 0 0 0 1
+     这4个字节代表int a;第一个字节代表char b,显然b==0
+
+     小字节序
+     ox 1 0 0 0
+     显然b==1
+     */
     union w{
         int a;
         char b;
@@ -26,21 +48,8 @@ int check(){
 int main()
 {
     // @formatter:off
-    /**
-     此union占4字节,软件编程知识中有介绍union
-     大字节序
-     0x 0 0 0 1
-     这4个字节代表int a;第一个字节代表char b,显然b==0
-
-     小字节序
-     ox 1 0 0 0
-     显然b==1
-     */
-    // printf("%d \n",check());fflush(stdout);
-
-    /// ?ж?32λ 64λ
-    printf("??????%dλ \n",8*sizeof(char*));fflush(stdout);
-    printf("??????%dλ \n",sizeof(unsigned long));fflush(stdout); // ?????,????:??win???? ???й??
+    // int w = x.u.w; /// clion提示居然把w当做int??
+    printf("%d \n",union_litterEndian_bigEndian());fflush(stdout);
     Test u1;
     printf("u1???????С: %d \n",sizeof(u1));fflush(stdout);
     return 0;
