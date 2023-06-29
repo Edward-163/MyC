@@ -17,7 +17,7 @@ void sizeof_bool(){
 void test(){
     char *str1="123456789";
     char str2[]="123456789";
-    printf("%d %d\n",sizeof(str1),sizeof(str2));fflush(stdout);
+    printf("指针=%d 数组名=%d\n",sizeof(str1),sizeof(str2));fflush(stdout);
 }
 int main()
 {
