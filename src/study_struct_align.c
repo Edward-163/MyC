@@ -27,6 +27,10 @@ double地址通常是8的倍数
 /// 以下n代表内存补齐填充空格
 // #pragma pack(2)
 // #pragma pack(1)
+struct s00 {
+    int i; 
+    char c[]; /// 不确定长度的数组一定要在结构体最后,放前面会报错,且sizeof计算时不会计算c的大小
+};
 struct s0 {
     /*
      c c n n
@@ -82,6 +86,7 @@ struct ss{
 
 void sizeof_struct()
 {
+    printf("s00大小是%d \n", sizeof(struct s0));fflush(stdout);
     printf("s0大小是%d \n", sizeof(struct s0));fflush(stdout);
     printf("s1大小是%d \n", sizeof(struct s1));fflush(stdout);
     printf("s2大小是%d \n", sizeof(struct s2));fflush(stdout);
