@@ -19,6 +19,7 @@ int main()
     int i=0;
     while(1){
         /// c11 泛型???
+        // unsigned int i1 = 0x80000000;
         // if(i>=0x80000000)break; // int 型 loop 和 unsigned int 型的 0x80000000 比较时会将类型提升为 unsigned int 型，所以最后 loop 可以等于 0x80000000 而正常退出
         if(i>=2147483648)break; // dead loop
         i++;
