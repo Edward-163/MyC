@@ -136,9 +136,19 @@ void pragma_pack1()
     };
     printf("B大小是%d \n", sizeof(struct A));fflush(stdout);
 }
+void IsPadding(){
+    #pragma pack(4)
+    typedef struct {
+        short s;
+        char c[6]; // 我错误认为会新起一行,4字节,然后下一行2字节,实际2个字节直接跟在s后面
+        int i;
+    }Abc;
+    printf("IsPadding: %d \n",sizeof(Abc));fflush(stdout);
+}
 int main()
 {
     // @formatter:off
+    IsPadding();
     sizeof_struct();
     struct_nest();
     pragma_pack1();
