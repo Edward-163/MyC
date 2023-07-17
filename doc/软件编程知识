@@ -18,7 +18,8 @@ void test01(){
 }
 答:sizeof返回unsigned,而有符号-1转无符号??,在计算机补码看来,32位1拉满了都,没谁会比这个??大0xFF FF FF FF
 
-混合运算    涉及 隐式转换
+混合运算    涉及 隐式转换 自动转换 
+https://blog.csdn.net/QCZTZSWT357/article/details/73350688#:~:text=1%20%E6%89%80%E6%9C%89%E6%AF%94int%E5%9E%8B%E5%B0%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%88%E5%8C%85%E6%8B%ACchar%2C%20unsigned%20char%2C%20short%2C%20unsigned%20short%EF%BC%89%E8%BD%AC%E6%8D%A2%E4%B8%BAint%E5%9E%8B%E3%80%82%20%E5%A6%82%E6%9E%9C%E8%BD%AC%E6%8D%A2%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%9A%E8%B6%85%E5%87%BAint%E5%9E%8B%E6%89%80%E8%83%BD%E8%A1%A8%E7%A4%BA%E7%9A%84%E8%8C%83%E5%9B%B4%E7%9A%84%E8%AF%9D%EF%BC%8C%E5%88%99%E8%BD%AC%E6%8D%A2%E4%B8%BAunsigned,short%E5%92%8Cint%E5%9E%8B%E6%97%B6%EF%BC%8C%E5%A6%82%E6%9E%9Cint%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%8F%AF%E4%BB%A5%E8%A1%A8%E7%A4%BA%E6%89%80%E6%9C%89%E7%9A%84unsigned%20short%E5%9E%8B%E7%9A%84%E8%AF%9D%EF%BC%8C%E5%88%99%E5%B0%86unsigned%20short%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BAint%E5%9E%8B%EF%BC%8C%E5%90%A6%E5%88%99%EF%BC%8Cunsigned%20short%E7%B1%BB%E5%9E%8B%E5%8F%8Aint%E5%9E%8B%E9%83%BD%E8%BD%AC%E6%8D%A2%E4%B8%BAunsigned%20int%E7%B1%BB%E5%9E%8B%E3%80%82%20...%20More%20items
 char short
 int
 unsigned Int
