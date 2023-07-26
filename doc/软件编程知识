@@ -60,9 +60,9 @@ inline是加在实现上，就算加在声明上，编译器也会忽略掉。�
 
 
 /// 必须是2的幂次
-_Aligns(12) unsigned int data;
 _Aligns(2) char data;
 _Aligns(3) char data;
+_Aligns(12) unsigned int data;
 _Aligns(16) unsigned int data;
 
 白盒测试各种覆盖
@@ -78,5 +78,20 @@ https://blog.csdn.net/qq_39722988/article/details/90411581
            a＝0（条件a>1的值为“假”）
            b＝5 （条件b>1的值为“真”）
            b＝0 （条件b>1的值为“假”）
+
+测试因子
+因子a==2 因子b==3 因子c==4
+EachChoice          最大因子数==4
+BaseChoice          因子累加-因子个数+1==9-3+1
+AllCombinations     因子累乘==24
+pairWise            最大因子*第二大因子==12
+
+vector size capacity C++
+size==实际元素个数
+capacity==最大容量==能够容纳的元素数量
+某个vector size=1 cap=2 去掉一个元素后size=1 cap还是=2
+
+
+
 
 

@@ -96,18 +96,28 @@ void test06()
 
 void test07()
 {
-
+    char *str="aa bbb cc";
+    int i=0;
+    int len=0;
+    char c;
+    /// 留意这个++ 正确答案7 10
+    while ((c = str[i++]) != '\0') {
+        if(c==' ')continue;
+        len++;
+    }
+    printf("len: %d i: %d\n",len,i);fflush(stdout);
 }
 
 int main()
 {
     // @formatter:off
+    test07();
     // test01();
     // test02();
     // test03();
     // test04();
     // test05();
-    test06();
+//    test06();
     return 0;
     // @formatter:on
 }
