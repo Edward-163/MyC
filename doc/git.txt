@@ -5,7 +5,7 @@ git-am ~/patch/0001-trival-patch.patch // 据说am会把多个提交信息合成
 其他
 .gitignore只能忽略未被track的文件，而git本地缓存。如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
 git rm --cached -r .
-git add . // add后面可以接目录
+git add XXXdir // 只会add目录下面untrack文件
 git commit -m 'update ignore'
 git commit --amend // 追加方便,一般后接git push -f
 
@@ -20,6 +20,9 @@ git checkout -b newName origin/master
 
 git cherry-pick 其他分支名 commmitId     // 从其他分支摘取一个commit,接到当前分支head后面
 git cherry-pick 其他分支名 commitA^..commitB     // 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
+
+git clean XXXdir -n // -n dryRun
+git clean XXXdir -f
 
 git clone ??.git /home/??   // git clone 最后可以指定目录名
 git clone ??.git D:\??
