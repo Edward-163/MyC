@@ -90,3 +90,83 @@ int main() {
     return 0;
     // @formatter:on
 }
+/*
+// 官方写的就是精简呀
+void swap(int* a,int* b){
+    int tmp=*a;
+    *a=*b;
+    *b=tmp;
+}
+int pop(int* heap,int* hsize){
+    int top=heap[1];
+    int last = heap[(*hsize)--];
+    heap[1]=last;
+    int paridx=1;
+    int leftsonidx;
+    int righsonidx;
+    while (true) {
+        leftsonidx=paridx<<1;
+        righsonidx=(paridx<<1)+1;
+        // 没儿子退出循环
+        if (leftsonidx > *hsize) {
+            break;
+        }
+        if (righsonidx <= *hsize) {
+            int biggeridx=heap[leftsonidx]>heap[righsonidx]?leftsonidx:righsonidx;
+            if(heap[biggeridx]>heap[paridx]){
+                swap(&heap[biggeridx],&heap[paridx]);
+                paridx=biggeridx;
+            } else{
+                break; // 两儿子没一个比老子大
+            }
+        }else{
+            if(heap[leftsonidx]>heap[paridx]){
+                swap(&heap[leftsonidx],&heap[paridx]);
+                paridx=leftsonidx;
+            }else{
+                break;
+            }
+        }
+    }
+    return top;
+}
+void push(int* heap,int pushed,int* hsize){
+    heap[++(*hsize)] = pushed;
+    int tmp=*hsize;
+    while(tmp>1 && heap[tmp]>heap[tmp>>1]){
+        swap(&heap[tmp], &heap[tmp>> 1]);
+        tmp>>=1; // step
+    }
+}
+int* craeteheap(int* stones,int stonesSize,int* hsize){
+    int *heap = malloc(sizeof(int) * (stonesSize + 1));
+    for (int i = 1; i <= stonesSize; ++i){
+        push(heap,stones[i-1],hsize);
+    }
+    return heap;
+}
+int lastStoneWeight(int* stones, int stonesSize){
+    if(stonesSize==1){
+        return stones[0];
+    }
+    if (stonesSize == 2) {
+        return abs(stones[0] - stones[1]);
+    }
+
+    int hsize=0;
+    int *heap = craeteheap(stones, stonesSize, &hsize);
+    int top;
+    int top2;
+    while(hsize>=2){
+        top=pop(heap,&hsize);
+        top2=pop(heap,&hsize);
+        if(top>top2){
+            push(heap,top-top2,&hsize);
+        }
+    }
+    if(hsize==0){
+        return 0;
+    }
+    return heap[1];
+}
+*/
