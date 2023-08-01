@@ -1,13 +1,11 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <ctype.h>
-#include <stdbool.h>
 // #include "uthash.h"
-#include "securec.h"
+//#include "securec.h"
 
-/*
+/**
+ -fsanitize=address -g
  */
 int g_max;
 int find(int* parent,int a){
@@ -70,7 +68,11 @@ int main()
     int acolsize=sizeof(arr[0])/sizeof(arr[0][0]);
     int* grid[asize];
     for (int i = 0; i < asize; ++i){
-        grid[i]=arr[i];
+        /// 我自己,compilerEx测不出来
+//        grid[i]=arr[i];
+        /// 大神,可以侧出来
+        grid[i]=(int*)malloc(sizeof(arr[i]));
+        memcpy(grid[i], arr[i], sizeof(arr[i]));
     }
     int gcolsize[]={acolsize};
     int ans = maxAreaOfIsland(grid,asize,gcolsize);
