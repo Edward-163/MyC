@@ -48,7 +48,29 @@ void PrintArrayD(int array[][3]) {
  现在回过头看看上图,再来好好想想arr[row]到底是啥,                      我觉得arr[row]是某个实际数组的首地址,所以本质的误会还是int*的理解,通常理解为数组,也可以理解为某个值的地址
 
  */
+
+void test(){
+    int arr[][2] = {{1, 2},{3, 4},{5,6}};
+    int row= sizeof(arr) / sizeof(arr[0]);
+    int col=sizeof(arr[0])/sizeof(arr[0][0]);
+    int* a[row];
+    int* b[row];
+    for (int i = 0; i < row; ++i){
+        a[i]=arr[i]; /// 静态指针数组
+        b[i]=malloc(sizeof(int*)*row); /// 动态指针数组
+        // b[i]=malloc(sizeof(arr[i]));
+        memcpy(b[i],arr[i],sizeof(arr[i]));
+    }
+    for (int r = 0; r < row; ++r){
+        for (int c = 0; c < col; ++c){
+            printf("%p-%p \n",&a[r][c],&b[r][c]);fflush(stdout);
+        }
+    }
+    printf("%p \n",&a[0][2]);fflush(stdout); /// 下标越界(不推荐这么写),但是因为arr内存连续,a这个数组的内存也是连续的
+    printf("%p \n",&a[1][0]);fflush(stdout);
+}
 int main() {
+    test();
     int arr[][3]={{1,2,3},{4,5,6}};
     PrintArrayA(arr);fflush(stdout);
 
