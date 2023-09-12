@@ -70,8 +70,10 @@ git push --set-upstream origin <远程分支名>            // 注意: 中间是
 // 自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
 // 添加官方远程源
 git remote add origin_o https链接或者ssh链接
-// 抓取官方仓库所有分支的更新,需要特定分支可以在origin_o后面加上
+// 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支
 git fetch origin_o
+// 需要特定分支可以在origin_o后面加上
+git fetch origin_o branchXXX
 // 额外:抓取后fork的origin和官方的origin_o分支进度不一样,我想用官方全覆盖fork怎么办呢?
 
 // 把自己12个补丁"追加"到自己的最新的远程,需要用到rebase,待补充rebase动图
