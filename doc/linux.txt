@@ -42,6 +42,10 @@ source /etc/profile
 
 find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
 
+fsck
+fsck -y /dev/sda
+fsck -nf /dev/sda // -n表示以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 -f表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
+
 grep 高级实操
 背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
