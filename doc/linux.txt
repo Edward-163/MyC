@@ -74,6 +74,7 @@ iostat -dx 1 // 每1秒刷新一次,无效刷
 journalctl
 journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
 应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
+journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
 
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
