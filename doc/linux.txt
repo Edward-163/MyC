@@ -8,6 +8,14 @@ rc 代表run command,类似的还有~/.vimrc 我喜欢默认加上:set nu hls
 &&  第一个命令退出码0才执行第二个命令,以此类推
 确认I层内存总体使用量，命令：cd /sys/fs/cgroup/memory/system.slice/fsp && cat memory.usage_in_bytes && cat memory.limit_in_bytes
 
+chage -l root
+Last password change					: Nov 10, 2023
+Password expires					: Feb 08, 2024
+Password inactive					: never
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 90
+Number of days of warning before password expires	: 7
 
  
 chown root:root b.txt // 改变文件的所有者:所有者组
