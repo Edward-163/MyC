@@ -86,11 +86,15 @@ journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记
 
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
--o 后面接逗号分割options
-remount选项代表重新挂
-ro选下来代表只读
+-o 后面接逗号分割options,remount选项代表重新挂,ro选下来代表只读,整体意思是:将一个已经挂下的档案系统重新用不同的方式挂上。例如原先只读的系统，现在以可读写的模式重新挂上
 
--o remount：将一个已经挂下的档案系统重新用不同的方式挂上。例如原先是唯读的系统，现在用可读写的模式重新挂上。
+mpstat [-P {|ALL}] [internal [count]]
+参数 解释
+-P {|ALL} 表示监控哪个CPU， cpu在[0,cpu个数-1]中取值
+internal 相邻的两次采样的间隔时间、
+count 采样的次数，count只能和delay一起使用
+mpstat -P 8,9,10,11 2 // 每个两秒,监视cpu8,9,10,11的数据
+
 
 pgrep
 pgrep ssh // 只展示ssh进程的pid
