@@ -8,6 +8,13 @@ rc 代表run command,类似的还有~/.vimrc 我喜欢默认加上:set nu hls
 &&  第一个命令退出码0才执行第二个命令,以此类推
 确认I层内存总体使用量，命令：cd /sys/fs/cgroup/memory/system.slice/fsp && cat memory.usage_in_bytes && cat memory.limit_in_bytes
 
+/etc/passwd
+bin:x:1:1:bin:/bin:/sbin/nologin // 7列
+logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的shell程序
+真实密码在/etc/shadow中,加密串,不是明文,好像也没啥卵用
+/sbin/nologin 或者 /bin/false 代表禁止此用户默认登录
+
+
 chage -l root
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
