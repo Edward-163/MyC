@@ -3,7 +3,7 @@ xshell工具 选项 键盘和鼠标 选择 勾选"自动粘贴剪贴板" "字符
 # shell终端提示符一般表示root
 $ 一般表示非root
 
-5.2.1   进程列表
+5.2.1   进程列表 () 
 直接敲bash或者执行shell脚本都会创建子shell来直接,还有一个创建子shell的方法是进程列表,使用方式用()把多个命令括起来,如
 (commandA;commandB)     // 会创建子shell来执行这两个命令
 
@@ -64,6 +64,9 @@ d3=$(uname -r)
 
 <
 重定向输入,文件输入到命令,如cat < /etc/passwd效果和cat /etc/passwd是相同的
+
+// 左边 < 代表左边接受从右边输入，右边 <(command) 代表右边shell(子shell)命令的输出，将输出输出到左边
+source set_env < <(echo 1;echo 10086)
 
 命令 << 分界符	表示从标准输入设备（键盘）中读入，直到遇到分界符才停止（读入的数据不包括分界符），这里的分界符其实就是自定义的字符串
 [root@localhost ~]# cat << 0
