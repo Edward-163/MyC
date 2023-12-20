@@ -2,8 +2,21 @@
 
 字符串 单双引号都算
 
-str = "aa bb"
+str = " aa bb "
 print(str.title()) # Aa Bb
 print(str.upper())
 print(str.lower())
+print(str.lstrip()) # 去掉左侧空白,str内容不变
+print(str.rstrip()) # 去掉右侧空白
+print(str.strip())
 
+print(3**2) # 3^2==9
+print(10/3) # 3.33333
+
+[] 列表 元素逗号分割
+list=['a','b']
+list.append('c')
+list.insert(3,'d')
+print(list)
+print(list.pop()) # 弹出并返回栈顶元素d
+print(list.pop(0)) # 弹出并返回idx==0的元素
