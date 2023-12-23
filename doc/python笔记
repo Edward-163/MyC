@@ -42,3 +42,14 @@ new_list=list[:]
 
 元组==不可变列表
 
+字典
+dict={'key0':'val0'} # 值可以是py任何对象
+dict['key1']='val1'
+dict['key0']='val00'
+del dict['key0']
+for key,val in dict.items():
+for key in sorted(dict.keys()):
+for val in set(dict.values()):
+
+
+
