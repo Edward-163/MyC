@@ -51,5 +51,27 @@ for key,val in dict.items():
 for key in sorted(dict.keys()):
 for val in set(dict.values()):
 
+# 船体给函数的是实参的副本,而不是原件
+def func(list[:]):
+
+# 传递任意数量实参给函数,适用于我不知道这个函数应该接收几个实参,干脆就写*param了
+def func(*param):
+def func(size, *param):
+
+# 你写个a.py,里面有很多函数,现在你只想导入特定的函数
+from module_name import func_name
+from a import spec_func
+或者
+import a as aa
+aa.spec_func()
+
+类
+class dog():
+  def __init__(self): # self必不可少,且位置最前
+    XXX
+  def XXX
+    xxx
+
+
 
 
