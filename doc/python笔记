@@ -72,6 +72,20 @@ class dog():
   def XXX
     xxx
 
+文件
+with open('dir\a.txt') as file_obj: # win环境是反斜杠 \
+  content = file_obj.read() # 读取整个文件
+  print(content)
+
+with open('dir\a.txt') as file_obj: # win环境是反斜杠 \
+  for line in file_obj
+    print(rstrip(line) # 每行末尾有换行符,print输出也会默认加换行符,所以rstrip
+
+with open('dir\a.txt','w') as file_obj: # 初级理解py的w写入模式==覆盖写
+  file_obj.write("abc \n ")
+
+
+
 
 
 
