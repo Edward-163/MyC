@@ -92,6 +92,7 @@ ip link set eth5 vf 4 rate 1000  这条命令具体什么意思?
 这条命令的意思是将物理网卡 eth5 的第 4 个虚拟网卡的带宽限制为 1000 Mbps。其中，ip link set 是设置网络接口的命令，eth5 是物理网卡的名称，vf 4 表示要设置的是第 4 个虚拟网卡，rate 1000 表示设置带宽限制为 1000 Mbps
 
 
+
 iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
 iostat -dx 1 // 每1秒刷新一次,无效刷
 -d 只显示disk统计信息
@@ -102,6 +103,20 @@ journalctl
 journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
 应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
 journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
+
+ldconfig
+ldconfig 命令用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配置文件 /etc/ld.so.conf 内所列的目录下，搜索出可共享的动态链接库（格式如 lib*.so*），进而创建出动态链接器（ld.so 或 ld-linux.so）所需的缓存文件。缓存文件默认为 /etc/ld.so.cache，此文件保存已排好序的动态链接库名字列表。为了让动态链接库为系统所共享，需运行动态链接库的管理命令 ldconfig 更新动态链接库的缓存文件。
+附
+/proc/sys/vm/drop_caches 是一个系统文件，它允许用户在 Linux 操作系统中清除内核缓存。这个文件包含一个整数，它控制哪些缓存应该被清除。具体来说，这个整数的值可以是以下之一：
+- 0：什么都不清除(默认)
+- 1：清除页缓存。
+- 2：清除目录项和inode缓存。  dentries and inodes   如何理解dentries??
+- 3：同时清除页缓存、目录项和inode缓存。
+---
+echo 3>/proc/sys/vm/drop_caches
+rm -f /etc/ld.so.cache
+ldconfig
+---
 
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
