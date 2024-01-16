@@ -129,6 +129,12 @@ internal 相邻的两次采样的间隔时间、
 count 采样的次数，count只能和delay一起使用
 mpstat -P 8,9,10,11 2 // 每个两秒,监视cpu8,9,10,11的数据
 
+netstat
+localAddr   本地地址和端口
+foreignAddr 远程地址和端口
+state       常见 established listen(首先服务端需要打开一个socket进行监听，状态为LISTEN./*The socket is listening for incoming connections. 侦听来自远方TCP端口的连接请求)
+-p   多展示一列 pid/programName
+-n   上面两个地址替换成ip
 
 pgrep
 pgrep ssh // 只展示ssh进程的pid
