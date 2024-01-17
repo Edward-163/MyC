@@ -146,6 +146,12 @@ pgrep -l ssh // -l 展示 pid 和 processName
 /proc/meminfo |grep -i huge*
 /proc/mounts
 
+/proc/pidXXX/oom_score   // 只读,系统计算出来
+/proc/pidXXX/oom_adj    // 老参数,作用是兼容
+/proc/pidXXX/oom_score_adj // 
+Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会在系统内存耗尽的情况下跳出来，选择性的干掉一些进程以求释放一些内存。具体的记录日志是在/var/log/messages中，如果出现了Out of memory字样，说明系统曾经出现过OOM
+oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
+
 ps查找进程时顺保留首行
 ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
 ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
@@ -183,9 +189,11 @@ tar -zxvf  ?.gz  -C  ./
 top命令   动态检测进程运行状态
 有点特殊,直接敲top,帮张信息按h查看,但似乎没用??
 top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)降序
+按1  查看所有cpu占用详情
 按P  根据cpu排序
 按E  切换K M G T
-按1  查看所有cpu占用详情
+按f  自定义top展示字段
+
 
 ulimit
 ulimit // 直接查看core文件大小,返回unlimited代表core文件大小无限制
