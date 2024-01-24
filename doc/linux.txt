@@ -47,6 +47,10 @@ df -h // disk free
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
+ethtool
+ethtool -i eth0 // 显示网卡eth0的驱动信息
+ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
+
 // export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
 // 在 shell 中执行程序时，shell 会提供一组环境变量。export 可新增，修改或删除环境变量，供后续执行的程序使用。export 的效力仅限于该次登陆操作。
 linux配置path,全用户有效,举例:配置rust的path
