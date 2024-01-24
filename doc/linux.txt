@@ -1,4 +1,6 @@
-通用配置文件      /etc/profile.d/
+/etc/profile.d/
+包含系统级别脚本,用户登录时被执行
+
 个人配置文件      ~/.bashrc           敲alias展示结果来源于此
 `~/.bashrc` 是 Bash shell 的配置文件，它包含了一些用户自定义的环境变量、别名、函数和命令等。当用户登录到一个 Bash shell 时，Bash 会自动执行 `~/.bashrc` 文件中的命令，
 以设置用户的环境变量和自定义命令等。这个文件通常用于设置用户的个性化环境，比如设置命令别名、添加 PATH 环境变量、定义 shell 函数等。
@@ -15,7 +17,7 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 /sbin/nologin 或者 /bin/false 代表禁止此用户默认登录
 
 
-chage -l root
+chage -l root // list account info
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
 Password inactive					: never
