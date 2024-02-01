@@ -77,7 +77,8 @@ git fetch origin_o branchXXX
 // 额外:抓取后fork的origin和官方的origin_o分支进度不一样,我想用官方全覆盖fork怎么办呢?
 
 // 把自己12个补丁"追加"到自己的最新的远程,需要用到rebase,待补充rebase动图
-// 多分支变基,找出当前分支和origin_o/dev分支的共同祖先节点,从此点开始提取当前分支的提交,并追加到origin_o/dev分支的末尾(有瑕疵,虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,可以完美解决问题,但这行文字表达有瑕疵!!!)
+// 多分支变基,默认当前分支和origin_o/dev分支的共同祖先节点,提取(此节点,当前分支尾提交点],并嫁接到origin_o/dev的尾节点(作为新的祖先节点)后
+// 虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
 git rebase -i origin_o/dev
 
 // 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
