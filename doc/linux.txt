@@ -153,7 +153,13 @@ pgrep -l ssh // -l 展示 pid 和 processName
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
 /proc/cmdline
 /proc/meminfo |grep -i huge*
+
 /proc/mounts
+cat /proc/mounts |grep root
+rootfs / rootfs rw 0 0
+/dev/mapper/cpsVG-rootfs / ext4 rw,relatime,i_version,stripe=64,data=ordered,data_err=abort 0 0
+fileSys 挂载点 fs类型如ext4 挂载选项 dump备份表示(0不备份,1备份) pass(FS检查顺序,0不检查,1第一个检查,n第n个检查)
+
 
 /proc/pidXXX/oom_score   // 只读,系统计算出来
 /proc/pidXXX/oom_adj    // 老参数,作用是兼容
