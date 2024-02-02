@@ -52,6 +52,7 @@ du -hs * // 显示当前目录,每个子项的大小
 ethtool
 ethtool -i eth0 // 显示网卡eth0的驱动信息
 ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
+link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
 
 // export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
 // 在 shell 中执行程序时，shell 会提供一组环境变量。export 可新增，修改或删除环境变量，供后续执行的程序使用。export 的效力仅限于该次登陆操作。
@@ -86,7 +87,7 @@ ip a show eth0
 10: eth0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1800 qdisc mq master trunk2 state UP group default qlen 1000
     link/ether a4:6d:a4:90:3d:5e brd ff:ff:ff:ff:ff:ff
 10          编号10,从1开始没啥好说的
-UP          表明eth0被启动,逻辑上
+UP          表明eth0被启动,逻辑上 // 例如有次pxe报错dhclient enpXXX failure,ip a show显示这个enpXXX网卡呢没有up,lower_up,只能通过ethtool查看这个网卡的2层链路状态
 LOWER_UP    表明eth0物理链路上已连接
 mtu==max trans unit最大传输单元   单位是字节
 qlen 1000    接收队列的长度为1000
