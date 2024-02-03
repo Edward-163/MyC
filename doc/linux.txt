@@ -99,12 +99,14 @@ ip link set eth5 vf 4 rate 1000  这条命令具体什么意思?
 这条命令的意思是将物理网卡 eth5 的第 4 个虚拟网卡的带宽限制为 1000 Mbps。其中，ip link set 是设置网络接口的命令，eth5 是物理网卡的名称，vf 4 表示要设置的是第 4 个虚拟网卡，rate 1000 表示设置带宽限制为 1000 Mbps
 
 
-
+iostat
 iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
-iostat -dx 1 // 每1秒刷新一次,无效刷
+iostat -dx 1 // 每1秒刷新一次,一直刷
 -d 只显示disk统计信息
 -m 已 MB 单位显示
 -x 展示拓展信息
+rKB/s    读带宽
+aqu-sz   待处理io队列大小,平均值
 
 journalctl
 journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
@@ -161,6 +163,8 @@ rootfs / rootfs rw 0 0
 /dev/mapper/cpsVG-rootfs / ext4 rw,relatime,i_version,stripe=64,data=ordered,data_err=abort 0 0
 fileSys 挂载点 fs类型如ext4 挂载选项 dump备份表示(0不备份,1备份) pass(FS检查顺序,0不检查,1第一个检查,n第n个检查)
 
+/proc/net/bonding/trunkXXX
+speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
 
 /proc/pidXXX/oom_score   // 只读,系统计算出来
 /proc/pidXXX/oom_adj    // 老参数,作用是兼容
