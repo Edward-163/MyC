@@ -127,6 +127,9 @@ rm -f /etc/ld.so.cache
 ldconfig
 ---
 
+lsof  list open file
+如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
+
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
 -o 后面接逗号分割options,remount选项代表重新挂,ro选下来代表只读,整体意思是:将一个已经挂下的档案系统重新用不同的方式挂上。例如原先只读的系统，现在以可读写的模式重新挂上
@@ -229,6 +232,9 @@ cat /proc/sys/kernel/core_pattern
 uname
 uname -a // unixName 通常带-a 显示系统信息(内核版本啥的)
 uname -r // 直接查看内核版本
+
+/var/log/secure
+密码的改动会被记录,如 password changed for XXX
 
 // 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
 who
