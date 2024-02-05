@@ -1,3 +1,8 @@
+
+/etc/fstab
+磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
+根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
+
 /etc/profile.d/
 包含系统级别脚本,用户登录时被执行
 
@@ -129,6 +134,8 @@ ldconfig
 
 lsof  list open file
 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
+lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
+lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
@@ -253,11 +260,11 @@ netstat -tunlp 49208
 sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
-/etc/fstab
-磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
-根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了。
-
 timeout -s KILL 600 reboot // 执行reboot命令(或其他脚本),只让他执行600s,超过600s后向命令(或脚本)发送-s KILL 信号
+
+wc
+wc -l XXX.txt // 常见的统计行数
+XXX |wc -l
 
 zgrep -a "TLS handshake" ./logdump*
 -a, --text
