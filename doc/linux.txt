@@ -1,6 +1,11 @@
+sed(stream editor相比于vim文本编辑器就不多解释了吧),sed每次读取一行到它自己缓冲区,然后在缓冲区做操作,最后输出
+基本格式 sed s/oldStr/replacement/flags
+// -i代表直接修改源文件(看情况加), s代表substitute替换脚本
+sed -i 's/is a/is not a/g' /home/a.txt
+
+
 awk
-awk将一行分成多段来处理,第一段$1,第二段$2
-// -F 指定冒号为分隔符
+// awk将一行分成多段来处理, -F 指定冒号为分隔符第一段$1,第二段$2
 awk -F ":" '{print $1,$2}' /etc/passwd
 // 先去掉grep子进程本身,然后查询cpustat.py的pid
 ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
