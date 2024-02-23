@@ -154,6 +154,8 @@ lsof  list open file
 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
 lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
+lsof -p 10086 // 查询指定进程打开的文件
+lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX或者为空的行,去掉tid为空的行的统计结果才是进程打开的文件行
 
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
@@ -193,6 +195,8 @@ fileSys 挂载点 fs类型如ext4 挂载选项 dump备份表示(0不备份,1备�
 
 /proc/net/bonding/trunkXXX
 speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
+
+/proc/pidXXX/fs // ls /proc/pidXXX/fd |wc -l 这种也能统计进程打开的文件数
 
 /proc/pidXXX/oom_score   // 只读,系统计算出来
 /proc/pidXXX/oom_adj    // 老参数,作用是兼容
@@ -243,6 +247,8 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 
 
 ulimit
+ulimit -a // 强烈推荐这个
+ open files // 进程打开的文件数量限制
 ulimit // 直接查看core文件大小,返回unlimited代表core文件大小无限制
 ulimit -c 1 // 设置core文件大小,单位blocks,block==1024字节
 ulimit -c unlimited // 设置core文件大小无限制
