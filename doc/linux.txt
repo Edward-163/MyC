@@ -63,6 +63,8 @@ iflag=direct 绕开fs的缓存
 oflag=direct
 
 df -h // disk free
+df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
+
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
