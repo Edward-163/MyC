@@ -81,7 +81,13 @@ export PATH="$PATH:~/.cargo/bin"
 export -p //列出当前的环境变量值
 source /etc/profile
 
+find
 find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
+// -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
+find / -xdev -name \*.rpm
+// %h 根据linux manual是目录的意思,下面命令分两行完成!!!大致意思:遍历/home下每个文件,但是呢,只打印目录+换行
+find /home -printf '%h
+'
 
 fsck
 通常修分区4步
@@ -235,6 +241,10 @@ size hello.o
 [root@localhost test]# size hello.o
    text	   data	    bss	    dec	    hex	filename
     115	     80	      0	    195	     c3	hello.o
+
+sort
+// 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
+sort | uniq -c
 
 // -C 指定解压后目录
 tar -zxvf  ?.gz  -C  ./
