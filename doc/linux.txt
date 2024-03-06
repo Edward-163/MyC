@@ -91,8 +91,7 @@ find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev
 // -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
 find / -xdev -name \*.rpm
 // %h 根据linux manual是目录的意思,下面命令分两行完成!!!大致意思:遍历/home下每个文件,但是呢,只打印目录+换行
-find /home -printf '%h
-'
+find /home -printf '%h\n' |sort|uniq -c|sort -k 1 -n
 
 fsck
 通常修分区4步
