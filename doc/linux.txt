@@ -221,6 +221,18 @@ ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
 ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
 ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相同
 
+pushd popd dirs 目录栈
+// 往目录栈top压入 /home 并切到此目录
+pushd /home
+// 往目录栈top压入 /tmp 并切到此目录
+pushd /tmp
+dirs // 展示目录栈 /tmp /home
+// 不指定参数，则会回到前一个目录，类似cd - ,并把目录栈top的两个目录作交换
+pushd 
+dirs // 展示目录栈 /home /tmp
+// 弹出/home,那不就是切到/tmp
+popd
+
 realpath 某文件 // 显示文件路径
 
 rpm
