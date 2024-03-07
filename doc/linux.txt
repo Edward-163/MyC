@@ -38,6 +38,8 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 真实密码在/etc/shadow中,加密串,不是明文,好像也没啥卵用
 /sbin/nologin 或者 /bin/false 代表禁止此用户默认登录
 
+/etc/sysconfig/network-scripts/ifcfg-eth0 // 默认网卡配置文件 <linux系统命令及shell脚本实践指南> 6章 网络管理
+
 
 chage -l root // list account info
 Last password change					: Nov 10, 2023
