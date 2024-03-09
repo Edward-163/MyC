@@ -110,7 +110,7 @@ fsck
 umount mountPoint
 fsck -nf /dev/sda // -n表示以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 -f表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
 fsck -y /dev/sda
-mount /dev/sda mountPoint
+mount /dev/sda mountPoint // umount的时候,当前目录不要在挂载点内!!!
 
 
 grep 高级实操
