@@ -278,7 +278,7 @@ size hello.o
 sort
 // 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
 sort | uniq -c
-// -t 指定字段分隔符 -k 指定第三列排序 -n 按数组升序
+// -t 指定字段分隔符 -k 指定第三列排序 -n 按数字升序
 sort -t ':' -k 3 -n /etc/passwd
 
 // -C 指定解压后目录
