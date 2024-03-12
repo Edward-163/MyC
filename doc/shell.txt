@@ -1,5 +1,7 @@
 xshell工具 选项 键盘和鼠标 选择 勾选"自动粘贴剪贴板" "字符只"       剩下的就是shift双击可以实现复制大段连续字符串
 
+shell脚本编程大全
+
 # shell终端提示符一般表示root
 $ 一般表示非root
 
@@ -47,28 +49,35 @@ echo -n "不要换行,date结果会输出在右侧"
 date
 
 
-变量
-局部自定义变量 当前shell中生效,其他shell中不生效,随当前shell消失
+环境变量 分为 局部,全局 不同书文字描述还不统一,哎
+// 指定名字查看变量值
+printenv HOME
+env HOME
+
+局部变量 当前shell中生效,其他shell中不生效,随当前shell消失
 // 注意等号左右不能空格,直接赋值,使用变量时前面也要加个$,如$var ${var} 后者可以这么写但不推荐
 var=1   // 直接写就当赋值成功
 va2="hyj"
-
 // local局部变量,仅函数内使用
 function fun(){
     local module=
     ...
 }
-
 // 查看当前环境变量,而在环境变量名前面加个$就可以使用它,注意脚本中会把$??替换掉,所以想特意打印美元符,$前面还要加\
 set
 
-环境变量==全局变量 当前shell及子shell中生效   $var
+全局变量 当前shell及子shell中生效   $var
 // 设置环境变量
 export key=val
 // 取消环境变量
 unset key
 
-
+数组变量
+arrname=(1 2 3)
+unset arrname[1] // 注意,删了某个值后值为空,后面的值并不会前移
+arrname[1]=22
+echo ${arrname[idx]}
+echo ${arrname[*]} // 显示整个数组
 
 
 '' 单引号 中任何字符原样输出,单引号中str中变量无效
