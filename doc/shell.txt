@@ -157,14 +157,15 @@ then
     commands
 fi
 
-12.4 test condition 条件成立,退出并返回退出码0,若不写条件or不成立,则退出码非0
+12.4 test condition 测试退出码之外的条件 数字比较 字符串比较 文件比较
+// 条件成立,退出并返回退出码0,若不写条件or不成立,则退出码非0 
 var=""
 test $var
 echo $? // var值为空,退出码==1,var值非空,退出码==0
 
-----------方括号 []
+----------方括号 [] 注意必须有2空格 [空格XXX空格]
 bash shell提供方括号,代替test
-if [condition]
+if [ condition ]
 then
     commands
 fi
@@ -172,7 +173,7 @@ fi
 test中数值(只能整形比较)比较  注意:[ ]内部的前后要加空格!!!
 if [ $var -gt 5 ]
 
-test支持字符串的比较
+12.4.2 字符串的比较
 if [-n $str1] // 检查长度是否非0
 if [-z $str1] // 检查长度是否0
 if [-x $file] // 检查文件可执行?
@@ -183,7 +184,12 @@ elif [ -f "$file" ]; then
 else
    echo "does not exist"
 fi
-字符串顺序比较时 > < 必须转义
+// 字符串顺序比较时 > < 必须转义 !!!!!!!!!!!!!!!!!!!
+if [ $str \> $str2 ]
+
+12.4.3 文件比较
+if [ -d file ] // 目录
+if [ -f file ] // 文件
 
 test复合条件
 if [] && []
