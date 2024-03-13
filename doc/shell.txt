@@ -190,23 +190,37 @@ if [ $str \> $str2 ]
 12.4.3 文件比较
 if [ -d file ] // 目录
 if [ -f file ] // 文件
+if [ -s file ] // 文件非空返true
 
-test复合条件
+12.5 复合条件
 if [] && []
 if [] || []
 
-------------12.6 if then 高级
-((高级数学表达式))
-[[高级字符串表达式]]    // bashShell支持较好
+------------12.6 if then 高级特性
+12.6.1 双括号 双方括号
+((高级数学表达式)) // 高级数学表达式
+[[高级字符串表达式]]    // 字符串比较的高级特性 bashShell支持较好
+[[ $str==h* ]]
 
 --------case命令
 case var in
     pattern1 | pattern2) command1;;
     pattern3) command2;;
-    *) command3;;
+    *) default command3;;
+esac
+case $USER in
+rich | barbara)
+    echo "Welcome, $USER"
+    echo "Please enjoy your visit";;
+testing)
+    echo "Special testing account";;
+jessica)
+    echo "Do not forget to log off when you're done";;
+*)
+    echo "Sorry, you are not allowed here";;
 esac
 
--------for
+13.1 for
 for var in list
 do
     commands
