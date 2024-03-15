@@ -170,7 +170,7 @@ then
     commands
 fi
 
-test中数值(只能整形比较)比较  注意:[ ]内部的前后要加空格!!!
+test 数字比较(只能整形比较) 注意:[ ]内部的前后要加空格!!!
 if [ $var -gt 5 ]
 
 12.4.2 字符串的比较
@@ -244,7 +244,7 @@ do
    commands
 done
 
--------while 测试命令退出码0,则循环一次
+13.3.1 while 测试命令退出码0,则循环一次
 while test command
 do
     other commands
@@ -252,7 +252,7 @@ done
 
 注意 while 多条测试命令多行的情况
 
---------util 测试命令退出码非0,则循环一次 和while相反
+13.4 util 测试命令退出码非0,则循环一次 和while相反
 
 13.6中我注意到了IFS=$'\n'    IFS=:   换行作为ifs为啥多了$'
 IFS=$'\n' // 这才是真正的换行符
@@ -260,6 +260,8 @@ IFS="\n" // 将字符n作为IFS的换行符
 IFS=$"\n" // 等价上面
 https://www.cnblogs.com/yang29643/p/15029309.html
 
+13.7 break n 不写n就是默认1,退出当前循环,n=2就是下一层外部循环,类推
+     continue n 类似
 
 -----------从自定义user.csv文件中创建多个用户
 #!/bin/bash
