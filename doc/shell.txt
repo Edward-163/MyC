@@ -177,20 +177,14 @@ if [ $var -gt 5 ]
 if [-n $str1] // 检查长度是否非0
 if [-z $str1] // 检查长度是否0
 if [-x $file] // 检查文件可执行?
-if [ -s "$file" ]; then // -s检查文件是否存在
-   echo "exists and it is not empty"
-elif [ -f "$file" ]; then
-   echo "at least exists"
-else
-   echo "does not exist"
-fi
 // 字符串顺序比较时 > < 必须转义 !!!!!!!!!!!!!!!!!!!
 if [ $str \> $str2 ]
 
 12.4.3 文件比较
-if [ -d file ] // 目录
-if [ -f file ] // 文件
-if [ -s file ] // 文件非空返true
+if [ -e file ] // 是否存在,你看看下面 -e感觉没啥用,都被下面代替掉了
+if [ -d file ] // 是否存在并是个目录
+if [ -f file ] // 是否存在并是个文件
+if [ -s file ] // 是否存在并文件非空          
 
 12.5 复合条件
 if [] && []
