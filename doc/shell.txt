@@ -293,9 +293,16 @@ getopt ab:cd -a -b test1 -cd test2 test3
 optstring定义了四个有效选项字母：a、b、c和d。冒号（:）被放在了字母b后面，因为b
 选项需要一个参数值
 
+14.6.1 read命令     有点类似scanf,从标准输入读取数据,放入变量中
+echo -n "pls input " // -n 代表字符串后面不默认加换行符
+read name
+echo "$name"
+// -t 5 代表等待5秒 -p "XXX" 代表自定义提示字符串
+read -t 5 -p "pls input " name
+// -n1 代表接收到1个字符后read命令退出
+read -n1 -p "pls input " resule
 
 
----------read命令     有点类似scanf,从标准输入读取数据,放入变量中
 #!/bin/bash
 cat txt | while read line
 do
