@@ -109,6 +109,7 @@ expr 5 \* 2     // 输出10
 
 11.7.2 $[] 将数学运算结果赋给变量
 var=$[1+5]
+var=$[ $var+1 ] // +1 以后见得多??
 
 -------------bc
 scale=4 // 默认0,保留小数点后4位
@@ -302,7 +303,7 @@ read -t 5 -p "pls input " name
 // -n1 代表接收到1个字符后read命令退出
 read -n1 -p "pls input " resule
 
-
+14.6.4 每次调read会读取一行,没内容时,read非零退出码
 #!/bin/bash
 cat txt | while read line
 do
