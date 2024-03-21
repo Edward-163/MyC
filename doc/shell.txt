@@ -310,15 +310,25 @@ do
     echo "line's content: $line"
 done
 
-
---------只重定向错误
+15.1 重定向
+bashShell 保留了前三个文件描述符0 1 2
+只重定向错误
 ll stderr 2> stderr.txt // 若stderr文件不存在,会报错no such file,重定向>前的数字代表标准错误STDERR(它的fd是2),意味着错误时,stderr.txt内才还会有内容
 
-临时重定向
-echo "err info" > &2 // 将错误信息重定向到STDERR
+// 特殊重定向 $> 把stderr stdout重定向到同一文件中
+ls XXX $> a.txt
 
-永久重定向
-exec 1 > txt01 // exec命令会启动一个新shell并将STDOUT文件描述符重定向到文件。脚本中发给STDOUT的所有输出会被重定向到文件。
+15.2 临时重定向 重定向到fd时,必须在fd前面加 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+echo "err info" >&2 // 将错误信息重定向到STDERR
+
+15.2.2 永久重定向
+exec 1> txt01 // exec命令会启动一个新shell并将STDOUT文件描述符重定向到文件。脚本中发给STDOUT的所有输出会被重定向到文件。
+
+15.3 重定向输入
+exec 0< a.txt
+
+15.4.5 关闭文件描述符
+exec 3>&-
 
 
 >	将标准输出重定向到文件
