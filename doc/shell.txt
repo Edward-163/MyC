@@ -356,3 +356,6 @@ trap echo "ctrl C sig interrupt" SIGINT // 当收到SIGINT时,执行其他命令
 16.1.4 捕获脚本退出
 trap "when exit " EXIT // 似乎书写位置没要求??
 XXX
+
+17.2.3
+实测函数名后面需要空格!!!!!!!!!!!!!!
