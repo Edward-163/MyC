@@ -377,3 +377,27 @@ source 还有个别名 .  点操作符
 17.7.2
 bash每次启动时会在主目录下查找.bashrc文件,自定义函数丢这里面
 
+
+
+19.1
+sed(stream editor相比于vim文本编辑器就不多解释了吧),sed每次读取一行到它自己缓冲区,然后在缓冲区做操作,最后输出
+基本格式 sed option script file
+script举个例子 s/oldStr/replacement/flags
+// -i代表直接修改源文件(看情况加), s代表substitute替换脚本,
+sed -i 's/is a/is not a/g' /home/a.txt
+// -e 执行多个命令可以用-e
+sed -e 's/big/Big;s/small/Small' /home/a.txt
+// 命令多到需要额外一个脚本文件来记录 script.sed
+sed -f script.sed /home/a.txt
+
+
+awk 从输入中读取一行文本,然后针对该行执行program
+格式 awk option program file
+program举例 '{print $1,$2}' // $0整个文本行,文本行第一段$1,第二段$2
+// awk将一行分成多段来处理, -F 指定冒号为分隔符
+awk -F ":" '{print $1,$2}' /etc/passwd
+// 先去掉grep子进程本身,然后查询cpustat.py的pid
+ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
+// 执行program前后
+echo "name" |awk 'BEGIN{print "b---"};{print $0};END{print "e---"}'
+
