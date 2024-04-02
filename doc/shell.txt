@@ -383,11 +383,11 @@ bash每次启动时会在主目录下查找.bashrc文件,自定义函数丢这�
 sed(stream editor相比于vim文本编辑器就不多解释了吧),sed每次读取一行到它自己缓冲区,然后在缓冲区做操作,最后输出
 基本格式 sed option script file
 script举个例子 s/oldStr/replacement/flags
-// -i代表直接修改源文件(看情况加), s代表substitute替换脚本,
+// -i 代表in-place        直接修改源文件(看情况加), s代表substitute替换脚本,
 sed -i 's/is a/is not a/g' /home/a.txt
-// -e 执行多个命令可以用-e
+// -e 代表expression      执行多个命令可以用-e
 sed -e 's/big/Big;s/small/Small' /home/a.txt
-// 命令多到需要额外一个脚本文件来记录 script.sed
+// -f 代表file            命令多到需要额外一个脚本文件来记录 script.sed
 sed -f script.sed /home/a.txt
 
 
@@ -401,3 +401,42 @@ ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
 // 执行program前后
 echo "name" |awk 'BEGIN{print "b---"};{print $0};END{print "e---"}'
 
+19.2.1
+// 这个功能好呀,临时用其他符号代替 / 
+sed 's!/bin/bash!/bin/csh' /etc/passwd
+
+19.2.2
+// [2,3] 锁定2行~3行    把3换成 $ 代表最后一行 
+sed '2,3s/data/dota' /home/a.txt
+// 文本模式过滤 过滤出含hyj的行,再后续替换
+sed '/hyj/s/bash/csh' /etc/passwd
+
+i 前插
+a 后加
+c 修改
+
+19.2.6 单字符转换
+// 按照映射关系 1->7 2->8
+sed 'y/12/78' /home/a.txt
+
+19.2 这些内容感觉都不错,但就是平时用得少,导致读起来
+
+19.2.8
+//  显示a.txt,但是在其第三行之后,临时加上b.txt的内容
+sed '3r b.txt' a.txt
+// 文本模式匹配 如下
+sed '/line tail/r b.txt' a.txt
+
+20.2.2
+尽管 \ 不是正则特殊字符,但在sed和awk中还是需要转义
+
+
+20.2.6
+// 如果能理解区间取反,就应该能理解取反字符组[^012]是啥意思了
+echo "a b 1 2" | sed -n '/[^0-9]/p'
+
+
+20.3.3
+// 重启使用regular expression 通常称为间隔interval     -r --re-interval
+echo "boot" |awk '/bo{1}t/{print $0}' // o只能出现一次,因此不匹配无输出
+echo "boot" |awk '/bo{1,2}t/{print $0}' // o至少出现一次,至多2次,因此匹配有输出
