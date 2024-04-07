@@ -440,3 +440,19 @@ echo "a b 1 2" | sed -n '/[^0-9]/p'
 // 重启使用regular expression 通常称为间隔interval     -r --re-interval
 echo "boot" |awk '/bo{1}t/{print $0}' // o只能出现一次,因此不匹配无输出
 echo "boot" |awk '/bo{1,2}t/{print $0}' // o至少出现一次,至多2次,因此匹配有输出
+
+21.3
+h pattern space覆盖到hold space
+H pattern space追加到hold space
+g 反过来覆盖
+G 反过来追加
+x 交换
+
+21.5.1
+// & 等同于前面pattern
+echo "is a cat" |sed 's/.at/"&"' // .cat 匹配到了cat,那么&就等同于cat
+
+21.5.2
+// ()定义替换模式中的子模式 第一个子模式\1 第二个字模式\2
+echo "the sys adm" |sed 's/\(sys\) adm/\1 user' // 
+
