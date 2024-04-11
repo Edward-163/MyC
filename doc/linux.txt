@@ -171,6 +171,12 @@ lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 lsof -p 10086 // 查询指定进程打开的文件
 lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX或者为空的行,去掉tid为空的行的统计结果才是进程打开的文件行
 
+mkfs 
+// 在设备sda上创建文件系统==格式化分区
+mkfs /dev/sda
+// 在设备sdb上创建ext4类型文件系统
+mkfs.ext4 /dev/sdb
+
 mount
 mount -o remount,ro /dev/mapper/cpsVG-image
 -o 后面接逗号分割options,remount选项代表重新挂,ro选下来代表只读,整体意思是:将一个已经挂下的档案系统重新用不同的方式挂上。例如原先只读的系统，现在以可读写的模式重新挂上
