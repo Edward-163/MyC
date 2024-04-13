@@ -8,6 +8,16 @@ bg 1
 // 或者一开始指定后台运行 &
 tar -zcf usr.gz /usr &
 
+cpio 
+把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
+// -o代表归档或者创建
+ll /home/ | cpio -o > a.cpio
+// -i带条提取,-d代表必要时自动创建目录,但我自己试过创建X.cpio并提取,似乎对源目录没啥子影响,也没什么打印,所以一时半会看不出cpio的意义是啥
+cpio -id a.cpio
+// 提取rpm包中文件
+rpm2cpio X.rpm | cpio -idv
+
+
 curl is a tool for transferring data from or to a server using URLs
 // -g 允许url可以包含{}[]
 // -k --insecure不安全,大概就是跳过验证步骤
