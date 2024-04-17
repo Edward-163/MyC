@@ -23,6 +23,9 @@ curl is a tool for transferring data from or to a server using URLs
 // -k --insecure不安全,大概就是跳过验证步骤
 curl -gk https://XXX
 
+date
+// 根据str设置时间
+date -s "2024-04-17 10:18:50" // 主机时间莫名其妙被改了,可以手动改回来
 
 /etc/fstab
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
@@ -207,6 +210,10 @@ state       常见 established listen(首先服务端需要打开一个socket进
 -t   tcp协议
 -u   udp协议
 -l   display listening server sockets
+
+ntp network time protocol
+// 列出时钟源
+ntpq -p 
 
 pgrep
 pgrep ssh // 只展示ssh进程的pid
