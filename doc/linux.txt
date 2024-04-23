@@ -107,6 +107,8 @@ find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev
 find / -xdev -name \*.rpm
 // %h 根据linux manual是目录的意思,下面命令分两行完成!!!大致意思:遍历/home下每个文件,但是呢,只打印目录+换行
 find /home -printf '%h\n' |sort|uniq -c|sort -k 1 -n
+// %s代表文件bytes大小 %p代表文件名字
+find /var/log -type f -printf '%s %p\n' |sort -n
 
 fsck
 通常修分区4步
