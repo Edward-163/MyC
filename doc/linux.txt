@@ -217,6 +217,12 @@ ntp network time protocol
 // 列出时钟源
 ntpq -p 
 
+osi七层    简化4层
+应用层 定义客户端与服务端数据交换方式 如http ftp
+传输层 定义数据传输方法,主要两种协议 tcp udp 举例http的数据包不允许丢失,因此采用tcp来传输
+网络层 使用ip定位目标计算机,采用route决定数据传输路径
+链路层 可能是eth,光前fiber,无线网
+
 pgrep
 pgrep ssh // 只展示ssh进程的pid
 pgrep -l ssh // -l 展示 pid 和 processName
