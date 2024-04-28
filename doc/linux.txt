@@ -203,14 +203,14 @@ internal 相邻的两次采样的间隔时间、
 count 采样的次数，count只能和delay一起使用
 mpstat -P 8,9,10,11 1 2 // 监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
 
-netstat
+netstat -tunp
 localAddr   本地地址和端口
 foreignAddr 远程地址和端口
 state       常见 established listen(首先服务端需要打开一个socket进行监听，状态为LISTEN./*The socket is listening for incoming connections. 侦听来自远方TCP端口的连接请求)
--p   多展示一列 pid/programName
--n   上面两个地址替换成ip
 -t   tcp协议
 -u   udp协议
+-n   numeric
+-p   多展示一列 pid/programName for socket
 -l   display listening server sockets
 
 ntp network time protocol
@@ -311,6 +311,9 @@ sort
 sort | uniq -c
 // -t 指定字段分隔符 -k 指定第三列排序(字典序?短,小,升序,平时使用总是按数字排序,所以-n少不了的) -n 按数字升序
 sort -t ':' -k 3 -n /etc/passwd
+
+sshd_config中的ListenAddress
+假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
 
 stat 输出中modify与change的区别
 modify`时间戳表示文件的内容最后一次被修改的时间，即文件内容的修改时间。
