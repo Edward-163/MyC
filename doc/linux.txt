@@ -9,7 +9,7 @@ bg 1
 tar -zcf usr.gz /usr &
 
 cgroup 
-memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,本值与top中res值接近)
+memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 
 cpio 
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
