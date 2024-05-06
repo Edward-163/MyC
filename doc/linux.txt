@@ -87,6 +87,7 @@ oflag=direct
 
 df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
+df -T // 打印fs类型
 
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
@@ -141,15 +142,14 @@ ip a
 ip是个很强的命令,有很多子命令如 ip addr      ip link      ip route 等
 ip a show eth0
 10: eth0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1800 qdisc mq master trunk2 state UP group default qlen 1000
-    link/ether a4:6d:a4:90:3d:5e brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::d84d:36ff:fec4:936/64 scope link 
+    link/ether a4:6d:a4:90:3d:5e brd ff:ff:ff:ff:ff:ff  // 该接口的MAC地址
+    inet6 fe80::d84d:36ff:fec4:936/64 scope link        // ipv6
        valid_lft forever preferred_lft forever
 10          编号10,从1开始没啥好说的
 UP          表明eth0被启动,逻辑上 // 例如有次pxe报错dhclient enpXXX failure,ip a show显示这个enpXXX网卡呢没有up,lower_up,只能通过ethtool查看这个网卡的2层链路状态
 LOWER_UP    表明eth0物理链路上已连接
 mtu==max trans unit最大传输单元   单位是字节
 qlen 1000    接收队列的长度为1000
-link/ether a4:6d:a4:90:3d:5e   该接口的MAC地址,不是ip,具体看上面inet4 inet6
 brd ff:ff:ff:ff:ff:ff   广播地址
 
 ip a s // 感觉这两个命令用来查询网卡信息,没区别呀...
