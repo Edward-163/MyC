@@ -312,6 +312,10 @@ size hello.o
    text	   data	    bss	    dec	    hex	filename
     115	     80	      0	    195	     c3	hello.o
 
+soft lockup 软锁  hard lockup 硬锁  触发panic机制
+软锁 cpu被内核代码占据
+硬锁 cpu被内核代码占据,且不响应中断
+
 sort
 // 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
 sort | uniq -c
