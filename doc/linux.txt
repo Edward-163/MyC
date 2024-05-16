@@ -192,6 +192,10 @@ lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 lsof -p 10086 // 查询指定进程打开的文件
 lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX或者为空的行,去掉tid为空的行的统计结果才是进程打开的文件行
 
+lspci
+lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,这出问题就是系统问题
+ll /sys/class/net // 驱动把pci设备识别成网卡,这出问题就是驱动问题
+
 mkfs 
 // 在设备sda上创建文件系统==格式化分区
 mkfs /dev/sda
