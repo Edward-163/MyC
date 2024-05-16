@@ -156,6 +156,8 @@ ip a s // 感觉这两个命令用来查询网卡信息,没区别呀...
 ip link set eth5 vf 4 rate 1000  这条命令具体什么意思?
 这条命令的意思是将物理网卡 eth5 的第 4 个虚拟网卡的带宽限制为 1000 Mbps。其中，ip link set 是设置网络接口的命令，eth5 是物理网卡的名称，vf 4 表示要设置的是第 4 个虚拟网卡，rate 1000 表示设置带宽限制为 1000 Mbps
 
+// 这个命令会显示vf配置在xml中的mac地址,ip a不行
+ip link show |grep XXX 
 
 iostat
 iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
