@@ -336,6 +336,14 @@ modify`时间戳表示文件的内容最后一次被修改的时间，即文件�
 change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间
 size 4096 linux中目录的size通常为4096,或者4096倍数?
 
+tar 
+// 压缩某个目录
+tar -cvf XXX.tar /home/*
+// 压缩多个文件
+tar -cvf XXX.tar /home/a.txt /home/b.txt
+// 解压
+tar -xvf XXX.tar
+// 压缩,解压 XXX.tar.gz的话,一般加个-z
 // -C 指定解压后目录
 tar -zxvf  ?.gz  -C  ./
 
