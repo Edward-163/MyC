@@ -348,11 +348,11 @@ tar -xvf XXX.tar
 tar -zxvf  ?.gz  -C  ./
 
 top    动态检测进程运行状态
-有点特殊,直接敲top,帮张信息按h查看,但似乎没用??
+有点特殊,直接敲top,帮助信息按h查看,但似乎没用??
 top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)降序
 按1  查看所有cpu占用详情
 按P  根据cpu排序
-按E  切换K M G T
+按E  切换K M G T // 注意 Mem前面会有单位变化,单位过小可能出现加号+现象(仅仅是数字太大又展示不全,所以出现加号)    XXX+ total,     XXX+ free,     XXX+ buff
 按f  自定义top展示字段
 res resident内存大小 
 
