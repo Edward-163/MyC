@@ -75,6 +75,12 @@ chown root:root b.txt // 改变文件的所有者:所有者组
 chown root a.txt //
 chown :root c.txt //
 
+ldd 
+// 列出某程序所需动态链接库(.so)
+// 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
+ldd /lib/systemd/systemd
+
+
 linux 2个特殊的文件 /dev/null /dev/zero
 /dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
 /dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
