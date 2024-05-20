@@ -1,3 +1,7 @@
+blkid 
+// 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
+blkid /dev/sda
+
 jobs bg fg & ctrl+Z 后台
 // 假设很耗时,ctrl+Z暂停此任务
 tar -zcf usr.gz /usr 
