@@ -30,6 +30,11 @@ curl is a tool for transferring data from or to a server using URLs
 // -k --insecure不安全,大概就是跳过验证步骤
 curl -gk https://XXX
 
+echo 
+// echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
+// 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
+echo -n "末尾不自动加换行,本str会直接输出在右侧"
+
 date
 // 根据str设置时间
 date -s "2024-04-17 10:18:50" // 主机时间莫名其妙被改了,可以手动改回来
