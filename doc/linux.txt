@@ -205,6 +205,11 @@ rm -f /etc/ld.so.cache
 ldconfig
 ---
 
+lvm.conf  filter
+// LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
+filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
+
+
 lsof  list open file
 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
@@ -223,8 +228,9 @@ mkfs /dev/sda
 mkfs.ext4 /dev/sdb
 
 mount
-mount -o remount,ro /dev/mapper/cpsVG-image
--o 后面接逗号分割options,remount选项代表重新挂,ro选下来代表只读,整体意思是:将一个已经挂下的档案系统重新用不同的方式挂上。例如原先只读的系统，现在以可读写的模式重新挂上
+// -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
+mount -o remount,rw /dev/mapper/cpsVG-image
+
 
 mpstat [-P {|ALL}] [internal [count]]
 参数 解释
