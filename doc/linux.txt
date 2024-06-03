@@ -362,6 +362,10 @@ modify`时间戳表示文件的内容最后一次被修改的时间，即文件�
 change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间
 size 4096 linux中目录的size通常为4096,或者4096倍数?
 
+sysctl 
+// 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
+sysctl -a |grep perf_event_max_sample_rate 
+
 tar 
 // 压缩某个目录
 tar -cvf XXX.tar /home/*
