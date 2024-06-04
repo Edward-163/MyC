@@ -88,6 +88,17 @@ ldd
 // 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
 ldd /lib/systemd/systemd
 
+iscsiadm 
+    iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
+    Iscsi initiator：使用target提供“磁盘”的客户端。
+// 查询当前主机登入的存储设备
+iscsiadm -m session
+// 查看当前主机上发现所有target
+iscsiadm -m node
+// 发现阵列ip==对端业务ip的目标
+iscsiadm -m discovery -t st -p XXX.XXX.X.X:XX
+
+
 
 linux 2个特殊的文件 /dev/null /dev/zero
 /dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
