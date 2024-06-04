@@ -409,7 +409,7 @@ useradd
 // -m 创建用户家目录
 useradd -m XXX
 passwd XXX
-
+vim /etc/ssh/sshd_config // AllowUsers行尾添加XXX
 systemctl restart sshd
 // -r 删除用户家目录和mail spool(卷轴,卷盘)
 userdel -r XXX
