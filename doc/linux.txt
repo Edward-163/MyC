@@ -405,6 +405,15 @@ uname
 uname -a // unixName 通常带-a 显示系统信息(内核版本啥的)
 uname -r // 直接查看内核版本
 
+useradd 
+// -m 创建用户家目录
+useradd -m XXX
+passwd XXX
+
+systemctl restart sshd
+// -r 删除用户家目录和mail spool(卷轴,卷盘)
+userdel -r XXX
+
 /var/log/secure
 密码的改动会被记录,如 password changed for XXX
 
