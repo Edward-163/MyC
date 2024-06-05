@@ -1,3 +1,6 @@
+// 举例:高版本仓某次提交,仅仅是给XX.c路径最外层加层目录(可能是处于梳理代码结构的目的),当你要把这个提交补丁打到低版本仓中,显然就会报错error: XXdir/XX.c: No such file or directory
+git apply --reject XXX.patch
+
 git-am之前， 你要首先git am –abort 一次，来放弃掉以前的am信息，这样才可以进行一次全新的am。 Apply a series of patches from a mailbox
 git-am 可以一次合并一个文件，或者一个目录下所有的patch，或者你的邮箱目录下的patch.
 git-am ~/patch/0001-trival-patch.patch // 据说am会把多个提交信息合成一个? apply则不会提交,待验证
@@ -13,6 +16,9 @@ git commit --amend // 追加方便,一般后接git push -f
 git bisect start 终点commit 起点commit //
 git bisect good/bad
 git bisect reset // quit
+
+// 删除本地XXX分支
+git branch -d XXX
 
 // origin/通常固定写法,后面才是远程分支名
 git checkout -b huawei/csi/euleros_virtual/v2r9/6.2.0  origin/huawei/csi/euleros_virtual/v2r9/6.2.0
