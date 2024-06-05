@@ -2,6 +2,7 @@
 // 解决: -p2 Remove <n> leading path components (separated by slashes) from traditional diff paths. E.g., with -p2, a patch against a/dir/file will be applied directly to file. The default is 1.
 // 我看完理解以为是-p1,去掉一层高版本dir,剩下的路径高低版本完全一样,以为能解决,实际还是报错,-p2才解决了
 git apply --reject XXX.patch -p2
+// XX.c文件改动了6出,上面命令打完后,所有改动全在.rej中   衍生问题:这么打没意义,现在还好是6处,万一是60处呢?这和手动挪修改有什么区别???
 
 git-am之前， 你要首先git am –abort 一次，来放弃掉以前的am信息，这样才可以进行一次全新的am。 Apply a series of patches from a mailbox
 git-am 可以一次合并一个文件，或者一个目录下所有的patch，或者你的邮箱目录下的patch.
