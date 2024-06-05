@@ -13,6 +13,7 @@ git-am ~/patch/0001-trival-patch.patch // 据说am会把多个提交信息合成
 git rm --cached -r .
 git add XXXdir // 只会add目录下面untrack文件
 git commit -m 'update ignore'
+// 修改最后一次提交的message,不涉及改代码
 git commit --amend // 追加方便,一般后接git push -f
 
 
@@ -92,6 +93,9 @@ git rebase -i origin_o/dev
 
 // 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
 git rebase -i HEAD~2
+
+// 修改某次提交的代码,pick改edit,剩下的看帮助提示也不难
+git rebase -i commitId~1
 
 git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir(工作区)
 git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
