@@ -449,7 +449,12 @@ netstat -tunlp 49208
 sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
-timeout -s KILL 600 reboot // 执行reboot命令(或其他脚本),只让他执行600s,超过600s后向命令(或脚本)发送-s KILL 信号
+timeout    
+// Usage: timeout [OPTION] DURATION COMMAND [ARG]...
+// -s代表发送signal 如果600s内reboot命令没执行完,则发送 KILL 信号,终止reboot命令
+timeout -s KILL 600 reboot 
+// ping会一直ping的,下面这个就很好理解,让它ping 2秒后就kill掉
+timeout -s KILL 2 ping www.baidu.com
 
 wc
 wc -l XXX.txt // 常见的统计行数
