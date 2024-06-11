@@ -274,6 +274,10 @@ pgrep
 pgrep ssh // 只展示ssh进程的pid
 pgrep -l ssh // -l 展示 pid 和 processName
 
+pkill 
+// 通过进程名字杀进程  -f 代表full process name 
+pkill -9 -f /usr/XXX.py
+
 
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
 /proc/cmdline
