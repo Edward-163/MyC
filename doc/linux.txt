@@ -221,12 +221,15 @@ lvm.conf  filter
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 
 
-lsof  list open file
+lsof 
+// list open file
 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
 lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 lsof -p 10086 // 查询指定进程打开的文件
 lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX或者为空的行,去掉tid为空的行的统计结果才是进程打开的文件行
+// -t 仅输出pid,通常与kill配合使用,https://www.man7.org/linux/man-pages/man8/lsof.8.html
+lsof -t /var/log 
 
 lspci
 lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,这出问题就是系统问题
@@ -435,7 +438,19 @@ userdel -r XXX
 // 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
 who
 
-/etc/yum.repo.d/??.repo
+xargs 
+// 给命令传递参数,怎么传递的就很迷
+// 常常用来umount前杀进程
+lsof -t /var/log |xargs kill -9 
+// 多行输出
+lsof -t /var/log |xargs cat
+// 一行输出
+lsof -t /var/log |xargs ll
+// 多行输出
+lsof -t /var/log |xargs ls -s 
+
+yum 
+// 配置仓库/etc/yum.repo.d/??.repo
 yum search git
 yum install git
 yum list installed |grep git*
