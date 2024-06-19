@@ -2,8 +2,6 @@ blkid
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
 
-
-
 cgroup 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 
@@ -24,16 +22,6 @@ curl -gk https://XXX
 
 
 
-date 
-// 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
-date -s "2024-04-17 10:18:50"
-// display time described by STRING, not 'now',官方举例如下,1970至今秒数
-date -d'@2147483647'
-date --date='@2147483647'
-
-
-
-
 chage -l root // list account info
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
@@ -49,9 +37,12 @@ chown root a.txt //
 chown :root c.txt //
 
 
-
-
-
+date 
+// 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
+date -s "2024-04-17 10:18:50"
+// display time described by STRING, not 'now',官方举例如下,1970至今秒数
+date -d'@2147483647'
+date --date='@2147483647'
 
 
 /dev/null 
@@ -59,6 +50,7 @@ chown :root c.txt //
 // linux 2个特殊的文件 
 /dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
 /dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
+
 
 dd命令
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
@@ -69,6 +61,7 @@ obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字�
 bs=bytes：同时设置读入/输出的块大小为bytes个字节。
 iflag=direct 绕开fs的缓存
 oflag=direct
+
 
 df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
