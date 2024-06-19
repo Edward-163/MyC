@@ -2,15 +2,7 @@ blkid
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
 
-jobs bg fg & ctrl+Z 后台
-// 假设很耗时,ctrl+Z暂停此任务
-tar -zcf usr.gz /usr 
-// 展示任务,不出意外上述任务编号为1
-jobs
-// 后台运行任务1号,fg类似
-bg 1
-// 或者一开始指定后台运行 &
-tar -zcf usr.gz /usr &
+
 
 cgroup 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
@@ -30,10 +22,7 @@ curl is a tool for transferring data from or to a server using URLs
 // -k --insecure不安全,大概就是跳过验证步骤
 curl -gk https://XXX
 
-echo 
-// echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
-// 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
-echo -n "末尾不自动加换行,本str会直接输出在右侧"
+
 
 date 
 // 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
@@ -41,6 +30,57 @@ date -s "2024-04-17 10:18:50"
 // display time described by STRING, not 'now',官方举例如下,1970至今秒数
 date -d'@2147483647'
 date --date='@2147483647'
+
+
+
+
+chage -l root // list account info
+Last password change					: Nov 10, 2023
+Password expires					: Feb 08, 2024
+Password inactive					: never
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 90
+Number of days of warning before password expires	: 7
+
+ 
+chown root:root b.txt // 改变文件的所有者:所有者组
+chown root a.txt //
+chown :root c.txt //
+
+
+
+
+
+
+
+/dev/null 
+/dev/zero 
+// linux 2个特殊的文件 
+/dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
+/dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
+
+dd命令
+dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
+if      input file
+of      output file
+ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
+obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
+bs=bytes：同时设置读入/输出的块大小为bytes个字节。
+iflag=direct 绕开fs的缓存
+oflag=direct
+
+df -h // disk free
+df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
+df -T // 打印fs类型
+
+du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
+du -hs * // 显示当前目录,每个子项的大小
+
+echo 
+// echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
+// 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
+echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 /etc/fstab
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
@@ -68,58 +108,6 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 
 /etc/sysconfig/network-scripts/ifcfg-eth0 // 默认网卡配置文件 <linux系统命令及shell脚本实践指南> 6章 网络管理
 
-
-chage -l root // list account info
-Last password change					: Nov 10, 2023
-Password expires					: Feb 08, 2024
-Password inactive					: never
-Account expires						: never
-Minimum number of days between password change		: 0
-Maximum number of days between password change		: 90
-Number of days of warning before password expires	: 7
-
- 
-chown root:root b.txt // 改变文件的所有者:所有者组
-chown root a.txt //
-chown :root c.txt //
-
-ldd 
-// 列出某程序所需动态链接库(.so)
-// 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
-ldd /lib/systemd/systemd
-
-iscsiadm 
-    iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
-    Iscsi initiator：使用target提供“磁盘”的客户端。
-// 查询当前主机登入的存储设备
-iscsiadm -m session
-// 查看当前主机上发现所有target
-iscsiadm -m node
-// 发现阵列ip==对端业务ip的目标
-iscsiadm -m discovery -t st -p XXX.XXX.X.X:XX
-
-
-
-linux 2个特殊的文件 /dev/null /dev/zero
-/dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
-/dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
-
-dd命令
-dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
-if      input file
-of      output file
-ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
-obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
-bs=bytes：同时设置读入/输出的块大小为bytes个字节。
-iflag=direct 绕开fs的缓存
-oflag=direct
-
-df -h // disk free
-df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
-df -T // 打印fs类型
-
-du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
-du -hs * // 显示当前目录,每个子项的大小
 
 ethtool
 ethtool -i eth0 // 显示网卡eth0的驱动信息
@@ -197,6 +185,28 @@ iostat -dx 1 // 每1秒刷新一次,一直刷
 rKB/s    读带宽
 aqu-sz   待处理io队列大小,平均值
 
+iscsiadm 
+    iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
+    Iscsi initiator：使用target提供“磁盘”的客户端。
+// 查询当前主机登入的存储设备
+iscsiadm -m session
+// 查看当前主机上发现所有target
+iscsiadm -m node
+// 发现阵列ip==对端业务ip的目标
+iscsiadm -m discovery -t st -p XXX.XXX.X.X:XX
+
+
+jobs bg fg & ctrl+Z 后台
+// 假设很耗时,ctrl+Z暂停此任务
+tar -zcf usr.gz /usr 
+// 展示任务,不出意外上述任务编号为1
+jobs
+// 后台运行任务1号,fg类似
+bg 1
+// 或者一开始指定后台运行 &
+tar -zcf usr.gz /usr &
+
+
 journalctl
 journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
 应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
@@ -215,6 +225,11 @@ echo 3>/proc/sys/vm/drop_caches
 rm -f /etc/ld.so.cache
 ldconfig
 ---
+
+ldd 
+// 列出某程序所需动态链接库(.so)
+// 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
+ldd /lib/systemd/systemd
 
 lvm.conf  filter
 // LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
