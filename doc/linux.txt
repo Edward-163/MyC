@@ -224,6 +224,10 @@ ldd
 // 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
 ldd /lib/systemd/systemd
 
+ln 
+// ln -s target link_name
+
+
 lvm.conf  filter
 // LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
