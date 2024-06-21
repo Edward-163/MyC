@@ -246,6 +246,9 @@ lsof -t /var/log
 lspci
 lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,这出问题就是系统问题
 ll /sys/class/net // 驱动把pci设备识别成网卡,这出问题就是驱动问题
+// -v verbose   -s 指定domain bus device func号
+lspci -vvvs 0000:00:03.0
+lspci -vvvs 00:03.0
 
 mkfs 
 // 在设备sda上创建文件系统==格式化分区
