@@ -354,9 +354,16 @@ rpm -qR XXX
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
 
-rsync
-// -a代表归档 -v代表verbose 至于后面的 用户@ip:目录 类似scp -z代表压缩(网络传输时改善传输效率)
+rsync 
+// -r 递归 dir1下面有个a.txt 
+rsync -r /home/dir1/ /home/dir2/
+// -a 参数可以替代-r，除了可以递归同步以外，还可以同步元信息（比如修改时间、权限等） -a archive mode
+       The files are transferred in archive mode,
+       which ensures that symbolic links, devices, attributes,
+       permissions, ownerships, etc. are preserved in the transfer
+// -v 代表verbose 至于后面的 用户@ip:目录 类似scp -z代表压缩(网络传输时改善传输效率)
 rsync -avz /home/data root@172.X.X.X:/home/back/data
+
 
 scp
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
