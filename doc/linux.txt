@@ -290,6 +290,16 @@ osi七层    简化4层
 网络层 使用ip定位目标计算机,采用route决定数据传输路径
 链路层 可能是eth,光前fiber,无线网
 
+perf 
+// -g 记录调用栈
+// -C 0 指定cpu0
+perf top -g -C 0
+// 输出结果里idle可以忽略跳过,主要关注快慢节点上的区别 do_syscall,exc_page_fault
+do_syscall代表用户态切到内核执行系统调用,所以这个也是上层排查
+exc_page_fault跟内存分配强相关,慢环境上内存剩余约4g,快环境上内存剩余约15G,慢环境上大页占据约9G
+
+
+
 pgrep
 pgrep ssh // 只展示ssh进程的pid
 pgrep -l ssh // -l 展示 pid 和 processName
