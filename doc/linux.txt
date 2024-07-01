@@ -269,10 +269,11 @@ internal 相邻的两次采样的间隔时间、
 count 采样的次数，count只能和delay一起使用
 mpstat -P 8,9,10,11 1 2 // 监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
 
-netstat -tunp
-localAddr   本地地址和端口
-foreignAddr 远程地址和端口
+netstat 
+Local Address   本地地址和端口
+Foreign Address 远程地址和端口
 state       常见 established listen(首先服务端需要打开一个socket进行监听，状态为LISTEN./*The socket is listening for incoming connections. 侦听来自远方TCP端口的连接请求)
+-a   display all sockets
 -t   tcp协议
 -u   udp协议
 -n   numeric
@@ -319,10 +320,16 @@ speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
 Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会在系统内存耗尽的情况下跳出来，选择性的干掉一些进程以求释放一些内存。具体的记录日志是在/var/log/messages中，如果出现了Out of memory字样，说明系统曾经出现过OOM
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
-ps查找进程时顺保留首行
+ps 
+// 查看所有帮助
+ps --help a
 ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
 ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
 ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相同
+// -o   指定格式,后面单词(官网称之为format specifiers)不能写错
+// psr  表示进程运行的CPU编号
+// 查出cpu1上跑的进程
+ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'
 
 pushd popd dirs 目录栈
 // 往目录栈top压入 /home 并切到此目录
