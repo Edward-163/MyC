@@ -149,6 +149,10 @@ grep 高级实操
 -B3     // 多展示前面3行
 -C3     // 多展示后面前后各3行
 
+ifconfig 
+// -a 展示所有network interface,不加只展示激活的interface
+ifconfig -a
+
 ip a
 ip是个很强的命令,有很多子命令如 ip addr      ip link      ip route 等
 ip a show eth0
