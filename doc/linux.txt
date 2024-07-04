@@ -263,6 +263,7 @@ mkfs.ext4 /dev/sdb
 
 mount
 // -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
+// mount device|dir -o options  官网:写设备和写挂载点都可以
 mount -o remount,rw /dev/mapper/cpsVG-image
 
 
