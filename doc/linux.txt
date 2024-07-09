@@ -68,6 +68,10 @@ df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
 df -T // 打印fs类型
 
+dhclient 
+// 动态获取ip,并显示详细过程
+dhclient -v
+
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
