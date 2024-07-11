@@ -470,6 +470,10 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 按f  自定义top展示字段
 res resident内存大小  kB
 
+tune2fs 
+// 我常用来查看fs status:clean还是clean with errors
+tune2fs -l /dev/mapper/rootfs
+
 
 ulimit
 ulimit -a // 强烈推荐这个
