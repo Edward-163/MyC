@@ -160,6 +160,17 @@ ifconfig
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
 
+
+iostat
+iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
+iostat -dx 1 // 每1秒刷新一次,一直刷
+-d 只显示disk统计信息
+-m 已 MB 单位显示
+-x 展示拓展信息
+rKB/s    读带宽
+aqu-sz   待处理io队列大小,平均值
+
+
 ip a
 ip是个很强的命令,有很多子命令如 ip addr      ip link      ip route 等
 ip a show eth0
@@ -181,14 +192,17 @@ ip link set eth5 vf 4 rate 1000  这条命令具体什么意思?
 // 这个命令会显示vf配置在xml中的mac地址,ip a不行
 ip link show |grep XXX 
 
-iostat
-iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
-iostat -dx 1 // 每1秒刷新一次,一直刷
--d 只显示disk统计信息
--m 已 MB 单位显示
--x 展示拓展信息
-rKB/s    读带宽
-aqu-sz   待处理io队列大小,平均值
+
+iptables 
+// -v verbose
+// -n numeric
+// -L 列出[chain [rulenum]]
+iptables -vnL
+// -D 删除chain [rulenum]   删除名为input的chain中第二条rule
+iptables -D INPUT 2
+// 保存在/etc/sysconfig/iptables中
+service iptables save
+
 
 iscsiadm 
     iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
