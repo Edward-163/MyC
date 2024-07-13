@@ -75,6 +75,10 @@ dhclient -v
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
+e2fsck 
+// check a Linux ext2/ext3/ext4 file system
+
+
 echo 
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
 // 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
