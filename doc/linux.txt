@@ -249,6 +249,13 @@ rm -f /etc/ld.so.cache
 ldconfig
 ---
 
+
+killall 
+// -w Wait for all killed processes to die
+// 实操加不加前置路径都可以
+killall -w /sbin/dhclient
+
+
 ldd 
 // 列出某程序所需动态链接库(.so)
 // 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
