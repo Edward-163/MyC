@@ -293,11 +293,12 @@ mkfs /dev/sda
 // 在设备sdb上创建ext4类型文件系统
 mkfs.ext4 /dev/sdb
 
-mount
+mount 
 // -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
 // mount device|dir -o options  官网:写设备和写挂载点都可以
 mount -o remount,rw /dev/mapper/cpsVG-image
-
+// -R, --rbind             mount a subtree and all submounts somewhere else
+mount --rbind /proc proc/
 
 mpstat [-P {|ALL}] [internal [count]]
 参数 解释
@@ -424,7 +425,7 @@ rsync -r /home/dir1/ /home/dir2/
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 
-scp
+scp 
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
 scp -P 端口 github.cer 多文件空格分隔 9.13.7.128:/etc/pki/ca-trust/source/anchors/	
 // -r 递归整个目录 
@@ -434,6 +435,7 @@ scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/sour
 // 只要本机能ping通198,就能从198上远程拷贝日志到本机当前目录
 scp hyj@198.91.130.161:/home/hyj/a.log ./
 
+sh 
 sh -x // 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
 sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
