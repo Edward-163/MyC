@@ -44,6 +44,9 @@ git clone ??.git D:\??
 
 ubuntu上git默认的文本编辑器是nano，执行下面的命令将git的文本编辑器改为我们熟悉的vim
 git config --global core.editor vim
+// 仅为当前目录设置user.name user.email
+git config --local usern.name "XXX"
+git config --local usern.email "XXX"
 
 git diff    // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变-->index
 git diff --staged   // 查看staged changes 等同--cached 说白了查看 工作区-->index(中的改变)
