@@ -33,8 +33,8 @@ git branch -d XXX
 git checkout -b huawei/csi/euleros_virtual/v2r9/6.2.0  origin/huawei/csi/euleros_virtual/v2r9/6.2.0
 git checkout -b newName origin/master
 
-git cherry-pick 其他分支名 commmitId     // 从其他分支摘取一个commit,接到当前分支head后面
-git cherry-pick 其他分支名 commitA^..commitB     // 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
+git cherry-pick origin/branchXXX commmitId     // 从其他分支摘取一个commit,接到当前分支head后面
+git cherry-pick origin/branchXXX commitA^..commitB     // 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
 
 git clean XXXdir -n // -n dryRun
 git clean XXXdir -f
