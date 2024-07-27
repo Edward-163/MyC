@@ -395,11 +395,14 @@ sed -e 's/big/Big;s/small/Small' /home/a.txt
 sed -f script.sed /home/a.txt
 
 
-awk 从输入中读取一行文本,然后针对该行执行program
-格式 awk option program file
-program举例 '{print $1,$2}' // $0整个文本行,文本行第一段$1,第二段$2
-// awk将一行分成多段来处理, -F 指定冒号为分隔符
+awk 
+// 从输入中读取一行文本,然后针对该行执行program
+格式 awk option program file   ,program举例 '{print $1,$2}' 
+// -F 指定冒号为分隔符,awk将一行分成多段来处理, 
+// $0整个文本行,文本行第一段$1,第二段$2   下面输出逗号怎么空格了??
 awk -F ":" '{print $1,$2}' /etc/passwd
+// -F\'   太抽象了难以理解
+awk -F\' '{print $1"---"$2}' /etc/passwd
 // 先去掉grep子进程本身,然后查询cpustat.py的pid
 ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
 // 执行program前后
