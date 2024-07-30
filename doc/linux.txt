@@ -1,11 +1,13 @@
-blkid 
+我在每个命令后面加个2只是方便搜索
+
+blkid2
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
 
-cgroup 
+cgroup2 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 
-cpio 
+cpio2
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
 // -o代表归档或者创建
 ll /home/ | cpio -o > a.cpio
@@ -15,13 +17,14 @@ cpio -id a.cpio
 rpm2cpio X.rpm | cpio -idv
 
 
+curl2
 curl is a tool for transferring data from or to a server using URLs
 // -g 允许url可以包含{}[]
 // -k --insecure不安全,大概就是跳过验证步骤
 curl -gk https://XXX
 
 
-
+chage2
 chage -l root // list account info
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
@@ -31,13 +34,13 @@ Minimum number of days between password change		: 0
 Maximum number of days between password change		: 90
 Number of days of warning before password expires	: 7
 
- 
+chown2
 chown root:root b.txt // 改变文件的所有者:所有者组
 chown root a.txt //
 chown :root c.txt //
 
 
-date 
+date2
 // 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
 date -s "2024-04-17 10:18:50"
 // display time described by STRING, not 'now',官方举例如下,1970至今秒数
@@ -45,14 +48,14 @@ date -d'@2147483647'
 date --date='@2147483647'
 
 
-/dev/null 
-/dev/zero 
+/dev/null2
+/dev/zero2
 // linux 2个特殊的文件 
 /dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
 /dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
 
 
-dd 
+dd2
 // /dev/zero  /dev/null 在上面
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
 if      input file
@@ -64,31 +67,34 @@ iflag=direct 绕开fs的缓存
 oflag=direct
 
 
+df2
 df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
 df -T // 打印fs类型
 
-dhclient 
+dhclient2
 // 动态获取ip,并显示详细过程
 dhclient -v
 
+du2
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
-e2fsck 
+e2fsck2
 // check a Linux ext2/ext3/ext4 file system
 
 
-echo 
+echo2
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
 // 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
-/etc/fstab
+/etc/fstab2
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
 根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
 
-/etc/profile 全局配置文件,用户登录时会自动执行它
+/etc/profile2
+全局配置文件,用户登录时会自动执行它
 
 /etc/profile.d/
 包含系统级别脚本,用户登录时被执行
@@ -111,7 +117,7 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 /etc/sysconfig/network-scripts/ifcfg-eth0 // 默认网卡配置文件 <linux系统命令及shell脚本实践指南> 6章 网络管理
 
 
-ethtool
+ethtool2
 ethtool -i eth0 // 显示网卡eth0的驱动信息
 ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
 link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
@@ -124,7 +130,7 @@ export PATH="$PATH:~/.cargo/bin"
 export -p //列出当前的环境变量值
 source /etc/profile
 
-find
+find2
 find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
 // -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
 find / -xdev -name \*.rpm
@@ -136,10 +142,11 @@ find /home -printf '%h\n' | uniq -c |sort -k 1 -n
 // -type f 搜索regularFile   %s 文件bytes大小      -n numeric(默认升序) -k 1 指定第一列排序           "最大文件"
 find /var/log -type f -printf '%s %p\n' |sort -n -k 1
 
+free2
 free -m
 
 
-fsck
+fsck2
 通常修分区4步
 umount mountPoint
 fsck -nf /dev/sda // -n表示以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 -f表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
@@ -147,7 +154,7 @@ fsck -y /dev/sda
 mount /dev/sda mountPoint // umount的时候,当前目录不要在挂载点内!!!
 
 
-grep 高级实操
+grep2
 背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
 # error FIPS is disabled.
