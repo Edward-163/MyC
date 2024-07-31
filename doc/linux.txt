@@ -339,7 +339,8 @@ pageUp
 // 众所周知,上下键可以切换历史命令,
 // 举例:当你敲了ssh 然后pageUp时候,只会展示之前ssh相关的历史命令,好用!!!
 
-perf 
+
+perf2
 // -g 记录调用栈
 // -C 0 指定cpu0
 perf top -g -C 0
@@ -349,11 +350,12 @@ exc_page_fault跟内存分配强相关,慢环境上内存剩余约4g,快环境�
 
 
 
-pgrep
+pgrep2
 pgrep ssh // 只展示ssh进程的pid
 pgrep -l ssh // -l 展示 pid 和 processName
 
-pkill 
+
+pkill2
 // 通过进程名字杀进程  -f 代表full process name 
 pkill -9 -f /usr/XXX.py
 
@@ -379,7 +381,8 @@ speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
 Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会在系统内存耗尽的情况下跳出来，选择性的干掉一些进程以求释放一些内存。具体的记录日志是在/var/log/messages中，如果出现了Out of memory字样，说明系统曾经出现过OOM
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
-ps 
+
+ps2
 // 查看所有帮助
 ps --help a
 ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
@@ -389,6 +392,7 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
 // psr  表示进程运行的CPU编号
 // 查出cpu1上跑的进程
 ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'
+
 
 pushd popd dirs 目录栈
 // 往目录栈top压入 /home 并切到此目录
@@ -402,15 +406,19 @@ dirs // 展示目录栈 /home /tmp
 // 弹出/home,那不就是切到/tmp
 popd
 
+
+realpath2
 realpath 某文件 // 显示文件路径
 
-route
+
+route2
 A网络中设备想连B网络中设备,需要借助连接两个网络的某特殊设备发送packet,这个特殊设备叫网关 <shell脚本攻略 6章>
 路由表包含了packet如何转发的信息
 // -n代表numeric,
 route -n
 
-rpm
+
+rpm2
 rpm -qa // 查询所有包
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
 rpm -qi XXX.rpm // 查询包的info,用的较少
@@ -421,7 +429,7 @@ rpm -qR XXX
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
 
-rsync 
+rsync2
 // -r 递归 dir1下面有个a.txt 
 rsync -r /home/dir1/ /home/dir2/
 // -a 参数可以替代-r，除了可以递归同步以外，还可以同步元信息（比如修改时间、权限等） -a archive mode
@@ -432,7 +440,7 @@ rsync -r /home/dir1/ /home/dir2/
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 
-scp 
+scp2
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
 scp -P 端口 github.cer 多文件空格分隔 9.13.7.128:/etc/pki/ca-trust/source/anchors/	
 // -r 递归整个目录 
@@ -442,12 +450,14 @@ scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/sour
 // 只要本机能ping通198,就能从198上远程拷贝日志到本机当前目录
 scp hyj@198.91.130.161:/home/hyj/a.log ./
 
-sh 
+
+sh2
 sh -x // 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
 sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
 
-size命令
+
+size2
 size命令用于查看目标文件、库或可执行文件中各段及其总和的大小，是 GNU 二进制工具集 GNU Binutils 的一员。
 size hello.o
 [root@localhost test]# size hello.o
@@ -458,7 +468,7 @@ soft lockup 软锁  hard lockup 硬锁  触发panic机制
 软锁 cpu被内核代码占据
 硬锁 cpu被内核代码占据,且不响应中断
 
-sort
+sort2
 // 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
 sort | uniq -c
 // -t 指定字段分隔符 -k 指定第三列排序(字典序?短,小,升序,平时使用总是按数字排序,所以-n少不了的) -n 按数字升序
@@ -467,27 +477,28 @@ sort -t ':' -k 3 -n /etc/passwd
 sshd_config中的ListenAddress
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
 
-stat 输出中modify与change的区别
+stat2
+输出中modify与change的区别
 modify`时间戳表示文件的内容最后一次被修改的时间，即文件内容的修改时间。
 change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间
 size 4096 linux中目录的size通常为4096,或者4096倍数?
 
-su 
+su2
 // 不写用户,默认切root,环境变量还是当前用户的
 su 
 // 不写用户,默认切root,环境变量是root 用户的   https://www.cnblogs.com/linyfeng/p/13511945.html
 su -
 
-sudo 
+sudo2
 // sudo诞生前,su的缺点是要输入root密码,sudo使一般用户不需要知道超级用户的密码即可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，登记在特殊的文件中（通常是/etc/sudoers
 
 
 
-sysctl 
+sysctl2
 // 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
 sysctl -a |grep perf_event_max_sample_rate 
 
-tar 
+tar2
 // 压缩某个目录
 tar -cvf XXX.tar /home/*
 // 压缩多个文件
@@ -499,15 +510,15 @@ tar -xvf XXX.tar
 tar -zxvf  ?.gz  -C  ./
 
 
-tcpdump 
+tcpdump2
 // -v verbose -v -vv -vvv
 // -i 指定interface, -i any就是指定所有网口
 // -w 指定输出文件
 tcpdump -vvv -i any host XXX -w /home/a.pcap  
 
 
-top    动态检测进程运行状态
-有点特殊,直接敲top,帮助信息按h查看,但似乎没用??
+top2
+动态检测进程运行状态,有点特殊,直接敲top,帮助信息按h查看,但似乎没用??
 top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)降序
 按1  查看所有cpu占用详情
 按P  根据cpu排序
@@ -515,7 +526,7 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 按f  自定义top展示字段
 res resident内存大小  kB
 
-tune2fs 
+tune2fs2
 // 我常用来查看fs status:clean还是clean with errors
 tune2fs -l /dev/mapper/rootfs
 
