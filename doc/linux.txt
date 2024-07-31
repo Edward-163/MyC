@@ -130,6 +130,16 @@ export PATH="$PATH:~/.cargo/bin"
 export -p //列出当前的环境变量值
 source /etc/profile
 
+fdisk2
+manipulate disk partition table
+fdisk /dev/sda
+   n 新建一个新分区
+   p (新建主分区)
+   1 (使用第1个主分区)
+   两次回车(使用默认配置)
+   wq (保存分区表)
+
+
 find2
 find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
 // -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
@@ -277,7 +287,7 @@ lvm.conf  filter
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 
 
-lsof 
+lsof2
 // list open file
 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
@@ -287,26 +297,31 @@ lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX�
 // -t 仅输出pid,通常与kill配合使用,https://www.man7.org/linux/man-pages/man8/lsof.8.html
 lsof -t /var/log 
 
-lspci
+
+lspci2
 lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,这出问题就是系统问题
 ll /sys/class/net // 驱动把pci设备识别成网卡,这出问题就是驱动问题
 // -v verbose   -s 指定domain bus device func号
 lspci -vvvs 0000:00:03.0
 lspci -vvvs 00:03.0
 
-mkfs 
+
+mkfs2
 // 在设备sda上创建文件系统==格式化分区
 mkfs /dev/sda
 // 在设备sdb上创建ext4类型文件系统
 mkfs.ext4 /dev/sdb
 
-mount 
+
+mount2
 // -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
 // mount device|dir -o options  官网:写设备和写挂载点都可以
 mount -o remount,rw /dev/mapper/cpsVG-image
 // -R, --rbind             mount a subtree and all submounts somewhere else
 mount --rbind /proc proc/
 
+
+mpstat2
 mpstat [-P {|ALL}] [internal [count]]
 参数 解释
 -P {|ALL} 表示监控哪个CPU， cpu在[0,cpu个数-1]中取值
@@ -314,7 +329,8 @@ internal 相邻的两次采样的间隔时间、
 count 采样的次数，count只能和delay一起使用
 mpstat -P 8,9,10,11 1 2 // 监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
 
-netstat 
+
+netstat2
 Local Address   本地地址和端口
 Foreign Address 远程地址和端口
 state       常见 established listen(首先服务端需要打开一个socket进行监听，状态为LISTEN./*The socket is listening for incoming connections. 侦听来自远方TCP端口的连接请求)
@@ -325,9 +341,12 @@ state       常见 established listen(首先服务端需要打开一个socket进
 -p   多展示一列 pid/programName for socket
 -l   display listening server sockets
 
-ntp network time protocol
+
+ntp2
+network time protocol
 // 列出时钟源
 ntpq -p 
+
 
 osi七层    简化4层
 应用层 定义客户端与服务端数据交换方式 如http ftp
@@ -335,7 +354,8 @@ osi七层    简化4层
 网络层 使用ip定位目标计算机,采用route决定数据传输路径
 链路层 可能是eth,光前fiber,无线网
 
-pageUp 
+
+pageUp2
 // 众所周知,上下键可以切换历史命令,
 // 举例:当你敲了ssh 然后pageUp时候,只会展示之前ssh相关的历史命令,好用!!!
 
