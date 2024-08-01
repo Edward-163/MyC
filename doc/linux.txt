@@ -494,6 +494,14 @@ sort | uniq -c
 // -t 指定字段分隔符 -k 指定第三列排序(字典序?短,小,升序,平时使用总是按数字排序,所以-n少不了的) -n 按数字升序
 sort -t ':' -k 3 -n /etc/passwd
 
+
+ssh-keygen2
+// -C 为密钥添加注释,通常用于标识密钥的用途或所有者
+// -t 指定密钥类型,可选值为dsa、ecdsa、ed25519、rsa,默认为rsa   所以-t rsa没必要加了
+// 然后把id_rsa.pub的内容加到github中就行了
+ssh-keygen -C XXX@163.com
+
+
 sshd_config中的ListenAddress
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
 
