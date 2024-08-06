@@ -492,6 +492,12 @@ size hello.o
    text	   data	    bss	    dec	    hex	filename
     115	     80	      0	    195	     c3	hello.o
 
+
+sleep2
+// s m h d,秒分时天,不写默认单位秒
+sleep 2d
+
+
 soft lockup 软锁  hard lockup 硬锁  触发panic机制
 软锁 cpu被内核代码占据
 硬锁 cpu被内核代码占据,且不响应中断
