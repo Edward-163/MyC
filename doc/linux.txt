@@ -11,7 +11,8 @@ cpio2
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
 // -o代表归档或者创建
 ll /home/ | cpio -o > a.cpio
-// -i带条提取,-d代表必要时自动创建目录,但我自己试过创建X.cpio并提取,似乎对源目录没啥子影响,也没什么打印,所以一时半会看不出cpio的意义是啥
+// -i --extract  Extract files from an archive,[ˈɑːrkaɪv] n 档案;档案馆;档案室;档案文件;
+// -d 代表必要时自动创建目录,但我自己试过创建X.cpio并提取,似乎对源目录没啥子影响,也没什么打印,所以一时半会看不出cpio的意义是啥
 cpio -id a.cpio
 // 提取rpm包中文件,-v代表verbose
 rpm2cpio X.rpm | cpio -idv
@@ -456,6 +457,12 @@ rpm -ql openssh-client-XXX // 列出指定软件包的所有文件路径，包�
 rpm -qR XXX
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
+
+
+rpm2cpio2
+// 提取rpm包中文件,-v代表verbose
+rpm2cpio XXX.rpm | cpio -idv
+
 
 rsync2
 // -r 递归 dir1下面有个a.txt 
