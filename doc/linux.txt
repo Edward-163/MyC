@@ -547,6 +547,7 @@ sysctl2
 // 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
 sysctl -a |grep perf_event_max_sample_rate 
 
+
 tar2
 // 压缩某个目录
 tar -cvf XXX.tar /home/*
@@ -575,12 +576,13 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 按f  自定义top展示字段
 res resident内存大小  kB
 
+
 tune2fs2
 // 我常用来查看fs status:clean还是clean with errors
 tune2fs -l /dev/mapper/rootfs
 
 
-ulimit
+ulimit2
 ulimit -a // 强烈推荐这个
  open files // 进程打开的文件数量限制
 ulimit // 直接查看core文件大小,返回unlimited代表core文件大小无限制
@@ -594,11 +596,12 @@ cat /proc/sys/kernel/core_pattern
 %t  core掉的time
 
 
-uname
+uname2
 uname -a // unixName 通常带-a 显示系统信息(内核版本啥的)
 uname -r // 直接查看内核版本
 
-useradd 
+
+useradd2
 // -m 创建用户家目录
 useradd -m XXX
 passwd XXX
@@ -624,7 +627,8 @@ lsof -t /var/log |xargs ll
 // 多行输出
 lsof -t /var/log |xargs ls -s 
 
-yum 
+
+yum2
 // 配置仓库/etc/yum.repo.d/??.repo
 yum search git
 yum install git
@@ -636,27 +640,31 @@ yum clean all // 删除yum缓存中可用包和旧缓存,yum clean删除前者
 yum makecache // 生成缓存
 
 
-
+grep2
 grep "ip_local_reserved_ports" -nr /usr/lib		// -n 显示num  -r 递归目录
 lsof -i:49208  // 山哥说只要有输出,本机在用此端口,   770是指对端ip
 netstat -tunlp 49208
 sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
-timeout    
+
+timeout2
 // Usage: timeout [OPTION] DURATION COMMAND [ARG]...
 // -s代表发送signal 如果600s内reboot命令没执行完,则发送 KILL 信号,终止reboot命令
 timeout -s KILL 600 reboot 
 // ping会一直ping的,下面这个就很好理解,让它ping 2秒后就kill掉
 timeout -s KILL 2 ping www.baidu.com
 
-wc
+
+wc2
 wc -l XXX.txt // 常见的统计行数
 XXX |wc -l
 
-zgrep -a "TLS handshake" ./logdump*
--a, --text
-treat all files as text
+
+zgrep2
+// -a  --text equivalent to --binary-files=text      treat all files as text
+zgrep -an "TLS handshake" ./logdump*
+
 
 & 表示任务后台执行，与nohup命令功能差不多。   通常放在命令的末尾
 && 表示前一条命令执行成功时，才执行后一条命令。
