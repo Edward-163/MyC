@@ -4,8 +4,10 @@ blkid2
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
 
+
 cgroup2 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
+
 
 cpio2
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
@@ -186,12 +188,21 @@ grep2
 -B3     // 多展示前面3行
 -C3     // 多展示后面前后各3行
 
-ifconfig 
+
+hwlock2
+// rtc硬件时钟==hwlock -r       systemtime==date  
+// -r display rtc
+// -w 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
+// -s 反过来  set system time from rtc
+hwclock -w
+
+
+ifconfig2
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
 
 
-iostat
+iostat2
 iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
 iostat -dx 1 // 每1秒刷新一次,一直刷
 -d 只显示disk统计信息
