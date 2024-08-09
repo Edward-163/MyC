@@ -141,6 +141,12 @@ export PATH="$PATH:~/.cargo/bin"
 export -p //列出当前的环境变量值
 source /etc/profile
 
+
+faillock2
+// 重置用户登录失败次数
+faillock --user=root --reset
+
+
 fdisk2
 manipulate disk partition table
 fdisk /dev/sda
@@ -162,6 +168,7 @@ find /home/dir0 -printf '%p\n'
 find /home -printf '%h\n' | uniq -c |sort -k 1 -n
 // -type f 搜索regularFile   %s 文件bytes大小      -n numeric(默认升序) -k 1 指定第一列排序           "最大文件"
 find /var/log -type f -printf '%s %p\n' |sort -n -k 1
+
 
 free2
 free -m
