@@ -128,7 +128,7 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 /etc/sysconfig/network-scripts/ifcfg-eth0 // 默认网卡配置文件 <linux系统命令及shell脚本实践指南> 6章 网络管理
 
 
-ethtool2
+ethtool2 
 ethtool -i eth0 // 显示网卡eth0的驱动信息
 ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
 link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
@@ -142,12 +142,12 @@ export -p //列出当前的环境变量值
 source /etc/profile
 
 
-faillock2
+faillock2 
 // 重置用户登录失败次数
 faillock --user=root --reset
 
 
-fdisk2
+fdisk2 
 manipulate disk partition table
 fdisk /dev/sda
    n 新建一个新分区
@@ -157,7 +157,7 @@ fdisk /dev/sda
    wq (保存分区表)
 
 
-find2
+find2 
 find / -name uvp-getosstat -type d 2>/dev/null  // -type d只查找目录 2>/dev/null标准错误流向"无底洞",也就是丢弃错误信息
 // -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
 find / -xdev -name \*.rpm
@@ -166,15 +166,17 @@ find /home/dir0 -printf '%p\n'
 // %h 代表dirname且去掉了末尾的fileName(linux manual,理解了%p就能理解这个),下面命令分两行完成!!!大致意思:遍历/home下每个文件,但是呢,只打印目录+换行           "哪个目录inode占用多"
 // 每个文件或者目录都会占用一个inode条目
 find /home -printf '%h\n' | uniq -c |sort -k 1 -n
-// -type f 搜索regularFile   %s 文件bytes大小      -n numeric(默认升序) -k 1 指定第一列排序           "最大文件"
+// -type f 搜索regularFile   
+// %s 文件bytes大小      
+// -n numeric(默认升序) -k 1 指定第一列排序                                                                                                              "最大文件"
 find /var/log -type f -printf '%s %p\n' |sort -n -k 1
 
 
-free2
+free2 
 free -m
 
 
-fsck2
+fsck2 
 通常修分区4步
 umount mountPoint
 fsck -nf /dev/sda // -n表示以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 -f表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
@@ -182,7 +184,7 @@ fsck -y /dev/sda
 mount /dev/sda mountPoint // umount的时候,当前目录不要在挂载点内!!!
 
 
-grep2
+grep2 
 背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
 # error FIPS is disabled.
