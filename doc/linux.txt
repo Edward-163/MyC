@@ -454,18 +454,18 @@ dirs // 展示目录栈 /home /tmp
 popd
 
 
-realpath2
+realpath2 
 realpath 某文件 // 显示文件路径
 
 
-route2
+route2 
 A网络中设备想连B网络中设备,需要借助连接两个网络的某特殊设备发送packet,这个特殊设备叫网关 <shell脚本攻略 6章>
 路由表包含了packet如何转发的信息
 // -n代表numeric,
 route -n
 
 
-rpm2
+rpm2 
 rpm -qa // 查询所有包
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
 rpm -qi XXX.rpm // 查询包的info,用的较少
@@ -475,9 +475,11 @@ rpm -ql openssh-client-XXX // 列出指定软件包的所有文件路径，包�
 rpm -qR XXX
 // 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
+// --forece 常见于XXX already install,重新强制安装
+rpm -ivh XXX.rpm --force
 
 
-rpm2cpio2
+rpm2cpio2 
 // 提取rpm包中文件,-v代表verbose
 rpm2cpio XXX.rpm | cpio -idv
 
@@ -493,7 +495,7 @@ rsync -r /home/dir1/ /home/dir2/
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 
-scp2
+scp2 
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
 scp -P 端口 github.cer 多文件空格分隔 9.13.7.128:/etc/pki/ca-trust/source/anchors/	
 // -r 递归整个目录 
@@ -504,13 +506,13 @@ scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/sour
 scp hyj@198.91.130.161:/home/hyj/a.log ./
 
 
-sh2
+sh2 
 sh -x // 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
 sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
 
 
-size2
+size2 
 size命令用于查看目标文件、库或可执行文件中各段及其总和的大小，是 GNU 二进制工具集 GNU Binutils 的一员。
 size hello.o
 [root@localhost test]# size hello.o
@@ -518,7 +520,7 @@ size hello.o
     115	     80	      0	    195	     c3	hello.o
 
 
-sleep2
+sleep2 
 // s m h d,秒分时天,不写默认单位秒
 sleep 2d
 
@@ -527,14 +529,14 @@ soft lockup 软锁  hard lockup 硬锁  触发panic机制
 软锁 cpu被内核代码占据
 硬锁 cpu被内核代码占据,且不响应中断
 
-sort2
+sort2 
 // 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
 sort | uniq -c
 // -t 指定字段分隔符 -k 指定第三列排序(字典序?短,小,升序,平时使用总是按数字排序,所以-n少不了的) -n 按数字升序
 sort -t ':' -k 3 -n /etc/passwd
 
 
-ssh-keygen2
+ssh-keygen2 
 // -C 为密钥添加注释,通常用于标识密钥的用途或所有者
 // -t 指定密钥类型,可选值为dsa、ecdsa、ed25519、rsa,默认为rsa   所以-t rsa没必要加了
 // 然后把id_rsa.pub的内容加到github中就行了
@@ -547,7 +549,7 @@ sshd_config中的ListenAddress
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
 
 
-stat2
+stat2 
 输出中modify与change的区别
 modify`时间戳表示文件的内容最后一次被修改的时间，即文件内容的修改时间。
 change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间
