@@ -335,6 +335,13 @@ lspci -vvvs 0000:00:03.0
 lspci -vvvs 00:03.0
 
 
+lvresize2 resize2fs2
+// -L 调整大小,
+lvresize2 -L+9G /dev/mapper/rootfs
+lvresize2 -L-9M /dev/mapper/rootfs
+resize2fs /dev/mapper/rootfs
+
+
 mkfs2
 // 在设备sda上创建文件系统==格式化分区
 mkfs /dev/sda
