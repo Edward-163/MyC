@@ -5,11 +5,16 @@ blkid2
 blkid /dev/sda
 
 
+capability2 
+https://www.cnblogs.com/sparkdev/p/11417781.html
+从内核 2.2 开始，Linux 将传统上与超级用户 root 关联的特权划分为不同的单元，称为 capabilites。Capabilites 作为线程(Linux 并不真正区分进程和线程)的属性存在，每个单元可以独立启用和禁用。如此一来，权限检查的过程就变成了：在执行特权操作时，如果进程的有效身份不是 root，就去检查是否具有该特权操作所对应的 capabilites，并以此决定是否可以进行该特权操作。比如要向进程发送信号(kill())，就得具有 capability CAP_KILL；如果设置系统时间，就得具有 capability CAP_SYS_TIME。
+
+
 cgroup2 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 
 
-cpio2
+cpio2 
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
 // -o代表归档或者创建
 ll /home/ | cpio -o > a.cpio
@@ -20,14 +25,14 @@ cpio -id a.cpio
 rpm2cpio X.rpm | cpio -idv
 
 
-curl2
+curl2 
 curl is a tool for transferring data from or to a server using URLs
 // -g 允许url可以包含{}[]
 // -k --insecure不安全,大概就是跳过验证步骤
 curl -gk https://XXX
 
 
-chage2
+chage2 
 chage -l root // list account info
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
@@ -37,13 +42,13 @@ Minimum number of days between password change		: 0
 Maximum number of days between password change		: 90
 Number of days of warning before password expires	: 7
 
-chown2
+chown2 
 chown root:root b.txt // 改变文件的所有者:所有者组
 chown root a.txt //
 chown :root c.txt //
 
 
-date2
+date2 
 // 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
 date -s "2024-04-17 10:18:50"
 // display time described by STRING, not 'now',官方举例如下,1970至今秒数
@@ -51,14 +56,14 @@ date -d'@2147483647'
 date --date='@2147483647'
 
 
-/dev/null2
-/dev/zero2
+/dev/null2 
+/dev/zero2 
 // linux 2个特殊的文件 
 /dev/null  ： 在类Unix系统中，/dev/null，或称空设备，是一个特殊的设备文件，它丢弃一切写入其中的数据（但报告写入操作成功），读取它则会立即得到一个EOF。
 /dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
 
 
-dd2
+dd2 
 // /dev/zero  /dev/null 在上面
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
 if      input file
@@ -70,45 +75,49 @@ iflag=direct 绕开fs的缓存
 oflag=direct
 
 
-df2
+df2 
 df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
 df -T // 打印fs类型
 
-dhclient2
+dhclient2 
 // 动态获取ip,并显示详细过程
 dhclient -v
 
 
-dmesg2
+dmesg2 
 // -C 清除环回缓冲区
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
 dmesg -c
 
 
-du2
+du2 
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
 
 
-e2fsck2
+e2fsck2 
 // check a Linux ext2/ext3/ext4 file system
 
 
-echo2
+echo2 
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
 // 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
-/etc/fstab2
+
+/etc/fstab2 
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
 根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
 
-/etc/profile2
+
+/etc/profile2 
 全局配置文件,用户登录时会自动执行它
 
-/etc/profile.d/
+
+/etc/profile.d/ 
 包含系统级别脚本,用户登录时被执行
+
 
 个人配置文件      ~/.bashrc           敲alias展示结果来源于此
 `~/.bashrc` 是 Bash shell 的配置文件，它包含了一些用户自定义的环境变量、别名、函数和命令等。当用户登录到一个 Bash shell 时，Bash 会自动执行 `~/.bashrc` 文件中的命令，
@@ -116,8 +125,10 @@ echo -n "末尾不自动加换行,本str会直接输出在右侧"
 rc 代表run command,类似的还有~/.vimrc 我喜欢默认加上:set nu hls
 注意             改完记得source file // source命令 "从file中读取并执行命令"
 
+
 &&  第一个命令退出码0才执行第二个命令,以此类推
 确认I层内存总体使用量，命令：cd /sys/fs/cgroup/memory/system.slice/fsp && cat memory.usage_in_bytes && cat memory.limit_in_bytes
+
 
 /etc/passwd
 bin:x:1:1:bin:/bin:/sbin/nologin // 7列
@@ -132,6 +143,7 @@ ethtool2
 ethtool -i eth0 // 显示网卡eth0的驱动信息
 ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
 link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
+
 
 // export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
 // 在 shell 中执行程序时，shell 会提供一组环境变量。export 可新增，修改或删除环境变量，供后续执行的程序使用。export 的效力仅限于该次登陆操作。
