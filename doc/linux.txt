@@ -576,42 +576,40 @@ modify`时间戳表示文件的内容最后一次被修改的时间，即文件�
 change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间
 size 4096 linux中目录的size通常为4096,或者4096倍数?
 
-su2
+su2 
 // 不写用户,默认切root,环境变量还是当前用户的
 su 
 // 不写用户,默认切root,环境变量是root 用户的   https://www.cnblogs.com/linyfeng/p/13511945.html
 su -
 
-sudo2
+sudo2 
 // sudo诞生前,su的缺点是要输入root密码,sudo使一般用户不需要知道超级用户的密码即可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，登记在特殊的文件中（通常是/etc/sudoers
 
 
 
-sysctl2
+sysctl2 
 // 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
 sysctl -a |grep perf_event_max_sample_rate 
 
 
-tar2
+tar2 
 // 压缩某个目录
 tar -cvf XXX.tar /home/*
 // 压缩多个文件
 tar -cvf XXX.tar /home/a.txt /home/b.txt
-// 解压
-tar -xvf XXX.tar
-// 压缩,解压 XXX.tar.gz的话,一般加个-z
-// -C 指定解压后目录
-tar -zxvf  ?.gz  -C  ./
+// -z 压缩,解压 XXX.tar.gz的话,一般加个它
+// -C 解压到目标目录下
+tar -zxvf  XXX.gz  -C  ./
 
 
-tcpdump2
+tcpdump2 
 // -v verbose -v -vv -vvv
 // -i 指定interface, -i any就是指定所有网口
 // -w 指定输出文件
 tcpdump -vvv -i any host XXX -w /home/a.pcap  
 
 
-top2
+top2 
 动态检测进程运行状态,有点特殊,直接敲top,帮助信息按h查看,但似乎没用??
 top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)降序
 按1  查看所有cpu占用详情
@@ -621,7 +619,7 @@ top -M // 按内存使用率排序,效果: 按RES列(进程使用物理内存)�
 res resident内存大小  kB
 
 
-tune2fs2
+tune2fs2 
 // 我常用来查看fs status:clean还是clean with errors
 tune2fs -l /dev/mapper/rootfs
 
