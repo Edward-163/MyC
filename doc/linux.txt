@@ -255,7 +255,7 @@ ip link set eth5 vf 4 rate 1000  这条命令具体什么意思?
 ip link show |grep XXX 
 
 
-iptables 
+iptables2 
 // -v verbose
 // -n numeric
 // -L 列出[chain [rulenum]]
@@ -266,7 +266,15 @@ iptables -D INPUT 2
 service iptables save
 
 
-iscsiadm 
+irqbalance2 
+/etc/sysconfig/irqbalance
+IRQBALANCE_BANNED_CPUS=ffffffff,fffffffc,ffffffff,fffffffc
+f 代表(先转成2进制,全是1)不参与中断   一位16进制==4位二进制,上面32位16进制==128位2进制,刚好当前环境上cpu是128核
+0 代表参与中断
+irqbalance意义:每个核上均匀参与中断处理,使性能更佳
+
+
+iscsiadm2 
     iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
     Iscsi initiator：使用target提供“磁盘”的客户端。
 // 查询当前主机登入的存储设备
