@@ -23,6 +23,11 @@ ctrl i  下一个位置
 不区分大小写搜索err  注:有次升级日志就是只搜索err而漏掉了ERROR关键信息!!!
 /\cerr
 
+
+删除所有行
+:%d
+
+
 vim命令行模式:vsp 文件名
 如  先打开cpyfrom0901testsucc目录下的client.rs
 :vsp /mnt/sdc/hyj/stratovirt_0906splitPatch/virtio/src/vhost/user/client.rs
