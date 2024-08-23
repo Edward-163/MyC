@@ -690,7 +690,7 @@ lsof -t /var/log |xargs ll
 lsof -t /var/log |xargs ls -s 
 
 
-yum2
+yum2 
 // 配置仓库/etc/yum.repo.d/??.repo
 yum search git
 yum install git
@@ -702,7 +702,7 @@ yum clean all // 删除yum缓存中可用包和旧缓存,yum clean删除前者
 yum makecache // 生成缓存
 
 
-grep2
+grep2 
 grep "ip_local_reserved_ports" -nr /usr/lib		// -n 显示num  -r 递归目录
 lsof -i:49208  // 山哥说只要有输出,本机在用此端口,   770是指对端ip
 netstat -tunlp 49208
@@ -710,20 +710,21 @@ sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
 
-timeout2
+timeout2 
 // Usage: timeout [OPTION] DURATION COMMAND [ARG]...
-// -s代表发送signal 如果600s内reboot命令没执行完,则发送 KILL 信号,终止reboot命令
+// -s 发送signal 如果600s内reboot命令没执行完,则发送 KILL 信号,终止reboot命令
 timeout -s KILL 600 reboot 
 // ping会一直ping的,下面这个就很好理解,让它ping 2秒后就kill掉
 timeout -s KILL 2 ping www.baidu.com
 
 
-wc2
-wc -l XXX.txt // 常见的统计行数
+wc2 
+// -l line counts统计行
+wc -l XXX.txt
 XXX |wc -l
 
 
-zgrep2
+zgrep2 
 // -a  --text equivalent to --binary-files=text      treat all files as text
 zgrep -an "TLS handshake" ./logdump*
 
