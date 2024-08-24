@@ -442,6 +442,10 @@ pkill2
 // 通过进程名字杀进程  -f 代表full process name 
 pkill -9 -f /usr/XXX.py
 
+printf2 
+// printf formatStr args
+printf "first %s %s\n" hello world
+
 
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
 /proc/cmdline
