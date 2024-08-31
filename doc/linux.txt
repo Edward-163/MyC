@@ -215,7 +215,7 @@ grep2
 -C3     // 多展示后面前后各3行
 
 
-hwlock2
+hwlock2 
 // rtc硬件时钟==hwlock -r       systemtime==date  
 // -r display rtc
 // -w 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
@@ -223,22 +223,25 @@ hwlock2
 hwclock -w
 
 
-ifconfig2
+ifconfig2 
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
 
 
-iostat2
-iostat -dmx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
-iostat -dx 1 // 每1秒刷新一次,一直刷
--d 只显示disk统计信息
--m 已 MB 单位显示
--x 展示拓展信息
+iostat2 
+// -d 显示disk统计信息,默认disk和avg-cpu都会显示,所以这-d -c没卵用,不如不加
+// -c display cpu utilization实际展示avg-cpu
+// -m 单位 MB
+// -k 单位 KB
+// -x display extended statistics
+iostat -mx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
+iostat -mx 1 // 每1秒刷新一次,一直刷
+字段:
 rKB/s    读带宽
 aqu-sz   待处理io队列大小,平均值
 
 
-ip a
+ip a 
 ip是个很强的命令,有很多子命令如 ip addr      ip link      ip route 等
 ip a show eth0
 10: eth0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1800 qdisc mq master trunk2 state UP group default qlen 1000
