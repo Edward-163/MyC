@@ -485,10 +485,12 @@ ps --help a
 ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
 ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
 ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相同
-// -o   指定格式,后面单词(官网称之为format specifiers)不能写错
-// psr  表示进程运行的CPU编号
-// 查出cpu1上跑的进程
-ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'
+// -e Select all processes.  Identical to -A
+   -L Show threads, possibly with LWP and NLWP columns
+   -o  指定格式,后面单词(官网称之为format specifiers)不能写错
+   psr 代表processor that process last executed on  进程运行的CPU编号?翻译不够准确?
+   comm 代表command
+ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
 
 
 pushd popd dirs 目录栈
