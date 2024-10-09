@@ -35,14 +35,6 @@ git checkout -b branchXXX origin/master
 git checkout -b huawei/csi/euleros_virtual/v2r9/6.2.0  origin/huawei/csi/euleros_virtual/v2r9/6.2.0
 
 
-
-// -n dry run 演戏,排练
-git clear -n
-// 删除untrack文件或者目录
-git clear -f
-git clear -d
-
-
 // 有一次写上git cherry-pick origin/XXX commitID 反而有问题,不写反而能正常pick
 // 摘取一个commit,接到当前分支head后面
 git cherry-pick commmitId
@@ -51,8 +43,14 @@ git cherry-pick commmitId
 git cherry-pick commitA^..commitB     
 
 
+// -n dry run 演戏,排练
+git clear -n
+// 删除untrack文件或者目录
+git clear -f
+git clear -d
 git clean XXXdir -n // -n dryRun
 git clean XXXdir -f
+
 
 git clone ??.git /home/??   // git clone 最后可以指定目录名
 git clone ??.git D:\??
@@ -63,12 +61,14 @@ git config --global core.editor vim
 git config --local usern.name "XXX"
 git config --local usern.email "XXX"
 
-git diff  XXX  // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变-->index
-// 
 
-git diff --staged XXX  // 查看staged changes 等同--cached 说白了查看 工作区-->index(中的改变)
+// This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变(通常是git add之前)
+git diff  XXX  
+// 查看staged changes 等同--cached 说白了查看 工作区-->已经暂存到index的改变(通常是git add之后)
+git diff --staged XXX  
 git diff commit1 commit2    // (1,2]
 git diff > 0003.patch
+
 
 // 前开后闭,注意中间有.. 注意中间有.. 注意中间有..
 git format-patch e4d14012cf3436f8c7f7306aa0bbd113effc7728~1..e4d14012cf3436f8c7f7306aa0bbd113effc7728 // 0001-virtiofs-add-vhost_user_fs-package.patch
@@ -83,8 +83,13 @@ git format-patch HEAD -2 –stdout        //生成(HEAD^^,HEAD]之间的patch ,�
 git format-patch HEAD^^..HEAD  –stdout
 git format-patch -1 commitId // 生成commitId单次提交文件
 
-添加vhost_user_fs/src/lib.rs等文件中,git status只会显示未跟踪vhost_user_fs/   ,(从其它地方cp而来的文件不显示,天坑)
+
+// 添加vhost_user_fs/src/lib.rs等文件中,git status只会显示未跟踪vhost_user_fs/   ,(从其它地方cp而来的文件不显示,天坑)
+// 列出所有未添加到索引中且没有被.gitignore文件忽略的文件
+   --others 用于指示只显示未被跟踪的文件
+   --exclude-standard 用于排除.gitignore文件中列出的文件
 git ls-files --others --exclude-standard
+
 
 git log --oneline
 git log --pretty=oneline
@@ -100,10 +105,11 @@ git merge origin/dev
 
 
 
-git push --set-upstream origin <远程分支名>            // 注意: 中间是空格 中间是空格 中间是空格
--u=--set-upstream
 把本地分支关联到远程主分支；为每个更新或推送的分支设置远程引用
 若远程仓库没有<远程分支名>时，会自动创建该分支名
+-u=--set-upstream
+git push --set-upstream origin <远程分支名>            // 注意: 中间是空格 中间是空格 中间是空格
+
 
 // 更新fork仓库<<官方仓库
 // 自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
