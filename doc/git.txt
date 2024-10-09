@@ -26,15 +26,23 @@ git bisect start 终点commit 起点commit //
 git bisect good/bad
 git bisect reset // quit
 
+
 // 删除本地XXX分支
 git branch -d XXX
 
-// origin/通常固定写法,后面才是远程分支名
+
+git checkout -b branchXXX origin/master
 git checkout -b huawei/csi/euleros_virtual/v2r9/6.2.0  origin/huawei/csi/euleros_virtual/v2r9/6.2.0
-git checkout -b newName origin/master
 
 
-cherry-pick 
+
+// -n dry run 演戏,排练
+git clear -n
+// 删除untrack文件或者目录
+git clear -f
+git clear -d
+
+
 // 有一次写上git cherry-pick origin/XXX commitID 反而有问题,不写反而能正常pick
 // 摘取一个commit,接到当前分支head后面
 git cherry-pick commmitId
@@ -160,3 +168,8 @@ git stash apply stash@{编号,0是栈顶}
 git stash drop stash@{编号,0是栈顶}
 git stash pop                           // 不推荐,==apply栈顶+drop栈顶
 
+
+status ahead behind
+// ahead 当前分支比主分支多几个
+// behind 当前分支比主分支少几个
+git status
