@@ -36,9 +36,11 @@ git checkout -b newName origin/master
 
 cherry-pick 
 // 有一次写上git cherry-pick origin/XXX commitID 反而有问题,不写反而能正常pick
-git cherry-pick commmitId     // 摘取一个commit,接到当前分支head后面
+// 摘取一个commit,接到当前分支head后面
+git cherry-pick commmitId
 // 合补丁的时候,不同分支XXX.spec差距大,cherry-pick后你就会发现XXX.spec修改内容过多,华而不实,还是format-patch好使
-git cherry-pick commitA^..commitB     // 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
+// 从其他分支[commitA,commitB]摘过来,接到当前分支head后面
+git cherry-pick commitA^..commitB     
 
 
 git clean XXXdir -n // -n dryRun
@@ -85,6 +87,10 @@ git log --pretty=oneline
     网络可爱的；美丽的；俊俏的
 
 
+// 合并origin/dev分支到(不写默认)当前分支,我不喜欢merge的原因是它会自动有个合并提交
+git merge origin/dev
+
+
 
 git push --set-upstream origin <远程分支名>            // 注意: 中间是空格 中间是空格 中间是空格
 -u=--set-upstream
@@ -101,10 +107,10 @@ git fetch origin_o
 git fetch origin_o branchXXX
 // 额外:抓取后fork的origin和官方的origin_o分支进度不一样,我想用官方全覆盖fork怎么办呢?
 
-// 把自己12个补丁"追加"到自己的最新的远程,需要用到rebase,待补充rebase动图
-// 多分支变基,默认当前分支和origin_o/dev分支的共同祖先节点,提取(此节点,当前分支尾提交点],并嫁接到origin_o/dev的尾节点(作为新的祖先节点)后
+// 把自己12个补丁"追加"到自己的最新的远程
+// 多分支变基,origin_o/branchXXX分支(它作为newbase)和(不写默认)当前分支的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后
 // 虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
-git rebase -i origin_o/dev
+git rebase -i origin_o/branchXXX
 
 // 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
 git rebase -i HEAD~2
