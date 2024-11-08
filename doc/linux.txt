@@ -348,7 +348,8 @@ filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 
 lsof2
 // list open file
-如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放,lsof |grep delete |grep home
+// 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放
+lsof |grep delete |grep home
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
 lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 lsof -p 10086 // 查询指定进程打开的文件
@@ -508,6 +509,10 @@ popd
 
 realpath2 
 realpath 某文件 // 显示文件路径
+
+
+rm2
+rm -r dir0 dir1
 
 
 route2 
