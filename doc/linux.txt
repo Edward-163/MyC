@@ -561,6 +561,8 @@ scp -P 端口 -r /home/ 9.13.7.128:/home/
 scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/source/anchors/	
 // 只要本机能ping通198,就能从198上远程拷贝日志到本机当前目录
 scp hyj@198.91.130.161:/home/hyj/a.log ./
+// scp对Strict有严格顺序要求
+scp -r -o StrictHostKeyChecking=no /boot/efi/*  172.0.0.1:/boot/efi
 
 
 sh2 
