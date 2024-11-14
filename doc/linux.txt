@@ -267,13 +267,20 @@ ip link show |grep XXX
 
 iptables2 
 // -v verbose
-// -n numeric
-// -L 列出[chain [rulenum]]
+   -n numeric
+   -L 列出[chain [rulenum]]
+   --line-numbers   显示行号,删除rule的时候用得到行号
 iptables -vnL
 // -D 删除chain [rulenum]   删除名为input的chain中第二条rule
 iptables -D INPUT 2
 // 保存在/etc/sysconfig/iptables中
 service iptables save
+// -A INPUT 给input规则append
+   -p tcp 指定协议是tcp
+   --dport   指定des端端口8002
+   -s        指定src端地址
+   -j         指定动作ACCEPT DROP REJECT 等
+ip6tables -A INPUT -p tcp --dport 8002 -s 2409:8080:5A0A:6058::/80 -j ACCEPT 
 
 
 irqbalance2 
