@@ -299,7 +299,8 @@ iscsiadm -m session
 // 查看当前主机上发现所有target
 iscsiadm -m node
 // 发现阵列ip==对端业务ip的目标
-iscsiadm -m discovery -t st -p XXX.XXX.X.X:XX
+iscsiadm -m discovery -t st -p ip:port
+// -T targetName
 
 
 jobs bg fg & ctrl+Z 后台
