@@ -649,10 +649,12 @@ tar -zxvf  XXX.gz  -C  ./
 
 
 tcpdump2 
+格式:tcpdump option protocol diretion type
+https://www.cnblogs.com/wongbingming/p/13212306.html
 // -v verbose -v -vv -vvv
-// -i 指定interface, -i any就是指定所有网口
-// -w 指定输出文件
-tcpdump -vvv -i any host XXX -w /home/a.pcap  
+   -i 指定interface, -i any就是指定所有网口(物理网卡可能有多个网口,例如eth2)
+   -w 指定输出文件
+tcpdump -vvv -i any host 192.168.0.1 -w /home/a.pcap  
 
 
 top2 
