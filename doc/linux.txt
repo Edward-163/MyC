@@ -428,6 +428,7 @@ state       常见 established listen(首先服务端需要打开一个socket进
 -n   numeric
 -p   多展示一列 pid/programName for socket
 -l   display listening server sockets
+netstat -anp |grep ssh
 
 
 ntp2
@@ -653,6 +654,8 @@ tar -cvf XXX.tar /home/a.txt /home/b.txt
 // -C 解压到目标目录下
 tar -zxvf  XXX.gz  -C  ./
 
+tail2 
+tail -f message |grep sshd
 
 tcpdump2 
 格式:tcpdump option protocol diretion type
