@@ -582,9 +582,12 @@ scp -r -o StrictHostKeyChecking=no /boot/efi/*  172.0.0.1:/boot/efi
 
 
 sh2 
-sh -x // 进入跟踪方式，显示所执行的每一条命令
+// -c 把后面字符串当命令执行 https://blog.csdn.net/weixin_53389944/article/details/136560945
+sh -c 'XXX'
+// -x 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
 sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
+
 
 
 size2 
