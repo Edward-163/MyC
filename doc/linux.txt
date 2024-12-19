@@ -153,8 +153,10 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 
 
 ethtool2 
-ethtool -i eth0 // 显示网卡eth0的驱动信息
-ethtool -P eth0 // 显示 permanent Addr ,也称 hardware Addr,也称 MAC
+// -i interface 显示网口eth0的驱动信息
+ethtool -i eth0
+// -P permanent Addr ,也称 hardware Addr,也称 MAC
+ethtool -P eth0 
 link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
 
 
@@ -372,15 +374,16 @@ lsof |grep 10080 // 这种是全量查询再过滤pid,输出可能包含tid=XXX�
 lsof -t /var/log 
 
 
-lspci2
+lspci2 
 lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,这出问题就是系统问题
 ll /sys/class/net // 驱动把pci设备识别成网卡,这出问题就是驱动问题
-// -v verbose   -s 指定domain bus device func号
-lspci -vvvs 0000:00:03.0
-lspci -vvvs 00:03.0
+// -s 指定domain bus device func号
+   -v verbose   
+lspci -svvv 0000:00:03.0
+lspci -svvv 00:03.0
 
 
-lvresize2 resize2fs2
+lvresize2 resize2fs2 
 // -L 调整大小,
 lvresize2 -L+9G /dev/mapper/rootfs
 lvresize2 -L-9M /dev/mapper/rootfs
