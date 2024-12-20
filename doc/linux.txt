@@ -158,6 +158,7 @@ ethtool -i eth0
 // -P permanent Addr ,也称 hardware Addr,也称 MAC
 ethtool -P eth0 
 link detected:no // 2层链路状态,通俗来说就是物理网线没插,这种就不需要关注上层3层,如ifconfig up/down属于3层
+NO-CARRIED状态就是表示网卡已经处于up状态，但是因为物理层的原因导致网络没连接，比如网线没插好之类的
 
 
 // export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
