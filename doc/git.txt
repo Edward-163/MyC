@@ -1,7 +1,7 @@
 目标远程仓
 fork目标远程仓
     目标分支(代码旧了就重新从目标远程仓fetch更新,我不建议把代码提交到此分支上)
-    以目标分支为基础,checkout -b出来的众多分支(我建议不同人,不同版本来命名新分支,且push时选择同步推送分支名到fork目标远程仓)
+    以目标分支为基础,checkout -b出来的众多分支(我建议不同人,不同版本,不同时间点来命名新分支,且push时选择同步推送分支名到fork目标远程仓)
 
 // 举例:高版本仓某次提交,仅仅是给XX.c路径最外层加层目录(可能是处于梳理代码结构的目的),当你要把这个提交补丁打到低版本仓中,显然就会报错error: XX高版本dir/XX低版本dir/XX.c: No such file or directory
 // 解决: -p2 Remove <n> leading path components (separated by slashes) from traditional diff paths. E.g., with -p2, a patch against a/dir/file will be applied directly to file. The default is 1.
@@ -108,6 +108,7 @@ git merge origin/dev
 git push -u 仓库名 <分支名>            // 注意: 中间是空格 中间是空格 中间是空格
 // 举例:从origin_o检出分支XXX_10086,魔改后你不写仓库名还想-uf,你以为会默认推送到origin上,但实际会报错提示,所以还是建议指定仓库名
 git push -uf origin XXX_10086
+
 
 
 // 更新fork仓库<<官方仓库
