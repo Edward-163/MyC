@@ -103,6 +103,10 @@ dmesg2
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
 dmesg -c
 
+dmidecode2 
+// -t 指定类型  0-bios 1-system 等等
+dmidecode -t bios
+dmidecode -t 1
 
 du2 
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
