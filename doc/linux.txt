@@ -523,6 +523,8 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
    psr 代表processor that process last executed on  进程运行的CPU编号?翻译不够准确?
    comm 代表command
 ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
+// --sort=-rss -rss代表rss数字升序,不写或者写+默认数字升序
+ps -aux --sort=-rss |head -9
 
 
 pushd popd dirs 目录栈
