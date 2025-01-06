@@ -370,8 +370,15 @@ ln
 
 
 lvm.conf  filter
-// LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
+// This is a list of regular expressions used to accept or reject block device path names
+   LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
+// Reject the cdrom drive:
+filter = [ "r|/dev/cdrom|" ]
+
+
+// vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
+lvm vgchange -ay 
 
 
 lsof2
