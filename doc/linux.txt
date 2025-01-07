@@ -346,12 +346,13 @@ bg 1
 tar -zcf usr.gz /usr &
 
 
-journalctl
+journalctl2 
 journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
 应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
 journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
 
-ldconfig
+
+ldconfig2 
 ldconfig 命令用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配置文件 /etc/ld.so.conf 内所列的目录下，搜索出可共享的动态链接库（格式如 lib*.so*），进而创建出动态链接器（ld.so 或 ld-linux.so）所需的缓存文件。缓存文件默认为 /etc/ld.so.cache，此文件保存已排好序的动态链接库名字列表。为了让动态链接库为系统所共享，需运行动态链接库的管理命令 ldconfig 更新动态链接库的缓存文件。
 附
 /proc/sys/vm/drop_caches 是一个系统文件，它允许用户在 Linux 操作系统中清除内核缓存。这个文件包含一个整数，它控制哪些缓存应该被清除。具体来说，这个整数的值可以是以下之一：
@@ -366,29 +367,28 @@ ldconfig
 ---
 
 
-killall 
+killall2 
 // -w Wait for all killed processes to die
 // 实操加不加前置路径都可以
 killall -w /sbin/dhclient
 
 
-ldd 
+ldd2 
 // 列出某程序所需动态链接库(.so)
 // 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
 ldd /lib/systemd/systemd
 
-ln 
+ln2 
 // ln -s target link_name
 
 
+lvm2 
 lvm.conf  filter
 // This is a list of regular expressions used to accept or reject block device path names
    LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 // Reject the cdrom drive:
 filter = [ "r|/dev/cdrom|" ]
-
-
 // vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
    系统启动时，bios会扫描所有盘找到系统启动的引导文件。也就是boot分区(只有系统盘中才会有boot分区)，及分区内的grub.cfg，引导文件initrd等。引导入内存后根据lvm.conf2的过滤条件激活逻辑卷，然后挂载启动
 lvm vgchange -ay 
