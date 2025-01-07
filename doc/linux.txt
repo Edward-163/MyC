@@ -571,8 +571,9 @@ rm -r dir0 dir1
 route2 
 A网络中设备想连B网络中设备,需要借助连接两个网络的某特殊设备发送packet,这个特殊设备叫网关 <shell脚本攻略 6章>
 路由表包含了packet如何转发的信息
-// -n代表numeric,
-route -n
+// -A inet6 指定地址族,不写相当于只展示ipv4的
+   -n numeric,
+route -A inet6 -n
 
 
 rpm2 
