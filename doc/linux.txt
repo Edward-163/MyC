@@ -234,13 +234,19 @@ grep2
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
 # error FIPS is disabled.
 #endif
-/// -r递归目录(grep最后可以接单个文件,多个文件,或者目录配合-r) -n显示行号 -w单词匹配 -v反转查找
-/// 当前目录下有很多补丁,从补丁从查找谁用到openssl_fips这个宏,并且把ifdef给排除掉,最后一个grep仅仅是为了颜色高亮,因为第二个grep -v会把高亮抹掉
-[root@localhost openssl_virtual]# grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS        //r递归目录 n行号 w单词匹配  E拓展表达式 v取反
+// -r递归目录(grep最后可以接单个文件,多个文件,或者目录配合-r) -n显示行号 -w单词匹配 -v反转查找
+   当前目录下有很多补丁,从补丁从查找谁用到openssl_fips这个宏,并且把ifdef给排除掉,最后一个grep仅仅是为了颜色高亮,因为第二个grep -v会把高亮抹掉
+   r 递归目录 
+   n行号 
+   w单词匹配  
+   E拓展表达式 v取反
+   -A3     // 多展示后面3行
+   -B3     // 多展示前面3行
+   -C3     // 多展示后面前后各3行
+grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS        
+// -m 最大匹配行数
+ps -aux |grep -m 2 'root'
 
--A3     // 多展示后面3行
--B3     // 多展示前面3行
--C3     // 多展示后面前后各3行
 
 
 hwlock2 
