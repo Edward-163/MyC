@@ -2,7 +2,7 @@
 bios自检            检查硬件是否正常
 bootloader引导程序  常见grub,传统legacy引导方式
 内核加载            bootloader加载内核文件(通常/boot/vmlinuz)
-initrd             临时文件系统,包含linux系统所需驱动和必要文件
+initrd(老)/initramfs(新)             临时文件系统,包含linux系统所需驱动和必要文件
 init进程            第一个进程,读取/etc/inittab配置,启动其他进程
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面
 
