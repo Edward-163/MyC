@@ -6,6 +6,14 @@ initrd             临时文件系统,包含linux系统所需驱动和必要文�
 init进程            第一个进程,读取/etc/inittab配置,启动其他进程
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面
 
+重置root密码 rd.break 
+1 按e进入grub页面
+2 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break         不写等于rd.break=pre-pivot??
+3 chroot /sysroot
+4 vim /etc/shadow 把root:XX: 前两个冒号之间的密码密文删掉,:wq
+5 passwd命令
+
+
 blkid2
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
