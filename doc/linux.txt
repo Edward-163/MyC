@@ -715,15 +715,17 @@ tar -cvf XXX.tar /home/a.txt /home/b.txt
 // -C 解压到目标目录下
 tar -zxvf  XXX.gz  -C  ./
 
+
 tail2 
 tail -f message |grep sshd
 
+
 tcpdump2 
-格式:tcpdump option protocol diretion type
-https://www.cnblogs.com/wongbingming/p/13212306.html
+格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
 // -v verbose -v -vv -vvv
    -i 指定interface, -i any就是指定所有网口(物理网卡可能有多个网口,例如eth2)
    -w 指定输出文件
+   host 192.XX 感觉host+ip固定写法吧,host不关心src/dst之类的
 tcpdump -vvv -i any host 192.168.0.1 -w /home/a.pcap  
 
 
