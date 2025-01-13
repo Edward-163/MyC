@@ -140,6 +140,11 @@ echo -n "末尾不自动加换行,本str会直接输出在右侧"
 /etc/fstab2 
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
 根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
+fs_freq参数决定了文件系统是否需要进行备份。具体来说，如果这个参数设置为0，表示该文件系统不需要执行dump操作，即不需要进行备份；如果设置为其他值，则表示该文件系统需要定期执行dump备份。
+fs_passno参数则用于指定系统重启时文件系统的检查顺序。通常，fs_passno为1的文件系统会在其他文件系统之前被检查，这通常是指root文件系统；而fs_passno为2的文件系统会在所有fs_passno为1的文件系统之后进行检查。
+   fsck程序会按照fs_passno的顺序来检测磁盘，即先检查fs_passno为1的文件系统，然后是fs_passno为2的文件系统，以此类推。0值的fs_passno意味着该文件系统不被fsck检查。
+/dev/cpsVG/rootfs / ext4 acl,dioread_lock,data_err=abort,nospeed,defaults,iversion 1 1
+/dev/md2 /boot ext4 defaults,iversion,nodev,dioread_lock,data_err=abort,nospeed 1 2
 
 
 /etc/profile2 
@@ -357,7 +362,9 @@ tar -zcf usr.gz /usr &
 
 
 journalctl2 
-journalctl -u sshd	// 用于查看系统日志的工具 没有收到包  用于查看指定服务的日志。其中 `-u` 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
+一个用于查询和显示由systemd日志管理系统（systemd-journald服务）收集的日志信息的工具
+// -u 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
+journalctl -u sshd	
 应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
 journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
 
