@@ -713,6 +713,9 @@ sudo2
 sysctl2 
 // 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
 sysctl -a |grep perf_event_max_sample_rate 
+sysctl -a |grep panic |grep oom
+// 关闭oom时panic
+sysctl -w vm.panic_on_oom = 0
 
 
 tar2 
