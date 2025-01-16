@@ -276,12 +276,14 @@ ifconfig -a
 
 
 iostat2 
-// -d 显示disk统计信息,默认disk和avg-cpu都会显示,所以这-d -c没卵用,不如不加
-// -c display cpu utilization实际展示avg-cpu
-// -m 单位 MB
-// -k 单位 KB
-// -x display extended statistics
-iostat -mx 1 5 /dev/sda /dev/sdb（1代表每隔1s刷新一次，5代表总共显示5次，/dev/sdx代表要显示的盘符）
+// -d 显示disk统计信息,默认disk和avg-cpu都会显示,所以这  -d -c没卵用,不如不加
+   -c display cpu utilization实际展示avg-cpu
+   -m 单位 MB
+   -k 单位 KB
+   -x display extended statistics
+    1 每隔1s刷新一次
+    5 共刷新5次
+iostat -mx 1 5 /dev/sda /dev/sdb
 iostat -mx 1 // 每1秒刷新一次,一直刷
 字段:
 rKB/s    读带宽
