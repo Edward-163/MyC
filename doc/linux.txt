@@ -76,6 +76,9 @@ chown :root c.txt //
 
 
 date2 
+date [option]..[+format]
+// 什么是format,举例 %Y 四位年份 %m 月份 %d 日
+date +%m_%d // 输出举例 01_17
 // 根据str set时间,主机时间莫名其妙被改了,可以手动改回来
 date -s "2024-04-17 10:18:50"
 // display time described by STRING, not 'now',官方举例如下,1970至今秒数
