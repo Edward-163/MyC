@@ -481,11 +481,12 @@ mount --rbind /proc proc/
 
 mpstat2
 mpstat [-P {|ALL}] [internal [count]]
-参数 解释
--P {|ALL} 表示监控哪个CPU， cpu在[0,cpu个数-1]中取值
-internal 相邻的两次采样的间隔时间、
-count 采样的次数，count只能和delay一起使用
-mpstat -P 8,9,10,11 1 2 // 监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
+// -P {|ALL} 表示监控哪个CPU， cpu在[0,cpu个数-1]中取值
+   internal 相邻的两次采样的间隔时间、
+   count 采样的次数，count只能和delay一起使用
+   监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
+mpstat -P 8,9,10,11 1 2 
+mpstat -P 0-13 2 5
 
 
 netstat2 
