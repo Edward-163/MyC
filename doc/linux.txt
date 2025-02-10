@@ -736,10 +736,11 @@ sysctl -w vm.panic_on_oom = 0
 
 tar2 
 // 压缩某个目录
+   -z 压缩,解压 XXX.tar.gz的话,一般加个它
 tar -cvf XXX.tar /home/*
+tar -zcvf XXX.tar.gz /home/*
 // 压缩多个文件
 tar -cvf XXX.tar /home/a.txt /home/b.txt
-// -z 压缩,解压 XXX.tar.gz的话,一般加个它
 // -C 解压到目标目录下
 tar -zxvf  XXX.gz  -C  ./
 
