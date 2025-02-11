@@ -758,6 +758,12 @@ tcpdump2
 tcpdump -vvv -i any host 192.168.0.1 -w /home/a.pcap  
 
 
+tmpfs2
+临时文件系统,驻留在内存中,比如常见的 /run
+// 多分区只读,message无法vim,则可以拷贝至内存中,再查看message
+cp message /run
+
+
 top2 
 动态检测进程运行状态      帮助:直接敲top,按h,实际帮助不大
 // 按1  查看所有cpu占用详情
@@ -766,7 +772,6 @@ top2
    按M  内存使用率排序,效果: 按RES列(进程使用物理内存==resident内存 kB)降序
    按P  根据cpu排序 
 top -M
-
 
 
 tune2fs2 
