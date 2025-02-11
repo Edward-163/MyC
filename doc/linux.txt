@@ -133,6 +133,17 @@ dmidecode2
 dmidecode -t bios
 dmidecode -t 1
 
+
+dracut2
+将为当前运行的内核版本生成一个新的initramfs映像文件，并将其保存在/boot目录下
+// 不加force会提示不会覆盖已有镜像,加了后,镜像的modify,change会更新,
+dracut --force
+// 举例
+1 /etc/lvm/lvm.conf,放开filter = XXX行 
+2 dracut --forece命令重新打包
+3 解压镜像(/usr/lib/dracut/skipcpio initramfs-5.10.0-182.0.0.95.h2545.eulerosv2r13.aarch64.img |zcat |cpio -id)再查看变化       解压镜像命令,前两段有点难懂
+
+
 du2 
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
