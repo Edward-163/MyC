@@ -619,6 +619,15 @@ realpath2
 realpath 某文件 // 显示文件路径
 
 
+reboot2   主机反复重启定位
+原因多样,这里举例np卡引起的定位方法
+mv /usr/sbin/reboot /usr/sbin/reboot.bak
+echo '#!/bin/bash' > /usr/sbin/reboot
+echo 'ps -ef >> /root/ps.log' >> /usr/sbin/reboot
+chmod 777 /usr/sbin/reboot
+
+mv /usr/sbin/shutdown /usr/sbin/shutdown.bak
+
 rm2
 rm -r dir0 dir1
 
