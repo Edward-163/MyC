@@ -522,9 +522,9 @@ netstat2
    -t   tcp协议
    -u   udp协议
    -n   numeric
-   -p   多展示一列 pid/programName for socket
    -l   display listening server sockets
-netstat -anp |grep ssh
+   -p   display pid/program name for socket 常常lp一块使用
+netstat -anlp |grep ssh
 
 
 ntp2
