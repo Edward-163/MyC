@@ -527,15 +527,18 @@ netstat2
 netstat -anlp |grep ssh
 
 
-ntp2
+ntp2 
 network time protocol
 // 列出时钟源
 ntpq -p 
 
-ntpdate2
+ntpdate2 
 set the date and time via NTP
 // -d debugMode 后面是ntpServer的ipv6
 ntpdate -d fc00:ac1c::b2a 
+
+ntpq2 
+ntpq -p // 列出时钟源
 
 
 osi七层    简化4层
