@@ -358,6 +358,11 @@ service iptables save
    -s        指定src端地址
    -j         指定动作ACCEPT DROP REJECT 等
 ip6tables -A INPUT -p tcp --dport 8002 -s 2409:8080:5A0A:6058::/80 -j ACCEPT 
+// 删除所有rule
+   -F Flush the selected chain (all the chains in the table if none is given).  This is equivalent to deleting all the rules one by one.
+iptables-save > /home/XX.txt
+iptables -F
+iptables-save < /home/XX.txt
 
 
 irqbalance2 
