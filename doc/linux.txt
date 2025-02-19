@@ -901,6 +901,8 @@ yum provides ld // 由此编东西提示ld缺失,以为是binutils包里面的,�
 // 通常添加或者删除XXX.repo后,需要一下两步骤
 yum clean all // 删除yum缓存中可用包和旧缓存,yum clean删除前者
 yum makecache // 生成缓存
+// 从本机的yum源中下载httpd软件包
+yumdownloader httpd
 
 
 grep2 
