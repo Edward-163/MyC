@@ -52,8 +52,11 @@ git clean XXXdir -n // -n dryRun
 git clean XXXdir -f
 
 
-git clone ??.git /home/??   // git clone 最后可以指定目录名
-git clone ??.git D:\??
+// git clone 最后可以指定目录名
+   -b 指定检出分支
+git clone -b branchXX https://XXX.git /home/XX   
+git clone XX.git D:\XX
+
 
 ubuntu上git默认的文本编辑器是nano，执行下面的命令将git的文本编辑器改为我们熟悉的vim
 git config --global core.editor vim
