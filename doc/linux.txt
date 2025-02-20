@@ -702,11 +702,10 @@ rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 scp2 
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
+   -r 递归整个目录 
 scp -P 端口 github.cer 多文件空格分隔 9.13.7.128:/etc/pki/ca-trust/source/anchors/	
-// -r 递归整个目录 
 scp -P 端口 -r /home/ 9.13.7.128:/home/	
-// ipv6 注意ip与目录之间别漏了 冒号 ::::::::::::::::::::::::::::::::::::
-scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/source/anchors/	
+scp github.cer 多文件空格分隔 [2003:0:d05:225::26]:/etc/pki/ca-trust/source/anchors/	                        注意ip与目录之间别漏了 冒号 ::::::::::
 // 只要本机能ping通198,就能从198上远程拷贝日志到本机当前目录
 scp hyj@198.91.130.161:/home/hyj/a.log ./
 // scp对Strict有严格顺序要求
