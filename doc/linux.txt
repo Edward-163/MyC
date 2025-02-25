@@ -446,6 +446,10 @@ filter = [ "r|/dev/cdrom|" ]
 lvm vgchange -ay 
 
 
+lscpu2
+有时候不同节点的cpu的flag不同,也有称为cpu feature的,而这些cpu flag从硬件获取的,大概率是bios设置相关,举例bios开关MonitorMwaitEnable,开了flag里面就有monitor这个值,没开就没有
+
+
 lsof2
 // list open file
 // 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放
