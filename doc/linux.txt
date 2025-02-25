@@ -752,6 +752,18 @@ sort | uniq -c
 sort -t ':' -k 3 -n /etc/passwd
 
 
+source2
+它会将脚本中的命令直接加载到当前 Shell 中执行,而不是新的子shell
+
+sh2
+sh 命令用于启动一个新的子 Shell 来执行脚本文件
+
+return2
+return: can only `return' from a function or sourced script
+exit2
+终止shell脚本执行,可以在脚本任何地方使用
+
+
 ssh-keygen2 
 // -C 为密钥添加注释,通常用于标识密钥的用途或所有者
 // -t 指定密钥类型,可选值为dsa、ecdsa、ed25519、rsa,默认为rsa   所以-t rsa没必要加了
