@@ -446,6 +446,11 @@ filter = [ "r|/dev/cdrom|" ]
 lvm vgchange -ay 
 
 
+lsblk2
+// -f 输出fs类型
+lsblk -f
+
+
 lscpu2
 有时候不同节点的cpu的flag不同,也有称为cpu feature的,而这些cpu flag从硬件获取的,大概率是bios设置相关,举例bios开关MonitorMwaitEnable,开了flag里面就有monitor这个值,没开就没有
 
