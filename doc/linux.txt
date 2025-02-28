@@ -1,8 +1,8 @@
 我在每个命令后面加个2只是方便搜索
 bios自检            检查硬件是否正常
-bootloader引导程序  常见grub,传统legacy引导方式
-内核加载            bootloader加载内核文件(通常/boot/vmlinuz)
-initrd(老)/initramfs(新)             临时文件系统,包含linux系统所需驱动和必要文件
+bootloader引导程序  grub就是其中之一
+grub加载内核和initramfs            bootloader加载内核文件(/boot/vmlinuz-5.10.0-136.12.0.86.h2196.x86_64包含内核启动代码和必要的驱动)到内存中
+内核启动启动并解压initramfs         (/boot/initramfs-5.10.0-136.12.0.86.h2196.x86_64.img临时文件系统,包含linux系统所需驱动和必要文件) 到内存中，并执行其中的 /init 脚本
 init进程            第一个进程,读取/etc/inittab配置,启动其他进程
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面
 
