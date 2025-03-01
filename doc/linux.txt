@@ -406,6 +406,12 @@ journalctl -u sshd
 journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
 
 
+killall2 
+// -w Wait for all killed processes to die
+// 实操加不加前置路径都可以
+killall -w /sbin/dhclient
+
+
 ldconfig2 
 ldconfig 命令用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配置文件 /etc/ld.so.conf 内所列的目录下，搜索出可共享的动态链接库（格式如 lib*.so*），进而创建出动态链接器（ld.so 或 ld-linux.so）所需的缓存文件。缓存文件默认为 /etc/ld.so.cache，此文件保存已排好序的动态链接库名字列表。为了让动态链接库为系统所共享，需运行动态链接库的管理命令 ldconfig 更新动态链接库的缓存文件。
 附
@@ -421,16 +427,21 @@ ldconfig
 ---
 
 
-killall2 
-// -w Wait for all killed processes to die
-// 实操加不加前置路径都可以
-killall -w /sbin/dhclient
-
-
 ldd2 
-// 列出某程序所需动态链接库(.so)
-// 举例,有次启动callTrace,挂载iso,敲下面,输出提示XXX.so=>not found
-ldd /lib/systemd/systemd
+print shared object dependencies 列出某程序所需动态链接库(.so)
+// 切根后panic,串口回忆如下               
+   failed start kenel modules
+   system-load.service??
+   starting switch root
+   kernel panic
+   断点pre-mount
+mount /dev/mapper/rootfs /sysroot
+chroot /sysroot
+ldd /usr/lib/systemd/systemd                                                                举例,输出提示/usr/lib/systemd/libsystemd-shared-XX.so=>not found
+没有共享库文件->从正常环境拷贝一份
+ 有且md5sum变化   从正常环境拷贝
+ 有且md5sum不变   ldconfig刷新
+
 
 ln2 
 // ln -s target link_name
