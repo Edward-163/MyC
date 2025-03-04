@@ -524,6 +524,7 @@ mount -o remount,rw /dev/mapper/cpsVG-image
 // -R, --rbind             mount a subtree and all submounts somewhere else
 mount --rbind /proc proc/
 // 当使用 -o loop 选项时，mount 命令会自动找到一个可用的回环设备（如 /dev/loop0）。这个回环设备会将 XXX.iso 文件虚拟化为一个块设备。
+   实测,加不加loop,我看.iso挂完后lsblk,type列都是loop
 mount -o loop XX.iso /mnt/iso
 
 
