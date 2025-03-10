@@ -784,9 +784,14 @@ sort -t ':' -k 3 -n /etc/passwd
 
 source2
 它会将脚本中的命令直接加载到当前 Shell 中执行,而不是新的子shell
-
-sh2
+sh2区别
 sh 命令用于启动一个新的子 Shell 来执行脚本文件
+
+
+string2
+从二进制中提取字符串的工具
+string /usr/lib64/libc.so.6 |grep GLIBC    最高支持2.38??
+
 
 return2
 return: can only `return' from a function or sourced script
