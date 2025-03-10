@@ -858,6 +858,7 @@ tar -zxvf  XXX.gz  -C  ./
 
 tail2 
 tail -f message |grep sshd
+cat XX.txt |tail -9
 
 
 tcpdump2 
