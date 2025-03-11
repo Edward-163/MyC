@@ -182,7 +182,7 @@ fs_passno参数则用于指定系统重启时文件系统的检查顺序。通�
 个人配置文件      ~/.bashrc           敲alias展示结果来源于此
 `~/.bashrc` 是 Bash shell 的配置文件，它包含了一些用户自定义的环境变量、别名、函数和命令等。当用户登录到一个 Bash shell 时，Bash 会自动执行 `~/.bashrc` 文件中的命令，
 以设置用户的环境变量和自定义命令等。这个文件通常用于设置用户的个性化环境，比如设置命令别名、添加 PATH 环境变量、定义 shell 函数等。
-rc 代表run command,类似的还有~/.vimrc 我喜欢默认加上:set nu hls
+rc 代表run command,类似的还有~/.vimrc 我喜欢默认加上:set nu hls cursorline cursorcolumn
 注意             改完记得source file // source命令 "从file中读取并执行命令"
 
 
