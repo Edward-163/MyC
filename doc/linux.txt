@@ -8,6 +8,14 @@ init进程           第一个进程(举例如systemd),读取/etc/inittab配置,
    lsinitrd initramfs-5.10.0-136.12.0.86.h1428.aarch64.img |grep dracut-cmdline
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面(无论是大伟博客还是宏涛给的journal.log都是先启动systemd,很后面才切根swicthRoot)
 
+
+配置串口
+// x86
+console=tty0 console=ttyS0,115200
+// arm
+console=tty0 console=ttyAMA0,115200
+
+
 重置root密码 rd.break 
 1 按e进入grub页面
 2 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break         不写等于rd.break=pre-pivot??
