@@ -889,6 +889,9 @@ tcpdump2
 tcpdump -vvv -i any host 192.168.0.1 and port 443 -w /home/a.pcap  
 tcpdump -i trunk0 -nne 
 tcpdump -vvv -i enp129s0f0 -w XXX.pcap
+// 源端ssh连不上目的,|info|sshd[2054272]|Connection from fc51:158:46:17::32 port 58890 on fc00:0:0:2621::2 port 22 rdomain ""
+   1 先确定目的端ip对应的网口名字叫external_api,然后目的端敲命令如下
+tcpdump -i external_api  -vvv   |grep fc51:158:46:17::32
 
 
 tmpfs2
