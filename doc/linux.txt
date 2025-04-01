@@ -624,6 +624,7 @@ pkill -9 -f /usr/XXX.py
 printf2 
 // printf formatStr args
 printf "first %s %s\n" hello world
+printf ":set nu hls cursorline" >> ~/.vimrc
 
 
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
