@@ -31,7 +31,7 @@ rd.break2
 rd.break=pre-mount
 // 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
 rd.break=mount
-// 逻辑卷不识别的时候,只剩个control的时候是这么玩的
+// 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
 rd.break=initqueue
 
 
