@@ -819,7 +819,7 @@ string /usr/lib64/libc.so.6 |grep GLIBC    最高支持2.38??
 
 
 return2
-return: can only `return' from a function or sourced script
+return: can only `return' from a function or sourced script,退出当前函数,不是退出整个脚本,return和break什么区别不用重复了吧
 exit2
 终止shell脚本执行,可以在脚本任何地方使用
 
