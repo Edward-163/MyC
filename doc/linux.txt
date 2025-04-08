@@ -16,12 +16,24 @@ console=tty0 console=ttyS0,115200
 console=tty0 console=ttyAMA0,115200
 
 
-重置root密码 rd.break 
+重置root密码 
 1 按e进入grub页面
-2 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break         不写等于rd.break=pre-pivot??
+2 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break=mount         
 3 chroot /sysroot
 4 vim /etc/shadow 把root:XX: 前两个冒号之间的密码密文删掉,:wq
 5 passwd命令
+
+
+rd.break2 
+我试过了rd.break不写默认效果是mount,草ds乱说的
+我试过了rd.break不写默认效果是mount,草ds乱说的
+// /sysroot下面空的
+rd.break=pre-mount
+// 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
+rd.break=mount
+// 逻辑卷不识别的时候,只剩个control的时候是这么玩的
+rd.break=initqueue
+
 
 
 blkid2
