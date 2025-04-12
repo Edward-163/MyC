@@ -336,11 +336,14 @@ iostat2
    -x display extended statistics
     1 每隔1s刷新一次
     5 共刷新5次
-iostat -mxt 1 5 /dev/sda /dev/sdb
-iostat -mxt 1 // 每1秒刷新一次,一直刷
+iostat -mtx 1 5 /dev/sda /dev/sdb
+iostat -mtx 1 // 每1秒刷新一次,一直刷
 字段:
+rrqm/s：   每秒有多少个"取件请求"被你合并处理了（比如把同一栋楼的5个取件合并成1趟）
+wrqm/s：   每秒有多少个"寄件请求"被你合并处理了（比如把寄往同一城市的3个包裹合并成1个包裹）
 rKB/s    读带宽
-aqu-sz   待处理io队列大小,平均值
+avgrq-sz   和/sys/block/sdb/queue/max_sector_kb有关联        https://bean-li.github.io/dive-into-iostat/
+avgqu-sz   待处理io队列大小,平均值,值越大,"排队的人越多"
 
 
 ip a 
