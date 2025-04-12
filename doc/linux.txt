@@ -332,11 +332,12 @@ iostat2
    -c display cpu utilization实际展示avg-cpu
    -m 单位 MB
    -k 单位 KB
+   -t     Print the time for each report displayed 每小段统计数据上方有一行时间戳
    -x display extended statistics
     1 每隔1s刷新一次
     5 共刷新5次
-iostat -mx 1 5 /dev/sda /dev/sdb
-iostat -mx 1 // 每1秒刷新一次,一直刷
+iostat -mxt 1 5 /dev/sda /dev/sdb
+iostat -mxt 1 // 每1秒刷新一次,一直刷
 字段:
 rKB/s    读带宽
 aqu-sz   待处理io队列大小,平均值
