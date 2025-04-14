@@ -283,6 +283,13 @@ find /var/log -type f -printf '%s %p\n' |sort -n -k 1
 free2 
 free -m
 
+fuser2      
+Show which processes use the named files, sockets, or filesystems.
+// -m show all processes using the named filesystems or block device
+   -v verbose
+fuser -mv /var/log
+
+
 
 fsck2 
 通常修分区4步
