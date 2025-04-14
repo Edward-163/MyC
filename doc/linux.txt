@@ -894,6 +894,14 @@ sudo2
 // sudo诞生前,su的缺点是要输入root密码,sudo使一般用户不需要知道超级用户的密码即可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，登记在特殊的文件中（通常是/etc/sudoers
 
 
+/sys/fs/cgroup/cpuset/cgroup.procs                                    决定哪些进程只能使用指定的 CPU 核心，就像给进程分配固定的“工作座位”。
+// 把当前shellPid写入它里面,允许当前shell使用cpu
+echo $$ >> /sys/fs/cgroup/cpuset/cgroup.procs
+CPU 核心 = 办公桌（比如 4 张桌子对应 4 个 CPU 核心）
+cpuset = 你给不同项目组划分的专属办公区（比如：A 组只能用 1-2 号桌，B 组用 3-4 号桌）
+cgroup.procs = 贴在办公区门口的成员名单，只有名单上的人才能进这个区域工作
+
+
 sysctl2 
 // 显示所有系统参数,NMI中断采样频率降低,说明主机性能差,NMI处理时间变长,系统会自动降低此频率
 sysctl -a |grep perf_event_max_sample_rate 
