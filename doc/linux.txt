@@ -566,9 +566,10 @@ mkfs.ext4 /dev/sdb
 
 mount2 
 // -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
-// mount device|dir -o options  官网:写设备和写挂载点都可以
+   mount device|dir -o options  官网:写设备和写挂载点都可以
 mount -o remount,rw /dev/mapper/cpsVG-image
-// -R, --rbind             mount a subtree and all submounts somewhere else
+// -B --bind 把一个目录"镜像"到另一个位置，就像给文件夹创建了一个"分身"或"快捷方式+"。
+   -R, --rbind             mount a subtree and all submounts somewhere else
 mount --rbind /proc proc/
 // 当使用 -o loop 选项时，mount 命令会自动找到一个可用的回环设备（如 /dev/loop0）。这个回环设备会将 XXX.iso 文件虚拟化为一个块设备。
    实测,加不加loop,我看.iso挂完后lsblk,type列都是loop
