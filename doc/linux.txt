@@ -276,7 +276,7 @@ find /home -printf '%h\n' | uniq -c |sort -k 1 -n
    %s 文件bytes大小
    %p 代表fileName(注意英文的file==中文文件+目录)
    -n numeric(按数字大小默认升序) 
-   -k 1 指定第一列排序                                                                                                              "最大文件"
+   -k 1 指定第一列排序                                  "最大文件",若find了一圈还是没找到明显大文件,很可能是lsof中某些服务占用大文件,重启这些服务即可.或者重启主机
 find /var/log -type f -printf '%s %p\n' |sort -n -k 1
 
 
