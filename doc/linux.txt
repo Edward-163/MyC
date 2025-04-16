@@ -145,6 +145,8 @@ df -T // 打印fs类型
 dhclient2 
 // 动态获取ip,并显示详细过程
 dhclient -v
+// -x shutDown client
+dhclient -x
 
 
 dmesg2 
