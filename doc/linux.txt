@@ -1054,7 +1054,7 @@ userdel -r XXX
 
 
 usermod2 
-// 把hyj用户的家目录(默认/home/hyj)move到/home/hyj2目录下
+// 把hyj用户的家目录(默认/home/hyj)move到/home/hyj2目录下   实测细节:新的目录不能存在,存在会报错提示,用户的老家目录会删除,一创一删给人感觉就是老家目录换了个目录名字
 usermod -md /home/hyj2 hyj
 
 
