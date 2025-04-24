@@ -1047,15 +1047,24 @@ useradd -m XXX -s /bin/false
    vim /etc/ssh/sshd_config // AllowUsers行尾添加XXX
    systemctl restart sshd
 
+
 userdel2
 // -r 删除用户家目录和mail spool(卷轴,卷盘)
 userdel -r XXX
 
+
+usermod2 
+// 把hyj用户的家目录(默认/home/hyj)move到/home/hyj2目录下
+usermod -md /home/hyj2 hyj
+
+
 /var/log/secure
 密码的改动会被记录,如 password changed for XXX
 
+
 // 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
 who
+
 
 xargs 
 // 给命令传递参数,怎么传递的就很迷
