@@ -83,9 +83,12 @@ rpm2cpio X.rpm | cpio -idv
 
 curl2 
 curl is a tool for transferring data from or to a server using URLs
-// -g 允许url可以包含{}[]
-// -k --insecure不安全,大概就是跳过验证步骤
-curl -gk https://XXX
+// -i 在输出中包含 HTTP 响应头（便于调试）
+   -g 允许url可以包含{}[]
+   -k --insecure不安全,大概就是跳过验证步骤
+   -X GET	明确指定 HTTP 方法为 GET（默认即为 GET，可省略
+   -H "accept: application/json"要求返回json格式
+curl -igk -X GET https://XXX -H "accept: application/json"
 
 
 chage2 
