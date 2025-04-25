@@ -829,7 +829,8 @@ sh -c 'XXX'
 // -x 进入跟踪方式，显示所执行的每一条命令
 sh -x a.sh > /home/t.txt // 我发现文本没内容
 sh -x a.sh 2>&1 > /home/t.txt
-sh -x a.sh &> /home/t.txt // &代表后台运行命令,注意 &> 要相连,多空格文本会无内容!!!
+sh -x a.sh > /home/t.txt 2>&1
+sh -x a.sh &> /home/t.txt // &在这不是后台运行命令,注意 &> 要相连,&>：是 > 和 2>&1 的组合写法，表示 同时重定向 stdout（标准输出）和 stderr（标准错误）
 
 
 
