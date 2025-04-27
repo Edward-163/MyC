@@ -450,8 +450,10 @@ journalctl2
 一个用于查询和显示由systemd日志管理系统（systemd-journald服务）收集的日志信息的工具
 // -u 参数指定了要查看的服务的名称，例如 `journalctl -u ssh
 journalctl -u sshd	
-应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
-journalctl -f -u sshd // -f 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
+// -f follow the journal 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
+   应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
+   挂iso启动,dmesg和journalctl只针对当前镜像启动,没什么参考价值
+journalctl -f -u sshd 
 
 
 killall2 
@@ -960,6 +962,15 @@ PXE启动时：
 安装过程中：
    安装程序把 /sysroot 里的文件"装修"到目标磁盘（毛坯房）。
    完成后，/sysroot 会被卸载，最终系统从磁盘上的 / 启动。
+
+
+systemctl2 
+systemctl status hkids
+○ hkids.service - hkids deamon server
+     Loaded: loaded (/usr/lib/systemd/system/hkids.service; enabled; vendor preset: disabled)
+// 上面enabled代表hkids服务开机自启
+systemctl enable hkids
+
 
 
 tar2 
