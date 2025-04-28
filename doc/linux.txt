@@ -329,6 +329,17 @@ grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS
 ps -aux |grep -m 2 'root'
 
 
+grub2 
+无故进入grub模式,屏幕显示grub>
+// hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
+ls (hd1,gpt2)/
+// 手动引导
+set root=hd1,gtp2
+linux /vmlinuz-XX root=/dev/cpsVG/rootfs console=tty0
+initrd /initramfs-XX.img
+boot
+grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg，重新生成grub.cfg文件。生成成功后reboot，OS恢复正常
+
 
 hwlock2 
 // rtc硬件时钟==hwlock -r       systemtime==date  
