@@ -1033,7 +1033,10 @@ top -M
 
 
 tune2fs2 
-// 我常用来查看fs status:clean还是clean with errors
+// 我常用来查看fs status:clean还是clean with errors,所以此clean与fsck提示中still have error并不冲突
+   clean	文件系统已正常卸载（无未修复的错误）。	正常关机或手动 umount 后。
+   dirty	文件系统未正常卸载（可能存在未同步的元数据或错误）。	强制重启、崩溃、断电等异常情况。
+   errors	文件系统已标记为存在错误（需手动修复）。	检测到不一致时（如 fsck 未完成修复）
 tune2fs -l /dev/mapper/rootfs
 
 
