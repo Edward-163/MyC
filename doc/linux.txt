@@ -352,6 +352,7 @@ hwclock -w
 ifconfig2 
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
+ifconfig eth0 up
 
 
 iostat2 
@@ -1134,6 +1135,13 @@ timeout2
 timeout -s KILL 600 reboot 
 // ping会一直ping的,下面这个就很好理解,让它ping 2秒后就kill掉
 timeout -s KILL 2 ping www.baidu.com
+
+
+watch2 
+监视命令
+// -d 高亮变化差异
+   -n2 采样间隔2sec
+watch -d -n2 'ps -ef |grep systemd |grep -v grep'
 
 
 wc2 
