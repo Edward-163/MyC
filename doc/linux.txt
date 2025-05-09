@@ -17,11 +17,14 @@ console=tty0 console=ttyAMA0,115200
 
 
 重置root密码 
-1 按e进入grub页面
-2 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break=mount         
-3 chroot /sysroot
-4 vim /etc/shadow 把root:XX: 前两个冒号之间的密码密文删掉,:wq
-5 passwd命令
+按e进入grub页面
+启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break=mount         
+mount -o remount,rw /sysroot
+chroot /sysroot
+passwd -d root // 下面是备选方法?
+   vim /etc/shadow 把root:XX: 前两个冒号之间的密码密文删掉,:wq   
+   echo "root:XXX" |chpasswd
+passwd root 
 
 
 rd.break2 
@@ -659,10 +662,12 @@ pageUp2
 
 
 passwd2 
-// -S status
+// -d delete the password for the named account (root only)
+   -S status
    -l lock
    -u unlock
 passwd -S testuser
+passwd -d root
 testuser P 05/15/2024 0 99999 7 -1
 各字段详细解释
 1	testuser	用户名
