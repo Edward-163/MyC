@@ -25,6 +25,8 @@ passwd -d root // 下面是备选方法?
    vim /etc/shadow 把root:XX: 前两个冒号之间的密码密文删掉,:wq   
    echo "root:XXX" |chpasswd
 passwd root 
+sync // 用于 强制将内存缓冲区中的数据写入磁盘
+ctrlD ctrlD 正常进大系统
 
 
 rd.break2 
