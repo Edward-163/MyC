@@ -1062,6 +1062,18 @@ cat /proc/sys/kernel/core_pattern
 %t  core掉的time
 
 
+umount2 
+// -l detach the filesystem now, and cleanup all later
+   系统会立即断开挂载点的目录树，但实际的文件系统卸载会延迟到所有相关进程结束访问后再完成。这允许你卸载一个“繁忙”的文件系统，而无需先终止所有占用它的进程。
+   典型使用场景：
+      强制卸载被占用的挂载点：
+      例如，当你无法直接卸载 NFS 共享或外接硬盘（因为有进程卡死或无法终止），可以用 umount -l 先解除挂载点，后续由系统自动处理残留的访问。
+      避免阻塞操作：
+      某些情况下（如网络存储不可达），常规卸载可能卡住，-l 可以立即返回，让卸载在后台完成
+   -f --force
+umount -l /var/log
+
+
 uname2 
 uname -a // unixName 通常带-a 显示系统信息(内核版本啥的)
 uname -r // 直接查看内核版本
