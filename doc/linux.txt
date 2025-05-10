@@ -906,7 +906,7 @@ ssh-keygen2
 ssh-keygen -C XXX@163.com
 
 
-ssh2 
+ssh2 sshd_config2 
 ssh_config主要关注客户端如何连接到SSH服务器，‌
 sshd_config则关注SSH服务器如何配置以响应这些连接请求
 sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址
@@ -919,6 +919,9 @@ message日志bind to port 22 on XX failed: cannot assign requested address
 sysmonitor日志eth4: ip[172.28.0.4] prefixlen[20] is added,
 正确时序:先ip被添加,sshd服务拉起后才会根据listenAddress去监听ip
 为啥绑定报错->因为ip不存在->为啥不存在->dhcp还没获取到这个ip地址
+// 实测AllowUsers不添加root,root没法登陆
+PermitRootLogin yes
+AllowUsers XX root
 
 
 stat2 
