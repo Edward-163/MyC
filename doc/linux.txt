@@ -745,7 +745,7 @@ Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
 
-ps2
+ps2 
 // 查看所有帮助
 ps --help a
 ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
@@ -800,13 +800,17 @@ route -A inet6 -n
 
 
 rpm2 
-rpm -qa // 查询所有包
+// -a 查询所有包,但我还是觉得没有grep耗时
+   --dbpath 举例备区是老版本且人为挂在/mnt下,你想在备区里面查找某个rpm包,那么就得把rpm数据库指向备区
+rpm -qa 
+rpm -qa openssh
+rpm -qa openssh --dbpath=/mnt/var/log/rpm/
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
 // --changelog 比如你给某个rpm包合入过代码,那么就能用changelog查询到
 rpm -qi XXX.rpm --changelog |less 
 // -f 查询哪些包"拥有"此文件
+   -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
 rpm -qf /lib64/librdmacm.so.1
-// -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
 rpm -ql openssh-client-XXX
 // 查询XXX所需依赖
 rpm -qR XXX
