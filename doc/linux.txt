@@ -722,17 +722,20 @@ rootfs / rootfs rw 0 0
 fileSys 挂载点 fs类型如ext4 挂载选项 dump备份表示(0不备份,1备份) pass(FS检查顺序,0不检查,1第一个检查,n第n个检查)
 
 
-trunk2 
+trunk2 bond2 
 /proc/net/bonding/trunkXXX
-speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
-举例两个网口组成trunk0,可以通过mac找到trunk的网口,比如eth9以前的mac是后面permaddr,组trunk后mac统一变成前面的值,
-10: eth8: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master trunk0 state UP group default qlen 1000
-    link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff
-11: eth9: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master trunk0 state UP group default qlen 1000
-    link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff permaddr ac:dc:ca:7e:a1:e3
-254: trunk0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc noqueue master ovs-system state UP group default qlen 1000
-    link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::aedc:caff:fe7e:a1e2/64 scope link
+   speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
+   举例两个网口组成trunk0,可以通过mac找到trunk的网口,比如eth9以前的mac是后面permaddr,组trunk后mac统一变成前面的值,
+   10: eth8: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master trunk0 state UP group default qlen 1000
+       link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff
+   11: eth9: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master trunk0 state UP group default qlen 1000
+       link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff permaddr ac:dc:ca:7e:a1:e3
+   254: trunk0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc noqueue master ovs-system state UP group default qlen 1000
+       link/ether ac:dc:ca:7e:a1:e2 brd ff:ff:ff:ff:ff:ff
+       inet6 fe80::aedc:caff:fe7e:a1e2/64 scope link
+// 给tunk加减网口
+echo +eth5 > /sys/class/net/trunk2/bonding/slaves
+echo -eth5 > /sys/class/net/trunk2/bonding/slaves
 
 
 /proc/pidXXX/fs // ls /proc/pidXXX/fd |wc -l 这种也能统计进程打开的文件数
