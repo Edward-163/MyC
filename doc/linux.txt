@@ -821,6 +821,12 @@ rpm -qR XXX
 rpm -Uvh 1260 --nodeps
 // --forece 常见于XXX already install,重新强制安装
 rpm -ivh XXX.rpm --force
+// --rebuilddb 三步走,一般来说/var/log/rebuilddb.log会记录重建时候把哪些rpm添加到db的idx中
+rm -f /var/lib/rpm/__db*
+rm -f /var/lib/rpm/*.lock
+rpm --rebuilddb
+
+
 
 
 rpm2cpio2 
