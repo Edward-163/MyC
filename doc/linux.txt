@@ -566,6 +566,15 @@ lspci -svvv 00:03.0
 lspci -tv 
 
 
+lsscsi2 
+// -g Output the SCSI generic device file name.
+lsscsi -g
+   scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备 
+   [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg0
+   块设备:直接存取数据,像餐厅点菜
+   scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
+
+
 lvresize2 resize2fs2 
 // -L 调整大小,
 lvresize2 -L+9G /dev/mapper/rootfs
