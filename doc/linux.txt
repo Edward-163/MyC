@@ -1154,6 +1154,8 @@ lsof -t /var/log |xargs ls -s
 yum2 
 // 配置仓库/etc/yum.repo.d/??.repo
 yum search git
+// 查询某个包的来源,字段from repo
+yum info git
 yum install git
 yum list installed |grep git*
 yum remove git
