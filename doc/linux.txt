@@ -1018,14 +1018,14 @@ systemctl enable hkids
 
 
 tar2 
-// 压缩某个目录
-   -z 压缩,解压 XXX.tar.gz的话,一般加个它
+// -c compress压缩某个目录
+   -z 使用gzip,XXX.tar.gz的话,一般加个它
 tar -cvf XXX.tar /home/*
-tar -zcvf XXX.tar.gz /home/*
-// 压缩多个文件
+tar -cvfz XXX.tar.gz /home/*
 tar -cvf XXX.tar /home/a.txt /home/b.txt
-// -C 解压到目标目录下
-tar -zxvf  XXX.gz  -C  ./
+// -x extract抽取
+   -C 解压到目标目录下
+tar -xvfz  XXX.tar.gz  -C  ./
 
 
 tail2 
