@@ -664,7 +664,7 @@ osi七层    简化4层
 应用层 定义客户端与服务端数据交换方式 如http ftp
 传输层 定义数据传输方法,主要两种协议 tcp udp 举例http的数据包不允许丢失,因此采用tcp来传输
 网络层 使用ip定位目标计算机,采用route决定数据传输路径
-链路层 可能是eth,光前fiber,无线网
+链路层 可能是eth,光纤fiber,无线网
 
 
 pageUp2
@@ -1041,6 +1041,7 @@ cat XX.txt |tail -9
 
 tcpdump2 
 格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
+输出格式:时分秒毫秒 协议(ivp6/ip)  发送端ip+port > 接收端ip+port 数据包内容
 // -v verbose -v -vv -vvv
    -nn 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
    -e  显示数据链路层信息。默认情况下 tcpdump 不会显示数据链路层信息，使用 -e 选项可以显示源和目的 MAC 地址，以及 VLAN tag 信息
