@@ -1043,7 +1043,7 @@ tcpdump2
 格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
 direction取值   src dst 
 type取值         host net port
-输出格式:时分秒毫秒 协议(ivp6/ip)  发送端ip+port > 接收端ip+port 数据包内容
+输出格式:时分秒毫秒 协议(ivp6/ip)  src的ip+port > dst的ip+port 数据包内容
 // -v verbose -v -vv -vvv
    -nn 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
    -e  显示数据链路层信息。默认情况下 tcpdump 不会显示数据链路层信息，使用 -e 选项可以显示源和目的 MAC 地址，以及 VLAN tag 信息
