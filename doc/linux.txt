@@ -1041,6 +1041,8 @@ cat XX.txt |tail -9
 
 tcpdump2 
 格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
+direction取值   src dst 
+type取值         host net port
 输出格式:时分秒毫秒 协议(ivp6/ip)  发送端ip+port > 接收端ip+port 数据包内容
 // -v verbose -v -vv -vvv
    -nn 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
@@ -1048,7 +1050,7 @@ tcpdump2
    -i 指定interface, -i any就是指定所有网口(物理网卡可能有多个网口,例如eth2)
    -w 指定输出文件
    [src/dst] host 192.XX 感觉host+ip固定写法吧,host不关心src/dst之类的
-tcpdump -vvv -i any host 192.168.0.1 and port 443 -w /home/a.pcap  
+tcpdump -vvv -i any -w /home/a.pcap  host 192.168.0.1 and port 443 
 tcpdump -i trunk0 -nne 
 tcpdump -vvv -i enp129s0f0 -w XXX.pcap
 // 源端ssh连不上目的,|info|sshd[2054272]|Connection from fc51:158:46:17::32 port 58890 on fc00:0:0:2621::2 port 22 rdomain ""
