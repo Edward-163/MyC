@@ -695,8 +695,8 @@ testuser P 05/15/2024 0 99999 7 -1
 
 perf2
 // -g 记录调用栈
-// -C 0 指定cpu0
-perf top -g -C 0
+// -C 0 指定cpu0,2,3,4,6
+perf top -g -C 0,2-4,6
 // 输出结果里idle可以忽略跳过,主要关注快慢节点上的区别 do_syscall,exc_page_fault
 do_syscall代表用户态切到内核执行系统调用,所以这个也是上层排查
 exc_page_fault跟内存分配强相关,慢环境上内存剩余约4g,快环境上内存剩余约15G,慢环境上大页占据约9G
