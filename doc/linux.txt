@@ -29,6 +29,11 @@ sync // 用于 强制将内存缓冲区中的数据写入磁盘
 ctrlD ctrlD 正常进大系统
 
 
+子网掩码
+127.0.0.1/8   所有(二进制)前8位相同的IP地址都属于这个网段,实际覆盖了 127.0.0.0 ~ 127.255.255.255
+2^6=64,网段最大值255.255.255.255     256=2^8
+
+
 rd.break2 
 我试过了rd.break不写默认效果是mount,草ds乱说的
 我试过了rd.break不写默认效果是mount,草ds乱说的
@@ -514,16 +519,8 @@ ln2
 // ln -s target link_name
 
 
-lvm2 
-lvm.conf  filter
-// This is a list of regular expressions used to accept or reject block device path names
-   LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
-filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
-// Reject the cdrom drive:
-filter = [ "r|/dev/cdrom|" ]
-// vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
-   系统启动时，bios会扫描所有盘找到系统启动的引导文件。也就是boot分区(只有系统盘中才会有boot分区)，及分区内的grub.cfg，引导文件initrd等。引导入内存后根据lvm.conf2的过滤条件激活逻辑卷，然后挂载启动
-lvm vgchange -ay 
+lo2
+loop是虚拟网络几口,作用类似于给自己写纸条,不经过外界
 
 
 lsblk2
@@ -573,6 +570,17 @@ lsscsi -g
    [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg0
    块设备:直接存取数据,像餐厅点菜
    scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
+
+lvm2 
+lvm.conf  filter
+// This is a list of regular expressions used to accept or reject block device path names
+   LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
+filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
+// Reject the cdrom drive:
+filter = [ "r|/dev/cdrom|" ]
+// vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
+   系统启动时，bios会扫描所有盘找到系统启动的引导文件。也就是boot分区(只有系统盘中才会有boot分区)，及分区内的grub.cfg，引导文件initrd等。引导入内存后根据lvm.conf2的过滤条件激活逻辑卷，然后挂载启动
+lvm vgchange -ay 
 
 
 lvresize2 resize2fs2 
