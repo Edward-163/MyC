@@ -1051,8 +1051,12 @@ cat XX.txt |tail -9
 
 tcpdump2 
 格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
+proto取值         传输层网络层协议可以ip ip6 icmp tcp udp,应用层协议不行http https dns ssh这些一般用特定的port过滤
 direction取值   src dst 
-type取值         host net port
+type取值         host 127.0.0.1 
+                  net127.0.0.1/8 
+                  port22 
+                  portrange 22-24
 输出格式:时分秒毫秒 协议(ivp6/ip)  src的ip+port > dst的ip+port 数据包内容
 // -v verbose -v -vv -vvv
    -nn 单个 n 表示不解析域名，直接显示 IP；两个 n 表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
