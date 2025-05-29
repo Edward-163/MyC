@@ -1088,6 +1088,11 @@ top2
 top -M
 
 
+tty2 
+systemctl status getty@tty1
+systemctl status getty@tty2
+
+
 tune2fs2 
 // 我常用来查看fs status:clean还是clean with errors,所以此clean与fsck提示中still have error并不冲突
    clean	文件系统已正常卸载（无未修复的错误）。	正常关机或手动 umount 后。
