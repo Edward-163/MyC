@@ -582,6 +582,14 @@ filter = [ "r|/dev/cdrom|" ]
 // vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
    系统启动时，bios会扫描所有盘找到系统启动的引导文件。也就是boot分区(只有系统盘中才会有boot分区)，及分区内的grub.cfg，引导文件initrd等。引导入内存后根据lvm.conf2的过滤条件激活逻辑卷，然后挂载启动
 lvm vgchange -ay 
+lvm2 
+lv      如果cpsvg卷组里只有rootfs,bak-rootfs,log,那么lv==3
+vg
+pv      由pe组成,vg_size==pe大小*pe数量
+pp(盘
+vgdisplay -C
+VG    #PV #LV #SN(snapshots卷组快照数量)   Attr   VSize VFree
+cpsVG   1  15   0                         wz--n- 1.45t 1.30t
 
 
 lvresize2 resize2fs2 
