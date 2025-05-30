@@ -35,7 +35,7 @@ ctrlD ctrlD 正常进大系统
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
 
-rd.break2 
+rd.break2  
 我试过了rd.break不写默认效果是mount,草ds乱说的
 我试过了rd.break不写默认效果是mount,草ds乱说的
 // /sysroot下面空的
@@ -45,6 +45,11 @@ rd.break=mount
 // 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
 rd.break=initqueue
 
+systemd.debug-shell=1  
+tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
+有一次
+kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让我修,修复ctrlD一路往下multipathd.service又报错了
+rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
 
 
 blkid2 
