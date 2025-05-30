@@ -207,6 +207,9 @@ echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 /etc/pam.d/     Pluggable Authentication Modules  
 举例bmc界面登录,输完账号不能输入密码,直接login incorrect,无奈的办法就是对比异常/正常的/etc/pam.d内文件,有差异就替换吧
+// 比如sshd内容第一行
+auth       substack(将另一个pam配置文件作为子栈嵌入当前配置)     password-auth(这就是另一个pam配置文件)
+auth       sufficient(足够的,此行auth认证后,跳过后续auth认证)    pam_unix.so nullok try_first_pass
 
 
 /etc/fstab2 
