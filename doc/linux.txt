@@ -205,6 +205,10 @@ echo2
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
+/etc/pam.d/     Pluggable Authentication Modules  
+举例bmc界面登录,输完账号不能输入密码,直接login incorrect,无奈的办法就是对比异常/正常的/etc/pam.d内文件,有差异就替换吧
+
+
 /etc/fstab2 
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
 根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
