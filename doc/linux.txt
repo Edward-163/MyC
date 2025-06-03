@@ -974,6 +974,8 @@ sysmonitor日志eth4: ip[172.28.0.4] prefixlen[20] is added,
 // 实测AllowUsers不添加root,root没法登陆
 PermitRootLogin yes
 AllowUsers XX root
+// -v verbose mode
+ssh -v my@127.0.0.1
 
 
 stat2 
