@@ -896,6 +896,15 @@ scp hyj@198.91.130.161:/home/hyj/a.log ./
 scp -r -o StrictHostKeyChecking=no /boot/efi/*  172.0.0.1:/boot/efi
 
 
+selinux2 getenforce2 
+selinux是安全子系统,限制进程的权限
+// 查看selinux运行模式
+   Enforcing（强制模式）：严格执行安全策略，拒绝违规操作。
+   Permissive（宽容模式）：仅记录违规行为但不阻止，用于调试。
+   Disabled（禁用）：完全关闭 SELinux
+getenforce
+
+
 sh2 
 // -c 把后面字符串当命令执行 https://blog.csdn.net/weixin_53389944/article/details/136560945
 sh -c 'XXX'
