@@ -856,6 +856,8 @@ rpm2
    --dbpath 举例备区是老版本且人为挂在/mnt下,你想在备区里面查找某个rpm包,那么就得把rpm数据库指向备区
    --nodeps 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
    --forece 常见于XXX already install,重新强制安装
+   -Uvh 升级包,会删除旧包
+   -ivh 安装包,不管旧包,同名同版本包例外,会有提示
 rpm -qa 
 rpm -qa openssh
 rpm -qa openssh --dbpath=/mnt/var/log/rpm/
