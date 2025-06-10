@@ -849,29 +849,27 @@ route -A inet6 -n
 
 rpm2 
 // -a 查询所有包,但我还是觉得没有grep耗时
+   -f 查询哪些包"拥有"此文件
+   -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
+   -R, --requires查询XXX所需依赖
+   --changelog 比如你给某个rpm包合入过代码,那么就能用changelog查询到
    --dbpath 举例备区是老版本且人为挂在/mnt下,你想在备区里面查找某个rpm包,那么就得把rpm数据库指向备区
+   --nodeps 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
+   --forece 常见于XXX already install,重新强制安装
 rpm -qa 
 rpm -qa openssh
 rpm -qa openssh --dbpath=/mnt/var/log/rpm/
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
-// --changelog 比如你给某个rpm包合入过代码,那么就能用changelog查询到
 rpm -qi XXX.rpm --changelog |less 
-// -f 查询哪些包"拥有"此文件
-   -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
 rpm -qf /lib64/librdmacm.so.1
 rpm -ql openssh-client-XXX
-// 查询XXX所需依赖
 rpm -qR XXX
-// --nodeps 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
 rpm -Uvh 1260 --nodeps
-// --forece 常见于XXX already install,重新强制安装
 rpm -ivh XXX.rpm --force
 // --rebuilddb 三步走,一般来说/var/log/rebuilddb.log会记录重建时候把哪些rpm添加到db的idx中
 rm -f /var/lib/rpm/__db*
 rm -f /var/lib/rpm/*.lock
 rpm --rebuilddb
-
-
 
 
 rpm2cpio2 
