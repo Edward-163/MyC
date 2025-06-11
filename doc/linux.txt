@@ -167,6 +167,7 @@ df -h // disk free
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
 df -T // 打印fs类型
 
+
 dhclient2 
 // 动态获取ip,并显示详细过程
 dhclient -v
@@ -179,10 +180,12 @@ dmesg2
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
 dmesg -c
 
+
 dmidecode2 
 // -t 指定类型  0-bios 1-system 等等
 dmidecode -t bios
 dmidecode -t 1
+dmidecode -t processor // 如展示core一共多少个,启用多个少core
 
 
 dracut2
