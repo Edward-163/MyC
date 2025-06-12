@@ -1251,6 +1251,11 @@ timeout -s KILL 600 reboot
 timeout -s KILL 2 ping www.baidu.com
 
 
+unzip2 
+// -d extract files into exdir
+unzip XX.zip -d /dirXX
+
+
 watch2 
 监视命令
 // -d 高亮变化差异
