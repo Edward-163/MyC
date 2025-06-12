@@ -1066,6 +1066,10 @@ systemctl status hkids
 systemctl enable hkids
 
 
+systemd-analyze set-log-level debug
+systemd-analyze set-log-level info
+systemd-analyze blame // 展示各阶段耗时
+
 
 tar2 
 // -c compress压缩某个目录
