@@ -811,6 +811,17 @@ ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'                    
 ps -aux --sort=-rss |head -9
 
 
+pstree2 
+  -l, --long          don't truncate long lines
+  -p, --show-pids     show PIDs; implies -c
+  -s, --show-parents  show parents of the selected process
+// 无论是替换rm二进制还是ip二进制,玩法都类似
+#! /bin/bash
+echo $0 $@ >> /tmp/xx.log
+pstree -lsp $$ >> /tmp/xx.log
+ip.bak $@
+
+
 pushd popd dirs 目录栈
 // 往目录栈top压入 /home 并切到此目录
 pushd /home
