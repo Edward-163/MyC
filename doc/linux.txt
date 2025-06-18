@@ -1064,6 +1064,11 @@ systemctl status hkids
      Loaded: loaded (/usr/lib/systemd/system/hkids.service; enabled; vendor preset: disabled)
 // 上面enabled代表hkids服务开机自启
 systemctl enable hkids
+// 开启udev debug级别,新增打印设备匹配udev规则
+vim /etc/udev/udev.conf 打开注释行,并把info改成debug    
+systemctl daemon-reload
+systemctl restart systemd-udevd
+
 
 
 systemd-analyze set-log-level debug
