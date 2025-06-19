@@ -188,6 +188,12 @@ dmidecode -t 1
 dmidecode -t processor // 如展示core一共多少个,启用多个少core
 
 
+dos2unix2 
+将Windows格式文件转换为Unix、Linux格式的实用命令
+// 比如你将window上sh脚本拷贝至linux环境,就容易提示\r错误异常
+dos2unix XX.sh
+
+
 dracut2
 将为当前运行的内核版本生成一个新的initramfs映像文件，并将其保存在/boot目录下
 // 不加force会提示不会覆盖已有镜像,加了后,镜像的modify,change会更新,
