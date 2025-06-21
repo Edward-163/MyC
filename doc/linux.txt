@@ -1248,7 +1248,9 @@ who
 
 wget2 
 // XX.tar.gz.sha256sum这个文件一般较小,下载完后右键可以copy download link,然后把链接的.sha256sum直到末尾全删掉就是tar.gz的下载链接了
+   --no-check-certificate 
 wget XX.tar.gz
+wget --help |grep certi
 
 
 xargs 
