@@ -894,6 +894,10 @@ rm -f /var/lib/rpm/*.lock
 rpm --rebuilddb
 
 
+rpmbuild2 
+
+
+
 rpm2cpio2 
 // 提取rpm包中文件,-v代表verbose
 rpm2cpio XXX.rpm | cpio -idv
@@ -1240,6 +1244,11 @@ usermod -md /home/hyj2 hyj
 
 // 常常通过ssh从首节点跳转到其他节点,其他节点过一会会自动退出,但自己又不是守在屏幕前,所以不清楚是目前首节点还是其他节点
 who
+
+
+wget2 
+// XX.tar.gz.sha256sum这个文件一般较小,下载完后右键可以copy download link,然后把链接的.sha256sum直到末尾全删掉就是tar.gz的下载链接了
+wget XX.tar.gz
 
 
 xargs 
