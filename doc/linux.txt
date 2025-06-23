@@ -560,6 +560,9 @@ sda                      8:0     0  3.5T  0 disk
 
 lscpu2
 有时候不同节点的cpu的flag不同,也有称为cpu feature的,而这些cpu flag从硬件获取的,大概率是bios设置相关,举例bios开关MonitorMwaitEnable,开了flag里面就有monitor这个值,没开就没有
+sockets            主板上物理cpu插槽
+cores per socket   单个cpu的物理核心数
+threads per core   每个物理核心能同时处理的线程数                  逻辑cpu核数==socket*core*thread
 
 
 lsof2
