@@ -75,6 +75,11 @@ cat
 cat > test.sh
 
 
+chmod2 
+// -R 目录以及文件递归改
+chmod 777 -R /sys/fs/cgroup/cpu/hyjXX
+
+
 cgroup2 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 // 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
