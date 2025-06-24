@@ -1202,6 +1202,15 @@ cat /proc/sys/kernel/core_pattern
 %t  core掉的time
 
 
+umask2 
+umask（用户文件创建掩码）是一个重要的权限管理机制，用于控制新创建文件和目录的默认权限
+最终权限 = 默认最大权限 & ~umask
+文件：默认最大权限为 666（rw-rw-rw-）
+如果umask==022 ,快捷计算规律:文件默认权限==666-022==644
+目录：默认最大权限为 777（rwxrwxrwx）
+如果umask==022 ,快捷计算规律:文件默认权限==777-022==755
+
+
 umount2 
 // -l detach the filesystem now, and cleanup all later
    系统会立即断开挂载点的目录树，但实际的文件系统卸载会延迟到所有相关进程结束访问后再完成。这允许你卸载一个“繁忙”的文件系统，而无需先终止所有占用它的进程。
