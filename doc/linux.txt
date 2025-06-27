@@ -1188,6 +1188,12 @@ tune2fs2
 tune2fs -l /dev/mapper/rootfs
 
 
+uefi2    legacyBios(老技术都快淘汰了)
+ls /sys/firmware/efi 
+/boot/efi/EFI/XXX/grub.cfg                             uefi
+/boot/grub2/grub.cfg                            legacy
+
+
 ulimit2
 ulimit -a // 强烈推荐这个
  open files // 进程打开的文件数量限制
