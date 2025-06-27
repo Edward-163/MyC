@@ -1,8 +1,8 @@
 我在每个命令后面加个2只是方便搜索
 bios自检            检查硬件是否正常
 bootloader引导程序  grub就是其中之一
-grub加载内核和initramfs            bootloader加载内核文件(/boot/vmlinuz-5.10.0-136.12.0.86.h2196.x86_64包含内核启动代码和必要的驱动)到内存中
-内核启动启动并解压initramfs         (/boot/initramfs-5.10.0-136.12.0.86.h2196.x86_64.img临时文件系统,包含linux系统所需驱动和必要文件) 到内存中，并执行其中的 /init 脚本
+grub加载内核vmlinuz            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
+内核启动启动并解压initramfs         /boot/initramfs-5.10.0XXX.x86_64.img临时文件系统,包含linux系统所需驱动和必要文件到内存中(举例 帮内核加载硬件驱动)，并执行其中的 /init 脚本
 init进程           第一个进程(举例如systemd),读取/etc/inittab配置,启动其他进程
    后续会运行dracut-cmdline等dracut子命令
    lsinitrd initramfs-5.10.0-136.12.0.86.h1428.aarch64.img |grep dracut-cmdline
