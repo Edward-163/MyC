@@ -80,6 +80,19 @@ chmod2
 chmod 777 -R /sys/fs/cgroup/cpu/hyjXX
 
 
+chrt2 
+诉求:把进程杀掉再拉起,要求0.5s以内,这时候这块知识就有用了
+实时进程与普通进程区别在于schedule策略
+实时进程 SCHED_FF先进先出 SCHED_RR轮训
+普通进程 SCHED_OTHER
+ps -eo pid,comm,cls,rtprio -p pid
+// -f 设置SCHED_FF先进先出
+   -r 设置SCHED_RR轮训
+chrt -p pid
+chrt -f 99 // 优先级[1,99最高]
+chrt -r 99
+
+
 cgroup2 
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 // 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
@@ -820,6 +833,7 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
    -o  指定格式,后面单词(官网称之为format specifiers)不能写错
    psr 代表processor that process last executed on  进程运行的CPU编号?翻译不够准确?
    comm 代表command
+   cls   scheduling  class of the process 
 ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
 // --sort=-rss -rss代表rss数字升序,不写或者写+默认数字升序
 ps -aux --sort=-rss |head -9
