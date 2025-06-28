@@ -441,6 +441,25 @@ brd ff:ff:ff:ff:ff:ff   广播地址
 ip a s // 感觉这两个命令用来查询网卡信息,没区别呀...
 
 
+ip addr del
+背景:eth0和bro0的mac是一样的,我dhclient -v之后,这个主机我就ssh连不上了
+东哥:有了ip后,他就不是二层口,三层口,他不需要ip,总之说了一堆复杂的,建议删除ip命令
+ip addr del 9.13.3.11/32 dev eth0
+eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq master ovs-system state UP group default qlen 1000
+    link/ether 14:30:04:ea:87:8a brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::1630:4ff:feea:878a/64 scope link
+       valid_lft forever preferred_lft forever
+br0: <BROADCAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether 14:30:04:ea:87:8a brd ff:ff:ff:ff:ff:ff
+    inet 9.13.3.11/16 brd 9.13.255.255 scope global dynamic br0
+       valid_lft 76115sec preferred_lft 76115sec
+    inet6 2000:13::1630:4ff:feea:878a/64 scope global dynamic mngtmpaddr
+       valid_lft 2591998sec preferred_lft 604798sec
+    inet6 fe80::2088:76ff:fe20:8de4/64 scope link
+       valid_lft forever preferred_lft forever
+
+
+
 // 将物理网卡 eth5 的第 4 个虚拟网卡的带宽限制为 1000 Mbps
 ip link set eth5 vf 4 rate 1000
 ip link set eth4 down/up
