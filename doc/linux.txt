@@ -9,6 +9,10 @@ init进程           第一个进程(举例如systemd),读取/etc/inittab配置,
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面(无论是大伟博客还是宏涛给的journal.log都是先启动systemd,很后面才切根swicthRoot)
 
 
+第一内核 主内核
+第二内核 主内核crash时候启用,cmdline中crashkernel=256M 就是预留给第二内核使用的
+
+
 配置串口
 // x86
 console=tty0 console=ttyS0,115200
