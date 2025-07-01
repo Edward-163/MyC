@@ -49,11 +49,18 @@ rd.break=mount
 // 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
 rd.break=initqueue
 
+
 systemd.debug-shell=1  
 tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
 有一次
 kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让我修,修复ctrlD一路往下multipathd.service又报错了
 rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
+
+
+bc2 
+// scale=2000 保留小数点后2000位
+   4*a(1)==圆周率
+time echo "scale=2000;4*a(1)" |bc -l  // 用于简易测试环境cpu性能??
 
 
 blkid2 
