@@ -893,6 +893,12 @@ dirs // 展示目录栈 /home /tmp
 popd
 
 
+rc.d2 
+/etc/rc.d/init.d/                // 存放系统服务脚本
+/etc/rc.d/after.local            // 所有系统服务启动后执行的脚本,比rc.local早一些
+/etc/rc.d/rc.local               // 系统启动时最后执行的用户自定义脚本
+
+
 realpath2 
 realpath 某文件 // 显示文件路径
 
