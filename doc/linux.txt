@@ -644,6 +644,15 @@ lsscsi -g
    块设备:直接存取数据,像餐厅点菜
    scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
 
+
+lvcreate2 
+// -L --size 指定大小
+   -n --name 指定逻辑卷名字
+   cpsVG  实际存在的某个卷组
+lvcreate -L 10G -n upgrade cpsVG
+mkfs.ext4 /dev/cpsVG/upgrade               // 格式化逻辑卷
+
+
 lvm2 
 lvm.conf  filter
 // This is a list of regular expressions used to accept or reject block device path names
