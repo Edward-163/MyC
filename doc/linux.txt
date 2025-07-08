@@ -105,6 +105,8 @@ chrt -r 99
 
 
 cgroup2 
+进制占用内存不受限制,oom
+进制占用cpu不受限制,其他进程无法得到调度,执行超时or失败,这就是为啥引入cgroup的原因
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 // 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
    需要拼接 /sys/fs/cgroup/memory/system.slice/XX
