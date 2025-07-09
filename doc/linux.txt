@@ -701,6 +701,14 @@ mkfs /dev/sda
 mkfs.ext4 /dev/sdb
 
 
+modinfo2 modprobe2 
+// 可以先查询下有没有ko,有的话再modprobe打上ko
+   1. modprobe 命令会自动加载所需的依赖模块，而 insmod 命令则不会。如果一个模块依赖于其他模块，使用 modprobe 命令可以自动加载这些依赖模块，而使用 insmod 命令则需要手动加载这些依赖模块。
+   2. modprobe 命令会从 /etc/modprobe.conf 和 /etc/modprobe.d 目录中读取配置文件，以确定要加载的模块及其参数。而 insmod 命令则需要手动指定要加载的模块及其参数。
+modinfo ipmi_watchdog
+modprobe ipmi_watchdog
+
+
 mount2 
 // -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
    mount device|dir -o options  官网:写设备和写挂载点都可以
