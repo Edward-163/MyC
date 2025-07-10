@@ -86,9 +86,26 @@ cat
 cat > test.sh
 
 
+chage2 
+chage -l root // list account info
+Last password change					: Nov 10, 2023
+Password expires					: Feb 08, 2024
+Password inactive					: never
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 90
+Number of days of warning before password expires	: 7
+
+
 chmod2 
 // -R 目录以及文件递归改
 chmod 777 -R /sys/fs/cgroup/cpu/hyjXX
+
+
+chown2 
+chown root:root b.txt // 改变文件的所有者:所有者组
+chown root a.txt //
+chown :root c.txt //
 
 
 chrt2 
@@ -128,6 +145,13 @@ cpio -id a.cpio
 rpm2cpio X.rpm | cpio -idv
 
 
+cracklib2 弱密码 密码字典
+// 解析字典,并输出字典规则内容到文件中,当 pw_dict 不存在时，cracklib-unpacker 可能自动尝试加载其他关联文件（如 pw_dict.pwd），因此不会直接报错
+cracklib-unpacker /usr/share/cracklib/pw_dict > /home/a.txt
+create-cracklib-dict a.txt  // 生成新的二进制字典
+update-cracklib  // 更新字典索引
+
+
 curl2 
 curl is a tool for transferring data from or to a server using URLs
 // -i 在输出中包含 HTTP 响应头（便于调试）
@@ -138,21 +162,7 @@ curl is a tool for transferring data from or to a server using URLs
 curl -igk -X GET https://XXX -H "accept: application/json"
 
 
-chage2 
-chage -l root // list account info
-Last password change					: Nov 10, 2023
-Password expires					: Feb 08, 2024
-Password inactive					: never
-Account expires						: never
-Minimum number of days between password change		: 0
-Maximum number of days between password change		: 90
-Number of days of warning before password expires	: 7
 
-
-chown2 
-chown root:root b.txt // 改变文件的所有者:所有者组
-chown root a.txt //
-chown :root c.txt //
 
 
 date2 
