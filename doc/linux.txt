@@ -1067,6 +1067,19 @@ sh2区别
 sh 命令用于启动一个新的子 Shell 来执行脚本文件
 
 
+strace2 
+琦哥:strace抓系统调用:用户态陷入到内核态,vhost已经是内核态进程,strace抓个毛
+// -T 显示每一调用所耗的时间. 
+   -t 在输出中的每一行前加上时间信息. 
+   -tt 在输出中的每一行前加上时间信息,微秒级. 
+   -ttt 微秒级输出,以秒了表示时间. 
+   -f 观察fork子进程啥的,
+   -o 指定输出文件 
+   -p 指定进程号
+strace -o /home/fsp/hyj.txt -f -tt rpm -evh hinic-5.5.0.15_XX
+strace -o a.txt -Tttt -p 73010 
+
+
 string2
 从二进制中提取字符串的工具
 string /usr/lib64/libc.so.6 |grep GLIBC    最高支持2.38??
