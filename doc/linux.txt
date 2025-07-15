@@ -896,10 +896,12 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
 // -e Select all processes.  Identical to -A
    -L Show threads, possibly with LWP and NLWP columns
    -o  指定格式,后面单词(官网称之为format specifiers)不能写错
+   pid 
    psr 代表processor that process last executed on  进程运行的CPU编号?翻译不够准确?
-   comm 代表command
-   cls   scheduling  class of the process 
-ps -eLo pid,psr,comm | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
+   cmd 详细命令
+   comm 代表command,没卵用,短的很
+   cls  scheduling class of the process 
+ps -eLo pid,psr,cmd | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
 // --sort=-rss -rss代表rss数字升序,不写或者写+默认数字升序
 ps -aux --sort=-rss |head -9
 
