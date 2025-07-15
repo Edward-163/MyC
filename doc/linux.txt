@@ -1233,6 +1233,21 @@ pid 3960447's current affinity list: 40-47
 taskset -cp 0,3  1393 
 pid 1393's current affinity list: 0,4
 pid 1393's new affinity list: 0,3
+// 常见报错,绑核失败,
+taskset -cp 40  11940
+pid 11940's current affinity list: 0-11,28-39
+taskset: failed to set pid 11940's affinity: Invalid argument
+// 接上,这个进程的cpuset位于system-hostos.slice下面
+cat /proc/11940/cgroup
+...
+8:cpuset:/system.slice/system-hostos.slice
+// 范围没有40
+cat /sys/fs/cgroup/cpuset/system.slice/system-hostos.slice/cpuset.cpus
+0-11,28-39
+// 注意:父cgroup的约束,不能乱echo
+cat /sys/fs/cgroup/cpuset/system.slice/cpuset.cpus
+0-55
+echo '40,42-44' > /sys/fs/cgroup/cpuset/system.slice/system-hostos.slice/cpuset.cpus
 
 
 tcpdump2 
