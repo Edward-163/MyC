@@ -365,12 +365,12 @@ find /var/log -type f -printf '%s %p\n' |sort -n -k 1
 free2 
 free -m
 
+
 fuser2      
 Show which processes use the named files, sockets, or filesystems.
 // -m show all processes using the named filesystems or block device
    -v verbose
 fuser -mv /var/log
-
 
 
 fsck2 
@@ -482,7 +482,6 @@ br0: <BROADCAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default 
        valid_lft forever preferred_lft forever
 
 
-
 // 将物理网卡 eth5 的第 4 个虚拟网卡的带宽限制为 1000 Mbps
 ip link set eth5 vf 4 rate 1000
 ip link set eth4 down/up
@@ -490,10 +489,16 @@ ip link set eth4 down/up
 ip link set dev eth6 vf 9 mac 00:11:22:33:44:55
 
 
-
 // 展示所有网口信息  这个命令会显示vf配置在xml中的mac地址,ip a不行
 ip link show |grep XXX 
 ip link show eth9
+
+
+ipmitool2 
+// mc特质主板上负责ipmi的基板管理控制器baseboard manager controller
+ipmitool mc watdog get
+// 对ipmi的网络接口(lan通道,特指bmc的专用管理网络接口),其ip address输出就是bmc的ip
+ipmitool lan print
 
 
 iptables2 ip6tables 
