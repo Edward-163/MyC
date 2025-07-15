@@ -112,7 +112,7 @@ chrt2
 诉求:把进程杀掉再拉起,要求0.5s以内,这时候这块知识就有用了
 实时进程与普通进程区别在于schedule策略
 实时进程 SCHED_FF先进先出 SCHED_RR轮训
-普通进程 SCHED_OTHER
+普通进程 SCHED_OTHER                      cls列显示为TS
 ps -eo pid,comm,cls,rtprio -p pid
 // -f 设置SCHED_FF先进先出
    -r 设置SCHED_RR轮训
@@ -400,6 +400,7 @@ grep2
 grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS        
 // -m 最大匹配行数
 ps -aux |grep -m 2 'root'
+ps -ef |grep -E 'warn|err|critical'
 
 
 grub2 
