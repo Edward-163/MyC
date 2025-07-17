@@ -18,7 +18,7 @@ osi七层    层功能                          协议
 应用层交互的数据称为报文
 
 
-ifconfig2 
+ifconfig2 过气,能用ip命令替换就用ip命令吧
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
 ifconfig eth4 // 默认网卡配置文件  /etc/sysconfig/network-scripts/ifcfg-eth4 
@@ -27,3 +27,14 @@ ifconfig eth0 down
 // 添加一个新的ip
 ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
 ifconfig eth4:1 192.168.178.112/25 up
+
+
+route2 
+A网络中设备想连B网络中设备,需要借助连接两个网络的某特殊设备发送packet,这个特殊设备叫网关 <shell脚本攻略 6章>
+路由表包含了packet如何转发的信息
+// -A inet6 指定地址族,不写相当于只展示ipv4的
+   -n numeric,
+route -n // 默认inet4
+route -6 -n 
+route -A inet6 -n
+
