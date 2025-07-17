@@ -16,3 +16,14 @@ osi七层    层功能                          协议
 
 
 应用层交互的数据称为报文
+
+
+ifconfig2 
+// -a 展示所有network interface,不加只展示激活的interface
+ifconfig -a
+ifconfig eth4 // 默认网卡配置文件  /etc/sysconfig/network-scripts/ifcfg-eth4 
+ifconfig eth0 up
+ifconfig eth0 down
+// 添加一个新的ip
+ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
+ifconfig eth4:1 192.168.178.112/25 up
