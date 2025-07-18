@@ -1010,6 +1010,25 @@ rsync -r /home/dir1/ /home/dir2/
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 
+rsyslog2 
+/etc/rsyslog.conf +117             // 由此就是人为改成*.err,导致message,libvirt,sysmonitor等全部日志都不打印了
+*.debug;mail.none;authpriv.none;cron.none                :omfile:$message
+1. 日志过滤规则
+*.debug
+捕获 所有设施（facility） 且 日志级别为 debug 及以上（即所有日志，因为 debug 是最低级别）。
+* 表示所有设施（如 kern、auth、cron 等）。
+.debug 表示日志级别为 debug（包括 debug、info、notice、warning、err、crit、alert、emerg）。
+排除规则（; 分隔）
+mail.none：忽略邮件相关日志（mail 设施）。
+authpriv.none：忽略敏感认证日志（如 SSH、sudo，通常单独存储到 /var/log/secure）。
+cron.none：忽略计划任务日志（cron 设施，通常单独存储到 /var/log/cron）。
+2. 日志存储方式
+:omfile:$message
+omfile：表示使用 文件输出模块（Output Module File）。
+$message：将日志的原始消息内容写入文件（不附加额外元数据如时间戳、主机名等）。
+默认情况下，日志会写入 /var/log/messages（具体路径由全局配置决定）。
+
+
 scp2 
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
    -r 递归整个目录 
