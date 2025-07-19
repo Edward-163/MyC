@@ -27,6 +27,8 @@ ifconfig eth0 down
 // 添加一个新的ip
 ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
 ifconfig eth4:1 192.168.178.112/25 up
+// 操作系统（如 Linux、Windows）在驱动层允许用户通过命令或配置文件 临时覆盖 MAC 地址，实际硬件 MAC 并未改变，但所有网络通信使用修改后的值。
+ifconfig eth0 hw ether 00:11:22:33:44:55  # Linux 临时修改
 
 
 route2  https://www.man7.org/linux/man-pages/man8/route.8.html
@@ -69,5 +71,12 @@ A 检查本地 ARP 缓存，看是否已有 B 的 MAC 地址。
 如果没有，A 广播发送 ARP 请求（"Who has 192.168.1.20?"）。
 B 收到请求后，回复 ARP 应答（"192.168.1.20 is at AA:BB:CC:DD:EE:FF"）。
 A 将 B 的 IP-MAC 映射存入 ARP 缓存，后续通信直接使用。
+
+
+交换机会保留它连接局域网内所有mac,
+交换机管理mac  数据链路+物理层
+路由器管理ip   网络层
+
+
 
 
