@@ -210,8 +210,9 @@ df -T // 打印fs类型
 
 
 dhclient2 
-// 动态获取ip,并显示详细过程
+// -v verbose log ,动态获取ip,并显示详细过程,
 dhclient -v
+dhclient -v eth4 // 附:可以指定网络接口
 // -x shutDown client
 dhclient -x
 
