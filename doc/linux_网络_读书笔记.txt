@@ -65,6 +65,8 @@ route add default gw 192.168.1.1
 arp
 Address Resolution Protocol，地址解析协议）是一个用于将 IP 地址映射到 MAC 地址的网络协议，它维护了一个称为 ARP 缓存（ARP table） 的本地表，记录了最近通信过的设备的 IP-MAC 对应关系
 在局域网（LAN）中，设备通过 ARP 查询目标 IP 对应的 MAC 地址，以便在数据链路层（如以太网）正确传输数据。
+arp -a
+arp -e
 典型场景：
 当主机 A (192.168.1.10) 想与主机 B (192.168.1.20) 通信时：
 A 检查本地 ARP 缓存，看是否已有 B 的 MAC 地址。
