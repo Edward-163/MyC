@@ -2,6 +2,8 @@
 
 字符串 单双引号都算
 
+str = "1\'22\"33"
+print(3 * "*") // ***
 str = " aa bb "
 print(str.title()) # Aa Bb
 print(str.upper())
