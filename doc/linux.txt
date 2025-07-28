@@ -1430,6 +1430,9 @@ yum search git
 // 查询某个包的来源,字段from repo
 yum info git
 yum install git
+       import rpmUtils.updates  // 报错就是rpm包中相应的update.pyc update.py文件搞坏了,规避:rpm -Uvh yum同版本包
+   ValueError: bad marshal data (unknown type code)
+
 yum list installed |grep git*
 yum remove git
 yum provides ld // 由此编东西提示ld缺失,以为是binutils包里面的,实际是binutils-extra包里面的(provides含金量来了!!!)
