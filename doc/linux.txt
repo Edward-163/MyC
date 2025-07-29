@@ -1330,7 +1330,7 @@ ls /sys/firmware/efi
 /boot/grub2/grub.cfg                            legacy
 
 
-ulimit2
+ulimit2 限制进程core
 ulimit -a // 强烈推荐这个
  open files // 进程打开的文件数量限制
 ulimit // 直接查看core文件大小,返回unlimited代表core文件大小无限制
