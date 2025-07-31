@@ -1133,7 +1133,8 @@ sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
 // 可以观察到ssh监控的ip
 netstat -tunlp |grep ssh
-// 经典问题,假设listenAddress监听两个ip,上面命令只查出来一个
+
+// 问题1,假设listenAddress监听两个ip,上面命令只查出来一个
 首先systemctl status sshd 确认sshd服务拉起时间
 message日志bind to port 22 on XX failed: cannot assign requested address
 sysmonitor日志eth4: ip[172.28.0.4] prefixlen[20] is added,
@@ -1144,6 +1145,11 @@ PermitRootLogin yes
 AllowUsers XX root
 // -v verbose mode
 ssh -v my@127.0.0.1
+
+// 问题2,stop sshd服务后,修改/usr/lib/systemd/system/sshd.service中的Restart=no,期望ssh不在拉起,但ssh还是快速被拉起,sysmonitor.log记录是某个脚本拉的
+复制一行ExecStart
+ExecStart=exit 0
+Restart=no # 表示systemd不会去拉起sshd,和sysmonitor两码事?
 
 
 stat2 
