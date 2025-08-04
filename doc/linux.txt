@@ -612,6 +612,14 @@ lo2
 loop是虚拟网络几口,作用类似于给自己写纸条,不经过外界
 
 
+losetup2 
+// 将文件（如磁盘镜像）关联到 /dev/loopX 设备，使其可像物理磁盘一样操作
+losetup /dev/loop0   /opt/XXX/image/instance/disk.eph0
+// 如果这个镜像文件包含分区表的话,举例:就能看到/dev/mapper/loop0p1 /dev/mapper/loop0p2
+kpartx -av /dev/loop0
+
+
+
 lsblk2
 // -f 输出fs类型
 lsblk -f
