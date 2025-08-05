@@ -789,6 +789,11 @@ refid
    .init.   初始化中
    .locl.   本地时钟
    .gps.    gps时钟源
+// 同步时间
+   -d debugMode
+   -r port
+ntpdate -d -r 123 10.0.36.6
+
 
 
 ntpdate2 
