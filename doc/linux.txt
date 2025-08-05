@@ -782,6 +782,13 @@ ntp2
 network time protocol
 // 列出时钟源
 ntpq -p 
+remote
+   * 主同步源
+   + 备用同步源
+refid
+   .init.   初始化中
+   .locl.   本地时钟
+   .gps.    gps时钟源
 
 
 ntpdate2 
