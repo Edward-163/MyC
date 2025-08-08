@@ -331,12 +331,10 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 
 ethtool2 eth2 
 // -i interface 显示网络接口eth0的驱动信息,网络接口与网卡的物理网口(插孔)是两码事
+   -P permanent Addr ,也称 hardware Addr,也称 MAC
 ethtool -i eth0
-// -P permanent Addr ,也称 hardware Addr,也称 MAC
 ethtool -P eth0 
-up               L3网络层      管理员手动控制,独立于物理状态,如ifconfig up/down属于3层
-link detected:no L2数据链路层    由硬件/驱动直接检测
-NO-CARRIED         L1物理层      但是因为物理层的原因导致网络没连接，比如网线没插好之类的
+
 
 
 // export命令声明了将由子进程所继承的一个或多个变量。这些变量被导出后，当前shell脚本所执行的任何应用程序都会获得这个变量。
@@ -516,6 +514,10 @@ ip link set dev eth6 vf 9 mac 00:11:22:33:44:55
 // 展示所有网口信息  这个命令会显示vf配置在xml中的mac地址,ip a不行
 ip link show |grep XXX 
 ip link show eth9
+up               L3网络层      管理员手动控制,独立于物理状态,如ifconfig up/down属于3层,ip link set eth0 up/down 同理
+link detected:   L2数据链路层    由硬件/驱动直接检测
+lower_up                        物理链路激活,网线已连接且交换机端口正常               等价于detected:yes
+NO-CARRIED       L1物理层      物理链路断开，比如网线没插好之类的                  等价于detected:no
 
 
 ipmitool2 
