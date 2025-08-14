@@ -614,7 +614,10 @@ ldconfig
 
 ldd2 
 print shared object dependencies 列出某程序所需动态链接库(.so)
-// 切根后panic,串口回忆如下               
+// 问题1:无法restart nscd,报错symbol lookup error
+ldd /usr/sbin/nscd // 他的libc来源于glibc-XXoe版本,这不对,euler环境就应该不用oe的包
+
+// 问题2:切根后panic,串口回忆如下               
    failed start kenel modules
    system-load.service??
    starting switch root
