@@ -869,7 +869,9 @@ perf2
 // -F freq频率
    -a 采集所有cpu
    -g 记录调用栈
-perf record -F 99 -ga -p Pid  // 自动生成perf.data
+   -- sleep 30 抓30s
+perf record -F 99 -ga -- sleep 30 -p Pid  // 指定pid抓       当前目录自动生成perf.data
+perf record -F 99 -ga -- sleep 30 -C 0-6  // 指定核范围抓
 // -i 指定inputFile                       shift+展开或者收缩
 perf report -i perf.data
 
