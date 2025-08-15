@@ -865,12 +865,12 @@ testuser P 05/15/2024 0 99999 7 -1
 7	-1	密码过期后宽限天数（-1表示禁用宽限期，过期立即失效）
 
 
-perf2   两步走
+perf2   
 // -F freq频率
    -a 采集所有cpu
    -g 记录调用栈
 perf record -F 99 -ga -p Pid  // 自动生成perf.data
-// -i 指定inputFile
+// -i 指定inputFile                       shift+展开或者收缩
 perf report -i perf.data
 
 // -C 0 指定cpu0,2,3,4,6
