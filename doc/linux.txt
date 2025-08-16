@@ -805,9 +805,9 @@ Name:	network.XX.com         这个域名指向下面的地址
 Address: 128.9.61.10
 
 
-ntp2 
+ntp2 ntpq2 
 network time protocol
-// 列出时钟源
+// -p 打印时钟源
 ntpq -p 
 remote
    * 主同步源
@@ -816,20 +816,14 @@ refid
    .init.   初始化中
    .locl.   本地时钟
    .gps.    gps时钟源
-// 同步时间
-   -d debugMode
-   -r port
-ntpdate -d -r 123 10.0.36.6
-
 
 
 ntpdate2 
 set the date and time via NTP
 // -d debugMode 后面是ntpServer的ipv6
+   -r port
 ntpdate -d fc00:ac1c::b2a 
-
-ntpq2 
-ntpq -p // 列出时钟源
+ntpdate -d -r 123 10.0.36.6
 
 
 osi七层    简化4层
