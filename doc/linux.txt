@@ -1021,7 +1021,7 @@ rpm -qa
 rpm -qa openssh
 rpm -qa openssh --dbpath=/mnt/var/log/rpm/
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
-rpm -qi XXX.rpm --changelog |less 
+rpm -qi XXX.rpm --changelog |less // -i --info list descriptive information from ;-i会多列出包信息,可以去掉
 rpm -qf /lib64/librdmacm.so.1
 rpm -ql openssh-client-XXX
 rpm -qR XXX
