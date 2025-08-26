@@ -528,20 +528,26 @@ ipmitool lan print
 
 
 iptables2 ip6tables 
+硬件->数据包->内核空间(netfilter框架)->用户空间(iptables,可以视作框架的接口)
+iptables->包含表->包含chain->rule(从上往下执行rule行)
+最最最常见的表是filter(包含input,output,forward链)             iptables --table filter --list 等同于iptables -L
 // -v verbose
    -n numeric
    -L 列出[chain [rulenum]]
    --line-numbers   显示行号,删除rule的时候用得到行号
 iptables -vnL
+
+iptalbes --tables filter --append INPUT --source 172.28.XX  --jump DROP // 其实它的选项你不锁写的话,很好理解
 // -D 删除chain [rulenum]   删除名为input的chain中第二条rule
 iptables -D INPUT 2
+
 // 保存在/etc/sysconfig/iptables中
 service iptables save
 // -A INPUT 给input规则append
    -p tcp 指定协议是tcp
    --dport   指定des端端口8002
    -s        指定src端地址
-   -j         指定动作ACCEPT DROP REJECT 等
+   -j        指定动作ACCEPT DROP REJECT 等    This specifies the target of the rule; i.e., what to do if the packet matches it.
 ip6tables -A INPUT -p tcp --dport 8002 -s 2409:8080:5A0A:6058::/80 -j ACCEPT 
 // 删除所有rule
    -F Flush the selected chain (all the chains in the table if none is given).  This is equivalent to deleting all the rules one by one.
