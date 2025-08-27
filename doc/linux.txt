@@ -1288,13 +1288,13 @@ cat XX.txt |tail -9
 
 tar2 
 // -c compress压缩某个目录
-   -z 使用gzip,XXX.tar.gz的话,一般加个它
-tar -cvf XXX.tar /home/*
-tar -cvfz XXX.tar.gz /home/*
-tar -cvf XXX.tar /home/a.txt /home/b.txt
-// -x extract抽取
+   -z 使用gzip,XXX.tar.gz的话,一般加个它    坑:如果用z,z写最前面
+   -x extract抽取
    -C 解压到目标目录下
-tar -xvfz  XXX.tar.gz  -C  ./
+tar -cvf XXX.tar /home/
+tar -cvf XXX.tar /home/a.txt /home/b.txt
+tar -zcvf XXX.tar.gz /home/
+tar -zxvf  XXX.tar.gz  -C  ./
 命令末尾写法	         含义                  是否含隐藏文件	是否保留目录层级
 *	         仅打包当前目录下的非隐藏文件/目录	❌	         ❌
 ./*	      同上（* 默认不匹配隐藏文件）	      ❌	            ❌
