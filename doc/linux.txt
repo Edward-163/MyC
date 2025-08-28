@@ -277,9 +277,9 @@ e2fsck2
 // check a Linux ext2/ext3/ext4 file system
 
 
-echo2 
+echo2  默认末尾加换行
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
-// 默认末尾加换行,-n表示不要换行输出,-e解析反斜杠
+// -n 表示不要换行输出,-e解析反斜杠
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
