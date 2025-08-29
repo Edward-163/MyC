@@ -101,6 +101,15 @@ https://www.cnblogs.com/sparkdev/p/11417781.html
 从内核 2.2 开始，Linux 将传统上与超级用户 root 关联的特权划分为不同的单元，称为 capabilites。Capabilites 作为线程(Linux 并不真正区分进程和线程)的属性存在，每个单元可以独立启用和禁用。如此一来，权限检查的过程就变成了：在执行特权操作时，如果进程的有效身份不是 root，就去检查是否具有该特权操作所对应的 capabilites，并以此决定是否可以进行该特权操作。比如要向进程发送信号(kill())，就得具有 capability CAP_KILL；如果设置系统时间，就得具有 capability CAP_SYS_TIME。
 
 
+capsh2 
+// --caps 设置进程能力集
+   --keep 用户切换后保留能力集(默认切用户丢弃)
+   --user 指定用户
+   --addamb 添加XX能力到ambient能力集
+   -- -c pythonXX 丢弃所有输出 错误也转成输出(此处也会丢弃)
+capsh --caps="cap_dac_override,cap_setgid,cap_setuid,cap_setpcap+ip" --keep=1 --user="cps" --addamb="cap_dac_override" -- -c "python /usr/bin/logrotate.py >/dev/null 2>&1"
+
+
 cat2 
 // 什么都不写就是,你屏幕输入什么,打印什么
 cat
