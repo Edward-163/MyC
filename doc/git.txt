@@ -87,6 +87,7 @@ git format-patch HEAD -2 –stdout        //生成(HEAD^^,HEAD]之间的patch ,�
 等价
 git format-patch HEAD^^..HEAD  –stdout
 git format-patch -1 commitId // 生成commitId单次提交文件
+git format-patch -1 // 不写默认最近一次提交
 
 
 // 添加vhost_user_fs/src/lib.rs等文件中,git status只会显示未跟踪vhost_user_fs/   ,(从其它地方cp而来的文件不显示,天坑)
