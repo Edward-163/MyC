@@ -785,15 +785,14 @@ modprobe ipmi_watchdog
 
 
 mount2 
-// -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
-   mount device|dir -o options  官网:写设备和写挂载点都可以
-mount -o remount,rw /dev/mapper/cpsVG-image
+// -o loop 选项时，mount 命令会自动找到一个可用的回环设备（如 /dev/loop0）。这个回环设备会将 XXX.iso 文件虚拟化为一个块设备。当你使用 mount命令挂载一个 ​​.iso镜像文件​​ 时，系统自动采用 ​​loop设备​​来挂载它。这主要是因为ISO文件本身是一个​​普通文件​​，而非物理块设备（如硬盘分区），而 loop设备恰好是一种​​将文件虚拟成块设备​​的机制
+   -o 后面接逗号分割options,remount选项代表重新挂,rw选下来代表读写,例如原先只读的系统，现在以可读写的模式重新挂上
+mount -o loop XX.iso /mnt/iso // 实测,加不加loop,我看.iso挂完后lsblk,type列都是loop 
+mount -o remount,rw /dev/mapper/cpsVG-image // mount device|dir -o options  官网:写设备和写挂载点都可以
 // -B --bind 把一个目录"镜像"到另一个位置，就像给文件夹创建了一个"分身"或"快捷方式+"。
    -R, --rbind             mount a subtree and all submounts somewhere else
 mount --rbind /proc proc/
-// 当使用 -o loop 选项时，mount 命令会自动找到一个可用的回环设备（如 /dev/loop0）。这个回环设备会将 XXX.iso 文件虚拟化为一个块设备。
-   实测,加不加loop,我看.iso挂完后lsblk,type列都是loop
-mount -o loop XX.iso /mnt/iso
+
 
 
 mpstat2
