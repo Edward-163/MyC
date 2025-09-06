@@ -730,13 +730,24 @@ lspci -vvvs 00:03.0
 lspci -tv 
 
 
+scsi2 
+SCSI（Small Computer System Interface），中文全称是“小型计算机系统接口”。你可以把它想象成一条​​高效且智能的“设备高速公路”​​，它能让多种设备（如硬盘、光驱、扫描仪等）以一种相对聪明和快速的方式与计算机连接和通信
+
 lsscsi2 
 // -g Output the SCSI generic device file name.
+   -H lists scsi hosts rather than scsi devices
 lsscsi -g
    scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备 
-   [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg0
-   块设备:直接存取数据,像餐厅点菜
+   [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg1
+   [H:C:T:L]编号。这里的 H(Host) 就是指该设备连接在哪个主机控制器上
+   块设备:直接存取数据,像餐厅点菜 块设备​​（Block Device）是一种以固定大小的数据块（如512字节或4KB）为单位进行读写的设备，例如硬盘驱动器（HDD）、固态驱动器（SSD）、U盘等。/dev/sda是系统中第一块SCSI或SATA类型磁盘的​​块设备文件
    scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
+   /dev/sda是给文件系统和常规存储工具用的“标准接口”，而 /dev/sg1是给工程师和诊断工具用的“底层调试接口”
+lsscsi -H
+[0]    megaraid_sas驱动
+[1]    ahci​​驱动
+...      ...
+主机编号 ([0], [1]...)​​: 这是系统为每个SCSI主机控制器分配的唯一标识号
 
 
 lvcreate2 
