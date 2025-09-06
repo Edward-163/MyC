@@ -59,12 +59,15 @@ git clone XX.git D:\XX
 
 
 git config2 
-git config --list
-// ubuntu上git默认的文本编辑器是nano，执行下面的命令将git的文本编辑器改为我们熟悉的vim
-git config --global core.editor vim
+// -l --list
+git config -l
+git config --global -l
 // 仅为当前目录设置user.name user.email
 git config --local usern.name "XXX"
 git config --local usern.email "XXX"
+// ubuntu上git默认的文本编辑器是nano，执行下面的命令将git的文本编辑器改为我们熟悉的vim
+git config --global core.editor vim
+
 
 
 // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变(通常是git add之前)
