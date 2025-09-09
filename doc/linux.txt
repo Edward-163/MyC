@@ -838,6 +838,11 @@ mpstat -P 0-13 2 5
 %soft 软中断
 
 
+multipath2 
+// -f 您想要删除的特定多路径设备名
+multipath -f 多路径盘uuid
+
+
 netstat2 
 打印网络连接、路由表、连接的数据统计、伪装连接以及广播域成员
    Local Address   本地地址和端口
