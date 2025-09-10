@@ -8,11 +8,25 @@ pv 把/dev/sda格式化成pv(专业术语条带化==把硬盘空间划成一个�
   pe physicalExtent物理块  LVM 中最小的、可分配的存储单位,默认4M大小
 
 
+必背5步
 pvcreate /dev/sdb /dev/sdc
 vgcreate vgNameXX /dev/sdb /dev/sdc
 lvcreate -n lvNameXX -L 2G vgNameXX
 mkfs.ext4 /dev/vgNameXX/lvNameXX
 mount /dev/vgNameXX/lvNameXX /mnt
+
+
+lvresize2 resize2fs2 
+// -L 调整大小,
+lvresize2 -L+9G /dev/mapper/rootfs
+lvresize2 -L-9M /dev/mapper/rootfs
+// lvm扩容缩容之后,df -h并没有变化,是因为文件系统创建完之后,文件系统size,type都是固定的,扩容缩容之后还需要对fs更新
+resize2fs /dev/mapper/rootfs
+
+
+lvremove /dev/vgNameXX/lvNameXX // 严格顺序要求,全删lv才能删vg,全删vg才能删pv
+vgremove vgNameXX
+pvremove /dev/sdb
 
 
 lvm.conf  filter
@@ -41,8 +55,4 @@ lvscan
 lvdisplay
 
 
-lvresize2 resize2fs2 
-// -L 调整大小,
-lvresize2 -L+9G /dev/mapper/rootfs
-lvresize2 -L-9M /dev/mapper/rootfs
-resize2fs /dev/mapper/rootfs
+
