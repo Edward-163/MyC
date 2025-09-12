@@ -686,6 +686,12 @@ losetup /dev/loop0   /opt/XXX/image/instance/disk.eph0
 kpartx -av /dev/loop0
 
 
+lsattr2  
+lsattr /etc/passwd // 拓展属性
+// -a appendOnly
+   -i Immutable (不可变)	文件不能被修改、删除、重命名，不能创建指向它的链接，也不能写入数据。 最高级别的保护
+chattr +i /etc/passwd
+
 
 lsblk2
 // -f 输出fs类型
