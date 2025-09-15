@@ -385,6 +385,13 @@ fdisk /dev/sda
    1 (使用第1个主分区)
    两次回车(使用默认配置)
    wq (保存分区表)
+// -l List the partition tables for the specified devices and then exit.
+fdisk -l /opt/disk.img 
+mount -o loop,offset=1048576 /opt/disk.img /mnt // 想访问镜像中的某个分区，而不想整个挂载。因为直接mount loop会挂载整个镜像，但镜像里可能有多个分区，他们需要指定具体分区的起始位置
+Device           Boot Start     End Sectors  Size Id Type
+/opt/disk.img1        2048  999423  997376  487M 83 Linux
+/opt/disk.img2      999424 8388607 7389184  3.5G 8e Linux LVM
+从上面可知第一个分区的 Start是 2048。偏移量 = 2048 * 512= 1048576
 
 
 find2 
