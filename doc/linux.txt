@@ -1487,15 +1487,16 @@ umask（用户文件创建掩码）是一个重要的权限管理机制，用于
 
 
 umount2 
-// -l detach the filesystem now, and cleanup all later
+// -l --lazy detach the filesystem now, and cleanup all later
    系统会立即断开挂载点的目录树，但实际的文件系统卸载会延迟到所有相关进程结束访问后再完成。这允许你卸载一个“繁忙”的文件系统，而无需先终止所有占用它的进程。
    典型使用场景：
       强制卸载被占用的挂载点：
       例如，当你无法直接卸载 NFS 共享或外接硬盘（因为有进程卡死或无法终止），可以用 umount -l 先解除挂载点，后续由系统自动处理残留的访问。
       避免阻塞操作：
       某些情况下（如网络存储不可达），常规卸载可能卡住，-l 可以立即返回，让卸载在后台完成
+   -v verbose
    -f --force
-umount -l /var/log
+umount -lv /var/log
 
 
 uname2 
