@@ -705,6 +705,11 @@ losetup /dev/loop0   /opt/XXX/image/instance/disk.eph0
 kpartx -av /dev/loop0
 
 
+ls2 
+// -Z 仅在 SELinux 处于 ​​Enforcing（强制模式）​​ 或 ​​Permissive（宽容模式）​​ 时才有意义。如果 SELinux 被禁用（Disabled），所有文件的安全上下文通常显示为 system_u:object_r:unlabeled_t:s0或类似内容，表明它们未被标记
+ls -Z XX.so
+
+
 lsattr2  
 lsattr /etc/passwd // 拓展属性
 // -a appendOnly
