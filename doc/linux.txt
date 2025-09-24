@@ -486,6 +486,16 @@ ifconfig -a
 ifconfig eth0 up
 
 
+ima2 
+/etc/ima/ima-policy
+cat << EOF >> /etc/ima/ima-policy
+#appraise func=MMAP_CHECK mask=MAY_EXEC obj_type=XXXvirtual_exec_t
+measure func=MMAP_CHECK mask=MAY_EXEC obj_type=XXXvirtual_exec_t
+有一次文件chmod755,但是file文件提示no read permission,涛哥说可能与标签相关,后来发现涉及到这块,selinux,cmdline开启ima
+measure是被动记录文件的完整性哈希，用于审计和证明。
+appraise是主动强制检查文件的完整性，如果不通过则拒绝访问。
+
+
 iostat2 
 // -d 显示disk统计信息,默认disk和avg-cpu都会显示,所以这  -d -c没卵用,不如不加
    -c display cpu utilization实际展示avg-cpu
