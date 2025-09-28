@@ -260,10 +260,11 @@ df -T // 打印fs类型
 
 
 dhclient2 
+一般来说就是出网卡发包到pxe服务器上dhcpServer,获取ip,获取不到,最便捷的是先去dhcpServer抓包分析
 // -v verbose log ,动态获取ip,并显示详细过程,
+   -x shutDown client
 dhclient -v
 dhclient -v eth4 // 附:可以指定网络接口
-// -x shutDown client
 dhclient -x
 
 
