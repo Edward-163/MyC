@@ -203,6 +203,7 @@ cracklib2 弱密码 密码字典
 cracklib-unpacker /usr/share/cracklib/pw_dict > /home/a.txt
 create-cracklib-dict a.txt  // 生成新的二进制字典
 update-cracklib  // 更新字典索引
+echo "123" | cracklib-check // 密码预检查
 
 
 curl2 
