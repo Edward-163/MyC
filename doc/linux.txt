@@ -766,8 +766,8 @@ lsof -t /var/log
 
 
 lspci2 
-lspci |grep -i eth // 系统从硬件识别上来的pci设备,过滤出网卡,系统问题
-ll /sys/class/net // 驱动把pci设备识别成网卡,驱动问题
+lspci | grep Eth // 系统把网卡硬件识别成pci设备(rev 01正常识别,rev ff无法识别)，少了pci是系统问题
+ll /sys/class/net // 这个是驱动把pci设备识别成网络接口，少了网络接口是驱动问题
 ixgbe 0000:86:00.0 failed to load beacuse an unsupported SFP+ or QSFP module type was detected   什么意思?
 在尝试加载英特尔ixgbe万兆网卡驱动时，检测到了不支持的SFP+或QSFP模块类型。这意味着网卡无法识别或支持当前插入的光模块
 
