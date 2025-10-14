@@ -491,12 +491,15 @@ ifconfig eth0 up
 
 ima2 
 /etc/ima/ima-policy
+Integrity Measurement Architecture，完整性度量架构）是内置于Linux内核的安全子系统，它像一个尽职的​​系统安全审计员和守卫​​，核心目标是确保系统内关键文件（如可执行程序、库文件、内核模块等）的​​完整性
+场景:权限755,file命令提示no read permission
+根因:有一行本应该是measure变成了appraise评估(它比较严格,所以拒绝访问文件了)
 cat << EOF >> /etc/ima/ima-policy
 #appraise func=MMAP_CHECK mask=MAY_EXEC obj_type=XXXvirtual_exec_t
 measure func=MMAP_CHECK mask=MAY_EXEC obj_type=XXXvirtual_exec_t
 有一次文件chmod755,但是file文件提示no read permission,涛哥说可能与标签相关,后来发现涉及到这块,selinux,cmdline开启ima
-measure是被动记录文件的完整性哈希，用于审计和证明。
-appraise是主动强制检查文件的完整性，如果不通过则拒绝访问。
+measure 是被动记录文件的完整性哈希，用于审计和证明。
+appraise评估 是主动强制检查文件的完整性，如果不通过则拒绝访问。
 
 
 iostat2 
