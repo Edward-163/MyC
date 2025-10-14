@@ -1196,18 +1196,18 @@ sed2
 格式 sed option script file
 script举个例子 s/oldStr/replacement/flags
 // -i 代表in-place        直接修改源文件(看情况加), s代表substitute替换脚本,
+   -e 代表expression      执行多个命令可以用-e
+   -f 代表file            命令多到需要额外一个脚本文件来记录 script.sed
 sed -i 's/is a/is not a/g' /home/a.txt
-// -e 代表expression      执行多个命令可以用-e
 sed -e 's/big/Big;s/small/Small' /home/a.txt
-// -f 代表file            命令多到需要额外一个脚本文件来记录 script.sed
 sed -f script.sed /home/a.txt
-常用编辑命令
-// a 新增下一行
+
+// a 新增下一行 常用编辑命令
+   d 删除
+   s 替换,简单略
+   i 插入
+   p 打印,通常与-n配合,suppress output,抑制sed默认打印
 sed -i '/999/a 101010/' a.txt
-// d 删除
-// s 替换,简单略
-// i 插入
-// p 打印,通常与-n配合,suppress output,抑制sed默认打印
 sed '1p' test.txt的输出​​：
 line1  <-- p命令显式打印第一行
 line1  <-- sed默认打印第一行
@@ -1217,6 +1217,7 @@ line1  <-- sed默认打印第一行（第一行不匹配2p，故p命令未执行
 line2  <-- p命令显式打印第二行
 line2  <-- sed默认打印第二行
 
+sed -n  '1p ; $p' one.txt two.txt three.txt // sed treats multiple input files as one long stream.1p打印输入流第一行,$p打印输入流的最后一行(实测是three.txt的最后一行)
 
 
 selinux2 getenforce2 
