@@ -2,7 +2,7 @@ lvm    logical volume manager将底层物理磁盘抽象封装,以逻辑卷呈�
 
 
 层次结构
-lv 如果cpsvg卷组里只有rootfs,bak-rootfs,log,那么vgdisplay输出中lv==3
+lv 举例如果xxxVG卷组里只有rootfs,bak-rootfs,log,那么vgdisplay输出中Cur Lv==3
 vg 空间池
 pv 把/dev/sda格式化成pv(专业术语条带化==把硬盘空间划成一个个的pe) 由pe组成,vg_size==pe大小*pe数量
   pe physicalExtent物理块  LVM 中最小的、可分配的存储单位,默认4M大小
@@ -51,8 +51,22 @@ cpsVG   1  15   0                         wz--n- 1.45t 1.30t
 
 vgscan
 vgs
-lvscan
-lvdisplay
+
+lvscan2 
+ACTIVE '/dev/vg0/data' [1000.00 MB] inherit
+ACTIVE '/dev/vg1/web' [20.00 GB] inherit
+inactive '/dev/vg2/backup' [50.00 GB] inherit
+
+lvdisplay2 
+他的输出老多了,
+
+
+vgchange2 
+// -a avtive
+   -y yes
+vgchange -ay /dev/xxxVG/  # 激活单个卷组
+vgchange -ay      # 激活系统中所有卷组
+
 
 
 
