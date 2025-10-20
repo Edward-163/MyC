@@ -16,14 +16,15 @@ osi七层    层功能                          协议           记忆法:就�
 
 
 arping2 
-// -I 你用哪个设备去arp包
+// -I 你用哪个设备去发arp包
 arping -I brcps 172.28.0.4
   ARPING 172.28.0.4 from 172.28.0.2 brcps
   ^CSent 3 probes (3 broadcast(s))
   Received 0 response(s)
 
 
-ifconfig2 过气,能用ip命令替换就用ip命令吧
+ifconfig2 
+过气,还能用,新版是ip命令
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
 ifconfig eth4 // 默认网卡配置文件  /etc/sysconfig/network-scripts/ifcfg-eth4 
