@@ -3,7 +3,7 @@ tcp/ip 协议已经是internet网络中标准语言(地位类似"正宫")
 
 
 osi七层    层功能                          协议           记忆法:就记4层,应用层不用说,单独记传输层,"网恋"层
-应用层     定义客户端与服务端数据交换方式    http ftp dns smtp(邮件传输)
+应用层     定义客户端与服务端数据交换方式    http ftp dns smtp(邮件传输)    应用层交互的数据称为报文
   表示层
   会话层
 
@@ -11,11 +11,16 @@ osi七层    层功能                          协议           记忆法:就�
 
 网络层     为数据包选择路由                arp(通过ip知晓mac) ip(判断发送者/接受者是不是在一个子网中) icmp bgp(路由协议之一)    使用ip定位目标计算机,采用route决定数据传输路径,例如动态ip还是静态ip
 
-数据链路层  二进制数据流8位一字节分组处理为"帧",这一层还得知晓src/dest mac      iso@2100                                
+数据链路层  二进制数据流8位一字节分组处理为"帧",这一层还得知晓src/dest mac      iso@2100    科普:链路层地址又称mac地址                            
   物理层    可能是网线,光纤fiber,无线波                    以二进制形式在物理媒介上传输
 
 
-应用层交互的数据称为报文
+arping2 
+// -I 你用哪个设备去arp包
+arping -I brcps 172.28.0.4
+  ARPING 172.28.0.4 from 172.28.0.2 brcps
+  ^CSent 3 probes (3 broadcast(s))
+  Received 0 response(s)
 
 
 ifconfig2 过气,能用ip命令替换就用ip命令吧
@@ -29,6 +34,16 @@ ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
 ifconfig eth4:1 192.168.178.112/25 up
 // 操作系统（如 Linux、Windows）在驱动层允许用户通过命令或配置文件 临时覆盖 MAC 地址，实际硬件 MAC 并未改变，但所有网络通信使用修改后的值。
 ifconfig eth0 hw ether 00:11:22:33:44:55  # Linux 临时修改
+
+
+ip neigh show2 
+192.168.1.200 dev wlan0 lladdr 11:22:33:44:55:66 DELAY
+fe80::abc:def1:2345 dev eth0 lladdr 00:1a:2b:3c:4d:5e router REACHABLE
+IP 地址	邻居设备的网络层地址（IPv4 或 IPv6）	192.168.1.1 或 fe80::...
+dev	出站网络接口	eth0（有线网卡）, wlan0（无线网卡）
+lladdr	链路层地址，即 MAC 地址	00:1a:2b:3c:4d:5e
+ROUTER	标志，表示此邻居是一个路由器/网关	仅在IPv6中出现，表示默认网关
+状态	最重要的字段之一，表示此条目的“健康度”和可用性	REACHABLE, STALE, DELAY 等
 
 
 route2  https://www.man7.org/linux/man-pages/man8/route.8.html
