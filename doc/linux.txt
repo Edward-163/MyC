@@ -1315,7 +1315,10 @@ ssh-keygen2
 ssh-keygen -C XXX@163.com
 
 
-ssh2 sshd_config2 
+ssh2 
+ssh root:passXXX@10.189.4.183:35
+
+sshd_config2 
 ssh_config主要关注客户端如何连接到SSH服务器，‌
 sshd_config则关注SSH服务器如何配置以响应这些连接请求
 sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址
