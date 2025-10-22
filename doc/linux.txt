@@ -1418,6 +1418,7 @@ systemctl enable hkids
 vim /etc/udev/udev.conf 打开注释行,并把info改成debug    
 systemctl daemon-reload
 systemctl restart systemd-udevd
+systemctl cat sshd
 
 
 
