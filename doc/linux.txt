@@ -1525,7 +1525,9 @@ tune2fs2
    clean	文件系统已正常卸载（无未修复的错误）。	正常关机或手动 umount 后。
    dirty	文件系统未正常卸载（可能存在未同步的元数据或错误）。	强制重启、崩溃、断电等异常情况。
    errors	文件系统已标记为存在错误（需手动修复）。	检测到不一致时（如 fsck 未完成修复）
+   -m reserved block count percentage 通常5%,预留是去占用size-avail之间的空间,预留不是去占用size的大小
 tune2fs -l /dev/mapper/rootfs
+tune2fs -m 5 /dev/mapper/rootfs
 
 
 uefi2    legacyBios(老技术都快淘汰了)
