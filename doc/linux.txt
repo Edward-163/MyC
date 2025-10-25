@@ -480,7 +480,8 @@ ps -aux |grep -m 2 'root'
 ps -ef |grep -E 'warn|err|critical'
 
 
-grub2 
+grub2 手动引导2 
+grub.cfg位置x86在grub/ ;arm在efi/??
 无故进入grub模式,屏幕显示grub>
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
 ls (hd1,gpt2)/
