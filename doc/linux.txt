@@ -53,7 +53,7 @@ passwd -d root // 下面是备选方法?
 passwd root 
 sync // 用于 强制将内存缓冲区中的数据写入磁盘
 ctrlD ctrlD 正常进大系统
-
+涛哥:小系统密码a==iso安装时密码a,进大系统后passwd改密码b,小系统密码a不变
 另一种办法:systemd.debug-shell=1,ctrlAltF9切入单用户模式passwd修改密码,ctrlAltF1切出用新密码登录
 
 
