@@ -202,6 +202,16 @@ cpio -id a.cpio
 rpm2cpio X.rpm | cpio -idv
 
 
+cpuinfo2 
+// -c 指定cpulist
+cpuinfo -c 0-3 freqency-info
+performance性能模式就是没调频
+coresmart根据负载智能切换高性能/节能模式   coresmart就是调频
+每个核单独可以，但是用通配命令去改就报错
+echo coresmart | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+tee2 把输入输出到文件中并保存(实测,源文件内容被删除覆盖)
+
+
 cracklib2 弱密码 密码字典
 // 解析字典,并输出字典规则内容到文件中,当 pw_dict 不存在时，cracklib-unpacker 可能自动尝试加载其他关联文件（如 pw_dict.pwd），因此不会直接报错
 cracklib-unpacker /usr/share/cracklib/pw_dict > /home/a.txt
