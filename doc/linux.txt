@@ -864,6 +864,11 @@ md5sum *
 md5sum XXX.txt
 
 
+mkdir2 
+mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}  
+花括号 {}用于​​生成字符串序列​​，可以自动展开为多个独立的字符串,上面一条命令==6条命令
+
+
 mknod2 
 // -m 指定权限 c 字符设备 13分别是主次设备号(为啥13不懂)
 mknod -m 666 /dev/null c 1 3 
