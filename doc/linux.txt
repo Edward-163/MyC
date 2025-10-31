@@ -83,8 +83,9 @@ rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报
 
 
 bc2 
-// scale=2000 保留小数点后2000位
-   4*a(1)==圆周率
+// -l mathlib
+   scale=2000 保留小数点后2000位
+   4*a(1)==圆周率,pi=180度,tan(45度)=1,arctan(1)=45度,4*arctan(1)=180度=pi
 time echo "scale=2000;4*a(1)" |bc -l  // 用于简易测试环境cpu性能??
 
 
