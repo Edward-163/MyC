@@ -810,7 +810,7 @@ SCSI（Small Computer System Interface），中文全称是“小型计算机系
 
 lsscsi2 
 // -g Output the SCSI generic device file name.
-   -H lists scsi hosts rather than scsi devices
+   -H lists scsi hosts rather than scsi devices​​不要显示具体的磁盘或设备，而是只显示这些设备所连接的“主机控制器”
 lsscsi -g
    scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备 
    [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg1
@@ -818,11 +818,12 @@ lsscsi -g
    块设备:直接存取数据,像餐厅点菜 块设备​​（Block Device）是一种以固定大小的数据块（如512字节或4KB）为单位进行读写的设备，例如硬盘驱动器（HDD）、固态驱动器（SSD）、U盘等。/dev/sda是系统中第一块SCSI或SATA类型磁盘的​​块设备文件
    scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
    /dev/sda是给文件系统和常规存储工具用的“标准接口”，而 /dev/sg1是给工程师和诊断工具用的“底层调试接口”
+// ([0], [1]...)​​: 这是系统为每个SCSI主机控制器分配的唯一标识号, 主机控制器”或“主机适配器”是100%的物理实体​​。它就是插在您电脑或服务器主板上的​​一块物理芯片或一张扩展卡​​，是连接CPU和硬盘的桥梁。\
+   ds主机控制器举例:集成控制器(主板芯片),扩展卡式控制器(pcie卡,raid卡归属于这种),虚拟控制器(cpu模拟)
 lsscsi -H
 [0]    megaraid_sas驱动
 [1]    ahci​​驱动
-...      ...
-主机编号 ([0], [1]...)​​: 这是系统为每个SCSI主机控制器分配的唯一标识号
+
 
 io路径科普
 
