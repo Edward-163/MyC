@@ -22,19 +22,20 @@ console=tty0 console=ttyS0,115200
 console=tty0 console=ttyAMA0,115200
 
 
-解压initrd 解压解包
+解压iso 解压解包
 #!/bin/bash
 isoname=$1
 mkdir m
 # iso镜像文件,系统自动采用 loop设备来挂载它,而 loop设备恰好是一种将文件虚拟成块设备的机制,加不加-o loop效果一样
 mount $isoname m
+# minios里面没有repo目录,常规iso里面有
 cp m/repo/OS.tar.gz ./
-# 解压后一个initrd,一个linux目录
+# 解压后就一个initrd文件,一个linux可执行文件
 tar xf OS.tar.gz
 mkdir in
 mv initrd in
 cd in
-# -c让 gunzip将解压后的内容输出到标准输出（屏幕），而不是写入一个解压后的文件。这是使用管道的关键。
+# -c --stdout      write on standard output, keep original files unchanged,gunzip将解压后的内容输出到标准输出（屏幕），而不是写入一个解压后的文件。这是使用管道的关键。
 # 需要（gunzip和 cpio）接力完成，是因为 initrd文件本身是一个“压缩包中的打包文件”，需要先解压，再解包
 gunzip -c initrd | cpio -id
 cd ..
@@ -728,8 +729,12 @@ ln2
 // ln -s target link_name
 
 
-lo2
-loop是虚拟网络几口,作用类似于给自己写纸条,不经过外界
+lo2 
+ifconfig中的lo是虚拟网络接口,作用类似于给自己写纸条,不经过外界
+
+
+loop2 
+把文件模拟成块设备(硬盘就是常见的块设备)
 
 
 losetup2 
