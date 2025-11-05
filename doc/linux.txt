@@ -376,7 +376,7 @@ logName:密码全部用X代替:uid:gid:userName:homeDir:用户登陆后默认的
 
 
 ethtool2 eth2 
-// -i interface 显示网络接口eth0的驱动信息,网络接口与网卡的物理网口(插孔)是两码事
+// -i driverName 网络接口与网卡的物理网口(插孔)是两码事
    -P permanent Addr ,也称 hardware Addr,也称 MAC
 ethtool -i eth0
 ethtool -P eth0 
