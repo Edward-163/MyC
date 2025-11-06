@@ -913,6 +913,7 @@ mount -o loop XX.iso /mnt/iso // 实测,加不加loop,我看.iso挂完后lsblk,t
 mount -o remount,rw /dev/mapper/cpsVG-image // mount device|dir -o options  官网:写设备和写挂载点都可以
 // -B --bind 把一个目录"镜像"到另一个位置，就像给文件夹创建了一个"分身"或"快捷方式+"。
    -R, --rbind             mount a subtree and all submounts somewhere else
+   -a mount all filesystems mentioned in fstab
 mount --rbind /proc proc/
 
 
