@@ -682,7 +682,14 @@ journalctl -u sshd
 // -f follow the journal 展示最新日志 journal杂志,日志  entry[n]记录,词条 journey[n v]旅游
    应用场景:cps host-list显示虚拟机fault,查看journalctl日志发现rootfs没挂上去?或者fsck失败?手动fsck
    挂iso启动,dmesg和journalctl只针对当前镜像启动,没什么参考价值
+   -x --catalog               Add message explanations where available
+   -b --boot[=ID]             Show current boot or the specified boot
 journalctl -f -u sshd 
+journalctl -xb |grep fail // 本次启动日志
+   11月 01 10:00:15 hostname systemd[1]: Started Journal Service.
+   -- Subject: A start job for unit systemd-journald.service has finished successfully
+   -- Defined-By: systemd
+journalctl -xb -1 // 上次启动日志   -b -2 上上次启动日志
 
 
 killall2 
