@@ -1132,6 +1132,29 @@ rc.d2
 /etc/rc.d/rc.local               // 系统启动时最后执行的用户自定义脚本
 
 
+read2 
+读取一行,根据IFS分隔符,读到的多个字段赋给多个变量 read [选项] 变量名1 [变量名2...]
+echo "hi world" |read word1 word2
+echo "word1=$word1, word2=$word2"
+// -p promt
+   -t timeout
+   -r 不转义\
+read -t 10 -p "请10秒内输入" input
+echo $input
+
+# 没有 IFS= 的情况
+read -r line   # line="hello world"（去除了首尾空格）
+# 有 IFS= 的情况
+IFS= read -r line   # line="  hello world  "（保留所有空格）
+while IFS= read -r line; do
+    echo "处理行: $line"
+done < data.txt
+
+echo "$IFS" | cat -A  # 显示不可见字符
+# 输出可能显示： ^I$  （空格、tab^I、换行$）
+IFS（Internal Field Separator，内部字段分隔符）是一个Shell环境变量，它定义了Shell在分割单词、命令行参数和read命令输入时的分隔符。IFS=只影响当前的 read命令，不会永久改变Shell的IFS
+
+
 realpath2 
 realpath 某文件 // 显示文件路径
 
