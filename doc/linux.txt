@@ -1570,6 +1570,14 @@ hi hardIrq硬中断
 si softIrq软中断(与收发包有关,具体看sar日志)
 
 
+trap2 
+function handleSigFunc{
+   echo "666"
+}
+# init信号常见于ctrlC term常见于kill-9 quit常见于ctrl\,退出并产生core文件
+trap handleSigFunc INIT TERM QUIT 
+
+
 tty2 
 systemctl status getty@tty1
 systemctl status getty@tty2
