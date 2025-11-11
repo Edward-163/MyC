@@ -82,6 +82,22 @@ kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让�
 rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
 
 
+awk2 从输入中读取一行文本,然后针对该行执行program
+格式 awk option program file   ,program举例 '{print $1,$2}' 
+// -F 指定冒号为分隔符,awk将一行分成多段来处理, 
+   $0整个文本行,文本行第一段$1,第二段$2   下面输出逗号怎么空格了??
+awk -F ":" '{print $1,$2}' /etc/passwd
+// -F\'   如果 /etc/passwd行中没有单引号，则整个行会被视为一个字段（即 $1包含整行，$2为空）。因此，这个命令在 /etc/passwd上可能不会产生有意义的结果，只会输出每一行后跟 ---。
+awk -F\' '{print $1"---"$2}' /etc/passwd
+// 先去掉grep子进程本身,然后查询cpustat.py的pid
+ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
+// 执行program前后
+echo "name" |awk 'BEGIN{print "b---"};{print $0};END{print "e---"}'
+b---
+name
+e---
+
+
 basename2 
 basename /home/user/documents/report.txt # 输出report.txt
 
