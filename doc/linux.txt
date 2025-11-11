@@ -289,6 +289,11 @@ dhclient -v eth4 // 附:可以指定网络接口
 dhclient -x
 
 
+dirname2 basename2 
+dirname /home/user/docs/file.txt        
+/home/user/docs
+
+
 dmesg2 
 // -C 清除环回缓冲区
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
