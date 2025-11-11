@@ -1583,6 +1583,8 @@ trap handleSigFunc INIT TERM QUIT
 
 
 tty2 
+tty # 当你登录一个 Linux 系统（无论是通过本地键盘、SSH 还是终端模拟器），系统会为你分配一个终端设备。tty命令就是用来查询这个设备的。
+/dev/pts/0
 systemctl status getty@tty1
 systemctl status getty@tty2
 
