@@ -82,6 +82,10 @@ kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让�
 rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
 
 
+basename2 
+basename /home/user/documents/report.txt # 输出report.txt
+
+
 bc2 
 // -l mathlib
    scale=2000 保留小数点后2000位
