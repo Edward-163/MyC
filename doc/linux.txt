@@ -318,9 +318,12 @@ dmesg -c
 
 dmidecode2 
 // -t 指定类型  0-bios 1-system 等等
+   -s 查看string的值  string有很多,比如 system-uuid
 dmidecode -t bios
 dmidecode -t 1
+dmidecode -t system // 同上,
 dmidecode -t processor // 如展示core一共多少个,启用多个少core
+dmidecode -s system-uuid // 系统uuid在上面-t system也能查出来
 
 
 dos2unix2 
