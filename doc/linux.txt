@@ -357,6 +357,13 @@ echo2  默认末尾加换行
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
+efi2  uefi2  legacyBios(老技术都快淘汰了)
+ls /sys/firmware/efi  // 重要的判断依据
+ls /boot/efi/EFI // 它不是判断依据,传统引导也有该目录
+/boot/efi/EFI/XXX/grub.cfg                             uefi
+/boot/grub2/grub.cfg                            legacy
+
+
 /etc/pam.d/     Pluggable Authentication Modules  
 举例bmc界面登录,输完账号不能输入密码,直接login incorrect,无奈的办法就是对比异常/正常的/etc/pam.d内文件,有差异就替换吧
 // 比如sshd内容第一行
@@ -1640,11 +1647,6 @@ tune2fs2
 tune2fs -l /dev/mapper/rootfs
 tune2fs -m 5 /dev/mapper/rootfs
 
-
-uefi2    legacyBios(老技术都快淘汰了)
-ls /sys/firmware/efi 
-/boot/efi/EFI/XXX/grub.cfg                             uefi
-/boot/grub2/grub.cfg                            legacy
 
 
 ulimit2 限制进程core
