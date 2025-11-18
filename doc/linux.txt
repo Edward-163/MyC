@@ -278,6 +278,28 @@ date --date='@2147483647'
 /dev/zero  ： 在类UNIX 操作系统中, /dev/zero 是一个特殊的文件，当你读它的时候，它会提供无限的空字符(NULL, ASCII NUL, 0x00)。
 
 
+/dev/sr0
+通常它是第一个光驱,例如cdrom
+案例:
+大系统识别不到盘,bios界面能看到虚拟磁盘
+1 正常节点驱动是megaraid,异常节点也是megaraid驱动
+2 对比发现,异常节点megaraid版本低,挂镜像,确认高版本驱动可以识别盘
+附:其他可能,bios没有上报磁盘事件
+规避:
+正常节点,下载临时根文件系统initramfsXX.img,它内含megaraidXX.ko
+initramfsXX.img当iso挂,网页提示无法识别,把img后缀改成iso,强行挂上去
+// sr0是第一个光驱,从光驱中读取数据,自己制作一个init.img,oflag=sync同步写入，确保数据完全写入物理存储后再继续,确保文件100%完整可靠
+dd if=/dev/sr0 of=init.img oflag=sync
+// 解压.img到当前目录
+/usr/lib/dracut/skipcpio init.img |zcat |cpio -id
+// 老版本ko所在路径/opt/uvp/modules/megaraid_sas/megaraid_sas.ko
+rmmod megaraid_sas
+// insmod当前目录的高版本ko
+insmod opt/uvp/modules/megaraid_sas/megaraid_sas.ko
+// 怎么重新安装?执行一下安装脚本就是重新安装
+sh /usr/Euler/project/init/LinuxSetup.sh
+
+
 dd2 
 // /dev/zero  /dev/null 在上面
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
@@ -339,7 +361,7 @@ dracut --force
 // 举例
 1 /etc/lvm/lvm.conf,放开filter = XXX行 
 2 dracut --forece命令重新打包
-3 解压镜像(/usr/lib/dracut/skipcpio initramfs-5.10.0-182.0.0.95.h2545.eulerosv2r13.aarch64.img |zcat |cpio -id)再查看变化       解压镜像命令,前两段有点难懂
+3 /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压镜像命令
 
 
 du2 
