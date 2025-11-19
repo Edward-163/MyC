@@ -1128,6 +1128,17 @@ rootfs / rootfs rw 0 0
 fileSys 挂载点 fs类型如ext4 挂载选项 dump备份表示(0不备份,1备份) pass(FS检查顺序,0不检查,1第一个检查,n第n个检查)
 
 
+pxe2 
+三个组件pxeClient dhcpServer tftpServer
+pxeClient在网卡rom中
+计算机启动是,bios把pxeClient调入内存执行
+网卡广播dhcp报文,申请ip
+dhcpServer返回ip并返回bootFile pxelinux.0   当 DHCP 服务器在启动响应中指定 boot file name: pxelinux.0时，它是在告诉客户端：“你去 TFTP 服务器上找一个叫 pxelinux.0的文件，并执行它来继续你的启动过程
+执行pxelinux.0,去tftpServer申请个pxelinux.cfg配置文件
+根据pxelinux.cfg配置文件,去tftpServer上下载内核文件,initramfs
+安装流程
+
+
 trunk2 bond2 
 /proc/net/bonding/trunkXXX
    speed   1000Mbps // 网卡最大带宽?小b换算大B要除8
