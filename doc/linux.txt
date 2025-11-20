@@ -250,6 +250,11 @@ curl is a tool for transferring data from or to a server using URLs
    -X GET	明确指定 HTTP 方法为 GET（默认即为 GET，可省略
    -H "accept: application/json"要求返回json格式
 curl -igk -X GET https://XXX -H "accept: application/json"
+场景curl -ig 10.16.0.101:443      10.16.0.101就是external_api的ip
+Chain INPUT (policy ACCEPT 30M packets, 8165M bytes)
+ pkts bytes target     prot opt in           out     source               destination
+    7  1603 ACCEPT     all  --  external_api *       0.0.0.0/0            10.16.0.96/27
+    0     0 DROP       all  --  external_api *       0.0.0.0/0            0.0.0.0/0
 
 
 date2 
