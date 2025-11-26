@@ -1381,11 +1381,15 @@ sed -n  '1p ; $p' one.txt two.txt three.txt # sed treats multiple input files as
 
 selinux2 getenforce2 
 selinux是安全子系统,它通过为系统资源（如文件、进程、端口）定义严格的访问策略，来增强 Linux 系统的安全性
-// 查看selinux运行模式
-   Enforcing（强制模式）：严格执行安全策略，拒绝违规操作。
-   Permissive（宽容模式）：仅记录违规行为但不阻止，用于调试。
-   Disabled（禁用）：完全关闭 SELinux
+// 获取selinux状态
+   Enforcing：严格执行安全策略，拒绝违规操作
+   Permissive（纵容的）：违规行为可以执行,但会记录，用于调试。
+   Disabled：关闭SELinux
 getenforce
+// 核心配置文件,开启selinux需要修改配置文件并且重启
+/etc/selinux/config
+// 临时设置selinux
+setenforce [Enforcing|Permissive|1|0]
 
 
 sh2 
