@@ -11,7 +11,10 @@ pv 把/dev/sda格式化成pv(专业术语条带化==把硬盘空间划成一个�
 必背5步
 pvcreate /dev/sdb /dev/sdc
 vgcreate vgNameXX /dev/sdb /dev/sdc
-lvcreate -n -L 2G lvNameXX vgNameXX // 官网写法通常是lvName,vgName是最后两位
+lvcreate -L 2G -n lvNameXX vgNameXX // 官网写法通常是lvName,vgName是最后两位
+  延伸问题,如何查看vg中剩余多少G,vgs命令
+  VG    #PV #LV #SN Attr   VSize   VFree
+  hyjVG   1   3   0 wz--n- 445.59g 415.59g
 mkfs.ext4 /dev/vgNameXX/lvNameXX
 mount /dev/vgNameXX/lvNameXX /mnt
 
