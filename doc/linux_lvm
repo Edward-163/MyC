@@ -11,7 +11,7 @@ pv 把/dev/sda格式化成pv(专业术语条带化==把硬盘空间划成一个�
 必背5步
 pvcreate /dev/sdb /dev/sdc
 vgcreate vgNameXX /dev/sdb /dev/sdc
-lvcreate -n lvNameXX -L 2G vgNameXX
+lvcreate -n -L 2G lvNameXX vgNameXX // 官网写法通常是lvName,vgName是最后两位
 mkfs.ext4 /dev/vgNameXX/lvNameXX
 mount /dev/vgNameXX/lvNameXX /mnt
 
