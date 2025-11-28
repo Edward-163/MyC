@@ -1213,6 +1213,11 @@ dirs // 展示目录栈 /home /tmp
 popd
 
 
+python2
+// -c cmd 
+python -c "print(1/3)" // 你就当计算器用得了
+
+
 rc.d2 
 /etc/rc.d/init.d/                // 存放系统服务脚本
 /etc/rc.d/after.local            // 所有系统服务启动后执行的脚本,比rc.local早一些
