@@ -21,8 +21,10 @@ mount /dev/vgNameXX/lvNameXX /mnt
 
 lvresize2 resize2fs2 
 // -L 调整大小,
-lvresize2 -L+9G /dev/mapper/rootfs
-lvresize2 -L-9M /dev/mapper/rootfs
+   -r --resizefs
+   -f --force
+lvresize -L+9G /dev/mapper/rootfs
+lvresize -L-9M /dev/mapper/rootfs -rf // 就是修改大小后强制对fs更新,也就是省略下面的步骤
 // lvm扩容缩容之后,df -h并没有变化,是因为文件系统创建完之后,文件系统size,type都是固定的,扩容缩容之后还需要对fs更新
 resize2fs /dev/mapper/rootfs
 
