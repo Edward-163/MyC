@@ -723,10 +723,12 @@ irqbalance意义:每个核上均匀参与中断处理,使性能更佳
 iscsiadm2 
     iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
     Iscsi initiator：使用target提供“磁盘”的客户端。
+   https://linux.virtualcat.net/c/iscsiadm.html
 // 发现阵列ip==对端业务ip的目标,用于​​发现​​指定存储服务器（Target）上可供连接的存储资源,
-   -m discovery 指定发现模式
+   -m，--mode  <模式> 指定工作模式，如discovery（发现模式）、node（管理节点）、session（管理会话）
    -t st：指定发现类型为 ​​sendtargets（可简写为 st）​​。这是最常用的方式，意思是让存储服务器把它提供的存储目标列表“发送”过来
-iscsiadm -m discovery -t st -p ip:port // 像是​​你（客户端）根据地址（IP:Port）去询问仓库管理员（存储服务器）：“你们仓库里有哪些货架（Target）可以让我放货？”​​ 管理员会给你一份清单
+   -p，--portal  <ip:port> 指定目标IP,不带端口默认使用3260，仅用于discovery、node模式
+iscsiadm -m discovery -t st -p ip:port // （客户端）根据地址（IP:Port）去询问仓库管理员（存储服务器）：“你们仓库里有哪些货架（Target）可以让我放货？”​​ 管理员会给你一份清单
 // -l login
    -u logout
 iscsiadm -m node -p XX.XX.XX.XX -l 
