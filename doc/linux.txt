@@ -401,11 +401,15 @@ auth       sufficient(足够的,此行auth认证后,跳过后续auth认证)    p
 /etc/fstab2 
 磁盘被手动挂载之后都必须把挂载信息写入/etc/fstab这个文件中，否则下次开机启动时仍然需要重新挂载。 系统开机时会主动读取/etc/fstab这个文件中的内容，
 根据文件里面的配置挂载磁盘。这样我们只需要将磁盘的挂载信息写入这个文件中我们就不需要每次开机启动之后手动进行挂载了
-fs_freq参数决定了文件系统是否需要进行备份。具体来说，如果这个参数设置为0，表示该文件系统不需要执行dump操作，即不需要进行备份；如果设置为其他值，则表示该文件系统需要定期执行dump备份。
-fs_passno参数则用于指定系统重启时文件系统的检查顺序。通常，fs_passno为1的文件系统会在其他文件系统之前被检查，这通常是指root文件系统；而fs_passno为2的文件系统会在所有fs_passno为1的文件系统之后进行检查。
-   fsck程序会按照fs_passno的顺序来检测磁盘，即先检查fs_passno为1的文件系统，然后是fs_passno为2的文件系统，以此类推。0值的fs_passno意味着该文件系统不被fsck检查。
-/dev/cpsVG/rootfs / ext4 acl,dioread_lock,data_err=abort,nospeed,defaults,iversion 1 1
-/dev/md2 /boot ext4 defaults,iversion,nodev,dioread_lock,data_err=abort,nospeed 1 2
+fs_freq参数决定了文件系统是否需要进行备份。
+   0，表示该文件系统不需要执行dump操作，即不需要进行备份；
+   1，则表示该文件系统需要定期执行dump备份。
+fs_passno参数则用于指定系统重启时文件系统的检查顺序
+   0 系统启动时,此分区不被fsck检查。
+   1 优先检查
+   2 在1之后检查
+/dev/cpsVG/rootfs /       ext4 acl,dioread_lock,data_err=abort,nospeed,defaults,iversion     1 1
+/dev/md2          /boot   ext4 defaults,iversion,nodev,dioread_lock,data_err=abort,nospeed   1 2
 
 
 /etc/profile2 
