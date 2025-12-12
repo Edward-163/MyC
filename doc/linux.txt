@@ -1,8 +1,13 @@
 我在每个命令后面加个2只是方便搜索
-bios自检            检查硬件是否正常
-bootloader引导程序  grub就是其中之一
-grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
-   解压vmlinuz到随意目录,你就能看到 init -> usr/lib/systemd/systemd
+固件      |bootloader       |kernel|initrd|rootfs|1号进程
+bios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
+   mbr(旧),gpt(新)是两种不同硬盘分区方案
+
+bios程序            上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
+   可能会被uefi取代,
+bootloader引导程序  找到内核并加载内核到内存中,例:grub就是其中之一
+   grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
+      解压vmlinuz到随意目录,你就能看到 init -> usr/lib/systemd/systemd
 内核解压initramfs(临时根文件系统)         /boot/initramfs-5.10.0XXX.x86_64.img,包含linux系统所需驱动和必要文件到内存中(举例 帮内核加载硬件驱动)，并执行其中的 /init 脚本
    执行init进程           第一个进程(举例systemd),读取/etc/inittab配置,启动其他进程
       后续会运行dracut-cmdline等dracut子命令
@@ -472,6 +477,7 @@ fdisk /dev/sda
    两次回车(使用默认配置)
    wq (保存分区表)
 // -l List the partition tables for the specified devices and then exit.
+   sector size 通常512bytes,现在也有4k大小的扇区
 fdisk -l /opt/disk.img 
 mount -o loop,offset=1048576 /opt/disk.img /mnt // 想访问镜像中的某个分区，而不想整个挂载。因为直接mount loop会挂载整个镜像，但镜像里可能有多个分区，他们需要指定具体分区的起始位置
 mount -o loop,offset=34603008 /opt/disk.img /mnt
