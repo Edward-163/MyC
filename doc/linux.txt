@@ -1184,6 +1184,12 @@ Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
 
+/proc/pidXX/stat 
+第14字段 utime
+第15字段 stime 单位都是clockTicks 每个时钟嘀嗒的时间长度由内核常量USER_HZ决定，通常USER_HZ是100，即一个时钟嘀嗒是10毫秒
+10^9==1秒==10^7 * 100==100个0.01秒==100个10毫秒
+
+
 ps2 
 // 查看所有帮助
 ps --help a
