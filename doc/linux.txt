@@ -179,6 +179,8 @@ Account expires						: never
 Minimum number of days between password change		: 0
 Maximum number of days between password change		: 90
 Number of days of warning before password expires	: 7
+// -m set maximum number of days before password change to MAX_DAYS 设置密码expire时间
+chage -M 90 root
 
 
 chmod2 
