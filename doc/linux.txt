@@ -1449,9 +1449,18 @@ sleep2
 sleep 2d
 
 
+smartctl2 
+smartctl -a /dev/sdb提示
+Elements in grown defect list:1419 坏道数量
+...
+Total
+uncorrected errors ---uce数量
+
+
 soft lockup 软锁  hard lockup 硬锁  触发panic机制
 软锁 cpu被内核代码占据
 硬锁 cpu被内核代码占据,且不响应中断
+
 
 sort2 
 // 通常配合uniq去重统计使用,-c统计个数,作为结果第一列
@@ -1463,7 +1472,7 @@ sort | uniq -c
 sort -t ':' -k 3 -n /etc/passwd
 
 
-source2
+source2 
 它会将脚本中的命令直接加载到当前 Shell 中执行,而不是新的子shell
 sh2区别
 sh 命令用于启动一个新的子 Shell 来执行脚本文件
