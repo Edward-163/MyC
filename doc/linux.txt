@@ -1552,15 +1552,31 @@ strace2
 strace -o /home/fsp/hyj.txt  -tt rpm -evh XX.rpm
 
 
-su2 
-// 不写用户,默认切root,环境变量还是当前用户的
+su2 万能钥匙权限大,隐患也大
+// 不写用户,默认切root,保持工作目录和用户的环境变量
 su 
-// 不写用户,默认切root,环境变量是root 用户的   https://www.cnblogs.com/linyfeng/p/13511945.html
+// 不写用户,默认切root,切换到目标用户的家目录，同时完全加载目标用户的环境变量和配置文件   https://www.cnblogs.com/linyfeng/p/13511945.html
 su -
+   [root@server ~]# pwd   # 当前目录变为/root（root的家目录）
+   /root
+   [root@server ~]# echo $PATH   # PATH环境变量变为root的
+   /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/.local/bin:/root/bin
 
-
-sudo2 
-// sudo诞生前,su的缺点是要输入root密码,sudo使一般用户不需要知道超级用户的密码即可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，登记在特殊的文件中（通常是/etc/sudoers
+sudo2  临时工卡,可以临时权限大,更高级
+// sudo使用户不需要知道root的密码也可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，
+   核心配置文件 /etc/sudoers,
+   第一部分:环境设置Defaults,暂时省略
+   第二部分:用户权限规则
+      user host=(可切换的user:可切换的group) command
+      alice ALL=(ALL:ALL)  NOPASSWD:ALL
+      用户 alice​ 可以在任何主机上，可切换到任何用户和任何组的身份，运行任何命令。（相当于给 alice root权限）
+      NOPASSWD:： 关键标志。表示“无需密码”。如果没有这个标志，用户每次执行 sudo时都必须输入自己的密码。加上它之后，执行 sudo时直接授权，不询问密码。
+      bob myserver=(root) /usr/bin/apt, /usr/bin/systemctl restart nginx
+      用户 bob​ 在主机 myserver上，可以以 root身份，只运行​ apt和 systemctl restart nginx这两个命令。权限被严格限制。
+      %developers ALL=(ALL) /bin/systemctl start docker, /bin/systemctl stop docker
+      用户组 developers的所有成员，可以在任何主机上以 root身份启动和停止 Docker 服务。
+   第三部分:引用其他配置文件
+   #includedir /etc/sudoer.d/
 
 
 /sys/fs/cgroup/cpuset/cgroup.procs                                    决定哪些进程只能使用指定的 CPU 核心，就像给进程分配固定的“工作座位”。
@@ -1611,7 +1627,6 @@ vim /etc/udev/udev.conf 打开注释行,并把info改成debug
 systemctl daemon-reload
 systemctl restart systemd-udevd
 systemctl cat sshd
-
 
 
 systemd-analyze set-log-level debug
