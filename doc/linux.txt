@@ -69,22 +69,7 @@ ctrlD ctrlD 正常进大系统
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
 
-rd.break2  
-我试过了rd.break不写默认效果是mount,草ds乱说的
-我试过了rd.break不写默认效果是mount,草ds乱说的
-// /sysroot下面空的
-rd.break=pre-mount
-// 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
-rd.break=mount
-// 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
-rd.break=initqueue
 
-
-systemd.debug-shell=1  
-tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
-有一次
-kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让我修,修复ctrlD一路往下multipathd.service又报错了
-rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
 
 
 awk2 从输入中读取一行文本,然后针对该行执行program
@@ -290,6 +275,23 @@ date -s "2024-04-17 10:18:50"
 // display time described by STRING, not 'now',官方举例如下,1970至今秒数
 date -d'@2147483647'
 date --date='@2147483647'
+
+
+dbus2 busctl2 
+busctl list --system
+busctl list --user
+busctl monitor
+场景:1号进程systemd在top中%cpu占用70
+答:perf record -g -p 1 -- sleep 30 分析后,发现是sd_event_run和sd_event_dispatch函数占用高,琦哥说sd_event与dbus相关,所以在顺着下面uid10001再去journalctl或者dmesg或者message扒拉
+‣ Type=method_call  Endian=l  Flags=0  Version=1  Priority=0 Cookie=530157561
+  Sender=:1.1  Destination=org.freedesktop.systemd1  Path=/org/freedesktop/systemd1/unit/user_2d10001_2eslice  Interface=org.freedesktop.DBus.Properties  Member=Get
+  UniqueName=:1.1
+  MESSAGE "ss" {
+          STRING "org.freedesktop.systemd1.Unit";
+          STRING "ActiveState";
+  };
+path风格是url风格,  _2d代表-   _2e代表.    _5f代表_        ,所以user_2d10001_2eslice翻译user-10001.slice
+
 
 
 /dev/null2 
@@ -1180,6 +1182,24 @@ dhcpServer返回ip并返回bootFile pxelinux.0   当 DHCP 服务器在启动响�
 执行pxelinux.0,去tftpServer申请个pxelinux.cfg配置文件
 根据pxelinux.cfg配置文件,去tftpServer上下载内核文件,initramfs
 安装流程
+
+
+rd.break2  
+我试过了rd.break不写默认效果是mount,草ds乱说的
+我试过了rd.break不写默认效果是mount,草ds乱说的
+// /sysroot下面空的
+rd.break=pre-mount
+// 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
+rd.break=mount
+// 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
+rd.break=initqueue
+
+
+systemd.debug-shell=1  
+tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
+有一次
+kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让我修,修复ctrlD一路往下multipathd.service又报错了
+rd.break=mount systemd.debug-shell=1 console=tty0 -> 走到multipathd.service报错 -> ctrlAltF9 -> systemctl status multipathd -> /sbin/multipathd二进制提示少了.so
 
 
 trunk2 bond2 
