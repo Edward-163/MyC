@@ -278,6 +278,7 @@ date --date='@2147483647'
 
 
 dbus2 busctl2 
+D-Bus（Desktop Bus）是一种进程间通信（IPC）机制，最初是为Linux桌面环境设计的，用于应用程序之间的通信，但现在已广泛用于各种系统和服务
 busctl list --system
 busctl list --user
 busctl monitor
