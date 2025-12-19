@@ -1124,6 +1124,8 @@ testuser P 05/15/2024 0 99999 7 -1
 
 
 perf2   
+https://www.man7.org/linux/man-pages/man1/perf-record.1.html
+perf record -g -p 1 -- sleep 30 // -F不指定,-a这些你看文档,不加就是用官方的默认值
 // -F freq频率
    -a 采集所有cpu
    -g 记录调用栈
