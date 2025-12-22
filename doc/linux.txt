@@ -1348,7 +1348,8 @@ route -A inet6 -n
 rpm2 
 // -a 查询所有包,但我还是觉得没有grep耗时
    -f 查询哪些包"拥有"此文件
-   -i --info list descriptive information from ;-i会多列出包信息,可以去掉    通常-qi配套使用
+   -i --info list descriptive information from ;-i会多列出包信息,可以去掉    通常-qi配套使用\
+   -p, --package                      query/verify a package file
    -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
    -R, --requires查询XXX所需依赖
    --changelog 比如你给某个rpm包合入过代码,那么就能用changelog查询到
@@ -1361,6 +1362,7 @@ rpm -qa openssh // 包名可写可不写
 rpm -qa openssh --dbpath=/mnt/var/log/rpm/
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
 rpm -qi XXX.rpm --changelog |less 
+rpm -qp XX.rpm  --changelog |grep -i cve // 如果这个包没有安装,那么你用-qp来查询该包的changelog
 rpm -qf /lib64/librdmacm.so.1
 rpm -ql openssh-client-XXX
 rpm -qR XXX
@@ -1689,6 +1691,7 @@ tar2
 // -c compress压缩某个目录
    -z 使用gzip,XXX.tar.gz的话,一般加个它    坑:如果用z,z写最前面
    -x extract抽取
+   -f archive.tar：指定归档文件的名称
    -C 解压到目标目录下
 tar -cvf XXX.tar /home/
 tar -cvf XXX.tar /home/a.txt /home/b.txt
