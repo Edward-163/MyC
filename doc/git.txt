@@ -122,19 +122,20 @@ git push -uf origin XXX_10086
 
 
 // 更新fork仓库<<官方仓库
-// 自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
-// 添加官方远程源
+   自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
+   添加官方远程源
 git remote add origin_o https链接或者ssh链接
 // 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支
 git fetch origin_o
 // 需要特定分支可以在origin_o后面加上
 git fetch origin_o branchXXX
 // 额外:抓取后fork的origin和官方的origin_o分支进度不一样,我想用官方全覆盖fork怎么办呢?
-
 // 把自己12个补丁"追加"到自己的最新的远程
-// 多分支变基,origin_o/branchXXX分支(它作为newbase)和(不写默认)当前分支的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后
-// 虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
+   多分支变基,origin_o/branchXXX分支(它作为newbase)和(不写默认)当前分支的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后(这里存疑?,因为我还在是当前分支)
+   虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
 git rebase -i origin_o/branchXXX
+..rebase continue省略
+git push -uf 
 
 // 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
 git rebase -i HEAD~2
