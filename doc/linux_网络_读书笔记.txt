@@ -14,6 +14,17 @@ osi七层    层功能                          协议           记忆法:"传�
 数据链路层  二进制数据流8位一字节分组处理为"帧",这一层还得知晓src/dest mac      iso@2100    科普:链路层地址又称mac地址                            
   物理层    可能是网线,光纤fiber,无线波                    以二进制形式在物理媒介上传输
 
+arp
+Address Resolution Protocol，地址解析协议）是一个用于将 IP 地址映射到 MAC 地址的网络协议，它维护了一个称为 ARP 缓存（ARP table） 的本地表，记录了最近通信过的设备的 IP-MAC 对应关系
+在局域网（LAN）中，设备通过 ARP 查询目标 IP 对应的 MAC 地址，以便在数据链路层（如以太网）正确传输数据。
+arp -a
+arp -e
+典型场景：
+当主机 A (192.168.1.10) 想与主机 B (192.168.1.20) 通信时：
+A 检查本地 ARP 缓存，看是否已有 B 的 MAC 地址。
+如果没有，A 广播发送 ARP 请求（"Who has 192.168.1.20?"）。
+B 收到请求后，回复 ARP 应答（"192.168.1.20 is at AA:BB:CC:DD:EE:FF"）。
+A 将 B 的 IP-MAC 映射存入 ARP 缓存，后续通信直接使用。
 
 arping2 
 // -I 你用哪个设备去发arp包
@@ -35,6 +46,14 @@ ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
 ifconfig eth4:1 192.168.178.112/25 up
 // 操作系统（如 Linux、Windows）在驱动层允许用户通过命令或配置文件 临时覆盖 MAC 地址，实际硬件 MAC 并未改变，但所有网络通信使用修改后的值。
 ifconfig eth0 hw ether 00:11:22:33:44:55  # Linux 临时修改
+
+
+ip address show
+ip a
+9: br0: <BROADCAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether 14:30:04:ea:87:8c brd ff:ff:ff:ff:ff:ff
+    inet 76.53.151.89/17 brd 76.53.255.255 scope global dynamic br0
+       valid_lft 29589sec preferred_lft 29589sec (这种提示剩余秒,以及上一行dynamic,就是动态ip)
 
 
 ip neigh show2 
@@ -98,17 +117,7 @@ route del default
 route add default gw 192.168.1.1
 
 
-arp
-Address Resolution Protocol，地址解析协议）是一个用于将 IP 地址映射到 MAC 地址的网络协议，它维护了一个称为 ARP 缓存（ARP table） 的本地表，记录了最近通信过的设备的 IP-MAC 对应关系
-在局域网（LAN）中，设备通过 ARP 查询目标 IP 对应的 MAC 地址，以便在数据链路层（如以太网）正确传输数据。
-arp -a
-arp -e
-典型场景：
-当主机 A (192.168.1.10) 想与主机 B (192.168.1.20) 通信时：
-A 检查本地 ARP 缓存，看是否已有 B 的 MAC 地址。
-如果没有，A 广播发送 ARP 请求（"Who has 192.168.1.20?"）。
-B 收到请求后，回复 ARP 应答（"192.168.1.20 is at AA:BB:CC:DD:EE:FF"）。
-A 将 B 的 IP-MAC 映射存入 ARP 缓存，后续通信直接使用。
+
 
 
 交换机会保留它连接局域网内所有mac,
