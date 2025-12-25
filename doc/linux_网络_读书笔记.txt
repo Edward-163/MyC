@@ -41,9 +41,11 @@ ifconfig -a
 ifconfig eth4 // 默认网卡配置文件  /etc/sysconfig/network-scripts/ifcfg-eth4 
 ifconfig eth0 up
 ifconfig eth0 down
-// 添加一个新的ip
+// 增删ip
 ifconfig eth4:0 192.168.178.111 netmask 255.255.255.0 up
 ifconfig eth4:1 192.168.178.112/25 up
+ifconfig eth0 add 192.168.1.222
+ifconfig eth0 del 192.168.1.222
 // 操作系统（如 Linux、Windows）在驱动层允许用户通过命令或配置文件 临时覆盖 MAC 地址，实际硬件 MAC 并未改变，但所有网络通信使用修改后的值。
 ifconfig eth0 hw ether 00:11:22:33:44:55  # Linux 临时修改
 
@@ -54,6 +56,9 @@ ip a
     link/ether 14:30:04:ea:87:8c brd ff:ff:ff:ff:ff:ff
     inet 76.53.151.89/17 brd 76.53.255.255 scope global dynamic br0
        valid_lft 29589sec preferred_lft 29589sec (这种提示剩余秒,以及上一行dynamic,就是动态ip)
+// 增删ip
+ip address add 192.168.1.222 dev eth0
+ip address del 192.168.1.222 dev eth0
 
 
 ip neigh show2 
