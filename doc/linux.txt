@@ -925,12 +925,22 @@ ixgbe 0000:86:00.0 failed to load beacuse an unsupported SFP+ or QSFP module typ
 
 // -s 指定domain bus device func号
    -v verbose   
+   -t show bus tree 有次他问两套环境配置一样,但pci不同,直接正常/异常敲命令并对比,发现差异pci号了,网卡位置插得对不对?                    
+      pci号是硬件决定的，系统这边只是取一下，不做分配
+      设备增删都会触发bus 地址的重新分配，分配规则是：bus号从小到大顺序分配。如果把bus号小的设备拔掉，原型bus号大的会变小，拔掉bus号大的，不会影响bus号小的(bios的能力?)
+   -n  Show PCI vendor and device codes
 lspci -vvvs 0000:00:03.0
 lspci -vvvs 00:03.0
-// -t show bus tree 有次他问两套环境配置一样,但pci不同,直接正常/异常敲命令并对比,发现差异pci号了,网卡位置插得对不对?                    
-   pci号是硬件决定的，系统这边只是取一下，不做分配
-   设备增删都会触发bus 地址的重新分配，分配规则是：bus号从小到大顺序分配。如果把bus号小的设备拔掉，原型bus号大的会变小，拔掉bus号大的，不会影响bus号小的(bios的能力?)
 lspci -tv 
+
+场景
+qemu-kvm: -device vfio-pci,host=0000:3b:08.0,id=hostdev0,bus=pci.0,addr=0x3: vfio 0000:3b:08.0: failed to setup container for group 129: failed to open /dev/vfio/vfio: Permission denied
+-device vfio-pci使用vfio-pci驱动来把3b:08.0(主机上的一个vf)设备直通给vm使用
+x86环境,/dev/vfio/129不存在
+规避
+lspci -s 3b:08.0 -n
+echo '8086 154c' > /sys/bus/pci/drivers/vfio-pci/new_id // 其中 8086是 Intel 的厂商ID，154c是设备ID
+
 
 
 scsi2 
