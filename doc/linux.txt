@@ -899,6 +899,12 @@ cores per socket   单个cpu的物理核心数
 threads per core   每个物理核心能同时处理的线程数                  逻辑cpu核数==socket*core*thread
 
 
+lsmod2 
+module                 size   此模块被引用的次数,以及被谁引用了
+vfio_pci               57344  0
+vfio_virqfd            16384  1 vfio_pci
+
+
 lsof2
 // list open file
 // 如 df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放
