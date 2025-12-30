@@ -72,13 +72,14 @@ ip address del 192.168.1.222 dev eth0
 
 
 ip neigh show2 
-192.168.1.200 dev wlan0 lladdr 11:22:33:44:55:66 DELAY
-fe80::abc:def1:2345 dev eth0 lladdr 00:1a:2b:3c:4d:5e router REACHABLE
-IP 地址	邻居设备的网络层地址（IPv4 或 IPv6）	192.168.1.1 或 fe80::...
-dev	出站网络接口	eth0（有线网卡）, wlan0（无线网卡）
-lladdr	链路层地址，即 MAC 地址	00:1a:2b:3c:4d:5e
-ROUTER	标志，表示此邻居是一个路由器/网关	仅在IPv6中出现，表示默认网关
-状态	最重要的字段之一，表示此条目的“健康度”和可用性	REACHABLE, STALE, DELAY 等
+  邻居设备的ip         |通过wlan0网卡可达前一列ip | linkLayerAddr            |
+  192.168.1.200       | dev wlan0               | lladdr 11:22:33:44:55:66 | DELAY
+  fe80::abc:def1:2345 | dev eth0                | lladdr 00:1a:2b:3c:4d:5e router REACHABLE
+  IP 地址	邻居设备的网络层地址（IPv4 或 IPv6）	192.168.1.1 或 fe80::...
+  dev	出站网络接口	eth0（有线网卡）, wlan0（无线网卡）
+  lladdr	链路层地址，即 MAC 地址	00:1a:2b:3c:4d:5e
+  ROUTER	标志，表示此邻居是一个路由器/网关	仅在IPv6中出现，表示默认网关
+  状态	最重要的字段之一，表示此条目的“健康度”和可用性	REACHABLE, STALE, DELAY 等
 
 
 route2  https://www.man7.org/linux/man-pages/man8/route.8.html
