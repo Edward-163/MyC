@@ -498,7 +498,7 @@ mount -o loop,offset=34603008 /opt/disk.img /mnt
 Device           Boot Start     End Sectors  Size Id Type
 /opt/disk.img1        2048  999423  997376  487M 83 Linux
 /opt/disk.img2      999424 8388607 7389184  3.5G 8e Linux LVM
-从上面可知第一个分区的 Start是 2048。偏移量 = 2048 * 512= 1048576
+从上面可知第一个分区的 Start是 2048。偏移量 = 2048 * 512= 1048576,如果计算量很大的话,试下挂device?? 例 mount /opt/disk.img2 /mnt
 
 
 find2 
