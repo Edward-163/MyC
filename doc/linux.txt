@@ -20,6 +20,14 @@ bootloader引导程序  找到内核并加载内核到内存中,例:grub就是�
 第二内核 主内核crash时候启用,cmdline中crashkernel=256M 就是预留给第二内核使用的
 
 
+启动参数
+单用户
+single参数告诉Linux内核："不要启动正常的完整系统，只要给我一个root权限的shell就可以了
+正常启动：
+GRUB → 内核加载 → systemd启动所有服务 → 显示管理器 → 用户登录
+单用户模式（加single参数）：
+GRUB → 内核加载 → 只启动核心服务 → **直接获得root shell**
+
 配置串口
 // x86
 console=tty0 console=ttyS0,115200
@@ -1670,6 +1678,15 @@ sysctl -a |grep panic |grep oom
 // 关闭oom时panic
 sysctl -w vm.panic_on_oom = 0
 
+持久化核心配置文件 /etc/sysctl.confg
+// vi /etc/sysctl.conf
+kernel.hungtask_panic=1
+kernel.softlockup_panic=1
+vm.panic_on_oom=1
+// -p, --load[=<file>]  read values from file
+sysctl -p
+
+
 
 /sysroot2 
 最终系统根目录 (/)	毛坯房（未来要住的房子）
@@ -1788,6 +1805,8 @@ top2
 top -M
 hi hardIrq硬中断
 si softIrq软中断(与收发包有关,具体看sar日志)
+wa​ 重要,Wait for I/O，中文是 I/O 等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
+
 
 
 trap2 
