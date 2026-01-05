@@ -28,11 +28,17 @@ GRUB → 内核加载 → systemd启动所有服务 → 显示管理器 → 用�
 单用户模式（加single参数）：
 GRUB → 内核加载 → 只启动核心服务 → **直接获得root shell**
 
-配置串口
+串口  
 // x86
 console=tty0 console=ttyS0,115200
 // arm
 console=tty0 console=ttyAMA0,115200
+
+串口重定向spcr(Serial Port Console Redirection)
+BIOS boot completed.  
+[SP BOOT] exit boot service
+物理机串口老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开
+bios->支持spcr->开启
 
 
 解压iso 解压解包
