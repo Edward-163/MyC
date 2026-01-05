@@ -113,6 +113,11 @@ bc2
 time echo "scale=2000;4*a(1)" |bc -l  // 用于简易测试环境cpu性能??\
 
 
+/bin/true  /bin/false
+是 Unix/Linux 系统中两个非常简单的特殊命令，它们的设计目的是为了在 shell 脚本中提供固定的返回状态
+场景举例:systemctl cat sshd能看到ExecStart=XX ,可以把XX换成/bin/true,于是这个服务就变成了大事啥不干,光返回1
+
+
 bios2 e820表2 x86独有,arm没有这表
 可用内存（Usable RAM）：操作系统可以自由分配使用的普通内存。
 保留内存（Reserved）：这部分地址空间已被硬件设备"征用"，操作系统不能将其当作普通内存分配
