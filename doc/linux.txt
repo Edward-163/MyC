@@ -83,9 +83,6 @@ ctrlD ctrlD 正常进大系统
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
 
-
-
-
 awk2 从输入中读取一行文本,然后针对该行执行program
 格式 awk option program file   ,program举例 '{print $1,$2}' 
 // -F 指定冒号为分隔符,awk将一行分成多段来处理, 
@@ -410,6 +407,13 @@ dracut --force
 du2 
 du -hs // diskUsage,默认显示当前目录,-s 总结      显示当前目录总大小
 du -hs * // 显示当前目录,每个子项的大小
+
+
+dumpe2fs2 
+场景:sda2超级快坏了,用备份的超级快去修
+dumpe2fs /dev/sda2 |grep -i superblock
+Backup superblock at 8193, Group descriptors at 8194-8197
+fsck -b 8193 /dev/sda2
 
 
 e2fsck2 
