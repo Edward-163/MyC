@@ -22,15 +22,24 @@ git commit -m 'update ignore'
 git commit --amend // 追加方便,一般后接git push -f
 
 
+add2 
+// -i 交互式
+git add -i
+场景:你有多个文件需要add,那么按2或者u(update),然后选择文件编号,回车就行了
+
+
+bisect2 
 git bisect start 终点commit 起点commit //
 git bisect good/bad
 git bisect reset // quit
 
 
-// 删除本地XXX分支
+branch2 
+// -d 删除本地XXX分支
 git branch -d XXX
 
 
+checkout2 
 git checkout -b branchXXX origin/master
 // 报错 fatal: 'origin_o/XX' is not a commit and a branch 'XX_2025' cannot be created from it,常见于origin_o没有执行fetch
 git checkout -b XX_2025  origin_o/XX
