@@ -1195,6 +1195,7 @@ pgrep -l ssh // -l 展示 pid 和 processName
 pkill2
 // 通过进程名字杀进程  -f 代表full process name 
 pkill -9 -f /usr/XXX.py
+pkill -9 -f "life.sh"
 
 
 printf2 
