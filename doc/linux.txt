@@ -1477,8 +1477,13 @@ script举个例子 s/oldStr/replacement/flags
    -e 代表expression      执行多个命令可以用-e
    -f 代表file            命令多到需要额外一个脚本文件来记录 script.sed
 sed -i 's/is a/is not a/g' /home/a.txt
-sed -e 's/big/Big;s/small/Small' /home/a.txt
+sed -i -e 's/big/Big;s/small/Small' /home/a.txt
 sed -f script.sed /home/a.txt
+
+for i in {86..100}; do cp "/Images/TestImg/kvm-disk-scsi_85" "/Images/TestImg/kvm-disk-scsi__$(printf "%03d" "$i")" & done
+for i in {76..100}; do sed -i "s/99/$i/g" "vm$i.xml" & done
+for i in {76..100}; do sed -i "s/6e239438-1c50-4693-8ee2-062401681039/6e239438-1c50-4693-8ee2-0624016810$((i-1))/g" "vm$i.xml" & done
+for i in {76..100}; do sed -i "s|'/Images/TestImg/5.10-x86_64.qcow2_par'|'/Images/TestImg/5.10-x86_64_$i.qcow2_par'|" "vm$i.xml" & done
 
 // a 新增下一行 常用编辑命令
    d 删除
