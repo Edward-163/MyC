@@ -62,6 +62,13 @@ umount m
 rm -rf m OS.tar.gz linux
 
 
+进程替换2 <()2
+将进程的输出当作文件来使用
+source set_env < <(echo 1;echo 123)
+进程替换会在 /dev/fd/ 目录中创建一个命名管道（FIFO）或临时文件,相当于XX文件中两行内容
+source set_env < /dev/fd/XX
+
+
 重置root密码2 
 按e进入grub页面
 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break=mount         
