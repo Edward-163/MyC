@@ -1174,12 +1174,19 @@ perf record -g -p 1 -- sleep 30 // -F不指定,-a这些你看文档,不加就是
    -a 采集所有cpu
    -g 记录调用栈
    -- sleep 30 抓30s
+   -C 0 指定cpu0,2,3,4,6
 perf record -F 99 -ga -- sleep 30 -p Pid  // 指定pid抓       当前目录自动生成perf.data
 perf record -F 99 -ga -- sleep 30 -C 0-6  // 指定核范围抓
 // -i 指定inputFile                       shift+展开或者收缩
+   --no-ch 只显示函数自身开销,
 perf report -i perf.data
+perf report --no-ch
+特性	      perf report (默认)	perf report --no-ch
+显示子函数开销	✅ 是	            ❌ 否
+层次结构	      ✅ 有	            ❌ 平铺列表
+函数开销计算	包含子函数开销	只计算自身开销
+适合场景	   分析调用关系	找热点函数自身开销
 
-// -C 0 指定cpu0,2,3,4,6
 perf top -g -C 0,2-4,6
 // 输出结果里idle可以忽略跳过,主要关注快慢节点上的区别 do_syscall,exc_page_fault
 do_syscall代表用户态切到内核执行系统调用,所以这个也是上层排查
