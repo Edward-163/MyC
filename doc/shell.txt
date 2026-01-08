@@ -94,13 +94,16 @@ d1=`date`
 d2=$(date)
 d3=$(uname -r)
 
+>2  >>2  <2 <<2 
+
 <
 重定向输入,文件输入到命令,如cat < /etc/passwd效果和cat /etc/passwd是相同的
 
 // 左边 < 代表左边接受从右边输入，右边 <(command) 代表右边shell(子shell)命令的输出，将输出输出到左边
 source set_env < <(echo 1;echo 10086)
 
-11.5.2 内联输入重定向 必须要制定一个maker
+11.5.2 内联输入重定向 <<2
+必须要制定一个maker
 command << maker
 data
 maker
