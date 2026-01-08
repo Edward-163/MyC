@@ -1485,7 +1485,7 @@ scp -r -o StrictHostKeyChecking=no /boot/efi/*  172.0.0.1:/boot/efi
 
 sed2 
 (stream editor相比于vim文本编辑器就不多解释了吧),sed每次读取一行到它自己缓冲区,然后在缓冲区做操作,最后输出 https://www.gnu.org/software/sed/manual/sed.html
-格式 sed option script file
+格式 sed option script file(没说一定要文件,标准输入也行)
 script举个例子 s/oldStr/replacement/flags
 // -i 代表in-place        直接修改源文件(看情况加), s代表substitute替换脚本,
    -e 代表expression      执行多个命令可以用-e
