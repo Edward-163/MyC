@@ -1435,7 +1435,15 @@ rpm --rebuilddb
 
 
 rpmbuild2 
-
+// -ba = -bp + -bc + -bi + -bb + -bs
+   # 具体含义：
+   -bp    # 执行 %prep 阶段（解压源代码，应用补丁）
+   -bc    # 执行 %build 阶段（编译软件）
+   -bi    # 执行 %install 阶段（安装到构建根目录）
+   -bb    # 构建二进制RPM包
+   -bs    # 构建源码RPM包（SRPM）
+   --nocheck  = 不执行 spec 文件中的 %check 节  默认行为：如果没有此选项，会执行 %check 阶段
+rpmbuild -ba qemu.spece --nocheck
 
 
 rpm2cpio2 
