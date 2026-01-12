@@ -11,10 +11,14 @@ win git自带的vim的配置文件是C:\Program Files\Git\etc\vimrc
 不同的vim默认的设置是不同的,例如git自带的vim光标是竖线,单板上下载的vim光标默认的方块,cursor设置可以自己修改,只不过有点极客折腾,能用就行
 :help cursor
 
-:set xx! // 关闭xx 
+:set xx! // !关闭xx 
 :set nu hls // nu代表num,hightLightSearch,实用!!
 :set cul // set cursorline
 :set cuc // set cursorcolunm
+// 查看fireformat
+:set ff
+:set ff=unix
+:set ff=dos
 
 vim中有光标位置list
 ctrl o  上一个位置
