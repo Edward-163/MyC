@@ -921,6 +921,12 @@ losetup /dev/loop0   /opt/XXX/image/instance/disk.eph0
 kpartx -av /dev/loop0
 
 
+lun2
+Logical Unit Number（逻辑单元号）
+存储管理员在存储设备上，将多块物理硬盘组合成RAID组来提升性能或可靠性。然后，从这个大的存储池中，划分出不同大小的逻辑存储单元，每一个单元就是一个LUN。
+服务器上的HBA卡（主机总线适配器）通过网络（如光纤通道SAN或IP网络）发现这些LUN，并将其识别为一块本地硬盘，操作系统随后可以对其进行分区、格式化和使用
+
+
 ls2 
 // -Z 仅在 SELinux 处于 ​​Enforcing（强制模式）​​ 或 ​​Permissive（宽容模式）​​ 时才有意义。如果 SELinux 被禁用（Disabled），所有文件的安全上下文通常显示为 system_u:object_r:unlabeled_t:s0或类似内容，表明它们未被标记
 ls -Z XX.so
