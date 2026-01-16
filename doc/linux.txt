@@ -90,12 +90,14 @@ ctrlD ctrlD 正常进大系统
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
 
-awk2 从输入中读取一行文本,然后针对该行执行program
+awk2 
+从输入中读取一行文本,然后针对该行执行program
 格式 awk option program file   ,program举例 '{print $1,$2}' 
-// -F 指定冒号为分隔符,awk将一行分成多段来处理, 
-   $0整个文本行,文本行第一段$1,第二段$2   下面输出逗号怎么空格了??
+// -F 指定冒号为分隔符,awk将一行分成多段来处理, 如果不指定file,awk则从stdin取数据
+   print 它不是linux的printf命令,即便环境上没有print命令,它也能正常打印,所以我怀疑它与awk有关系
+   $0 整个文本行,文本行第一段$1,第二段$2   下面输出逗号怎么空格了??
 awk -F ":" '{print $1,$2}' /etc/passwd
-// -F\'   如果 /etc/passwd行中没有单引号，则整个行会被视为一个字段（即 $1包含整行，$2为空）。因此，这个命令在 /etc/passwd上可能不会产生有意义的结果，只会输出每一行后跟 ---。
+// -F\'   因为passwd中没有单引号，所以没法切割,导致$1==整行，$2==空,因此，这个命令在passwd上不会产生有意义的结果，只会输出每一行后紧跟---
 awk -F\' '{print $1"---"$2}' /etc/passwd
 // 先去掉grep子进程本身,然后查询cpustat.py的pid
 ps -aux|grep -v grep |grep cpustat.py |awk '{print $2}'
