@@ -1090,12 +1090,15 @@ mkfs /dev/sda
 mkfs.ext4 /dev/sdb
 
 
-modinfo2 modprobe2 
-// 可以先查询下有没有ko,有的话再modprobe打上ko
+modinfo2 modprobe2                         insmod2 rmmod2 
+modinfo ipmi_watchdog
+// -r remove
+   可以先查询下有没有ko,有的话再modprobe打上ko
    1. modprobe 命令会自动加载所需的依赖模块，而 insmod 命令则不会。如果一个模块依赖于其他模块，使用 modprobe 命令可以自动加载这些依赖模块，而使用 insmod 命令则需要手动加载这些依赖模块。
    2. modprobe 命令会从 /etc/modprobe.conf 和 /etc/modprobe.d 目录中读取配置文件，以确定要加载的模块及其参数。而 insmod 命令则需要手动指定要加载的模块及其参数。
-modinfo ipmi_watchdog
 modprobe ipmi_watchdog
+modprobe -r ipmi_watchdog
+
 depmod -a // 扫描更新模块数据库modules.dep,modprobe和depmod都是归属于kmod包
 /lib/modules/$(uname -r)/modules.dep // 归属于kernel包,内容就是一行文本,比如A.ko需要依赖a.ko,b.ko,       A.ko: a.ko b.ko
 
