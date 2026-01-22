@@ -2038,6 +2038,7 @@ timeout -s KILL 2 ping www.baidu.com
 
 
 udev2 
+历史背景  devfs->udev(systemd-udevd是udev实现之一)
 是用户空间设备管理器，它在设备插入或移除时，在用户空间动态创建和管理 /dev目录下的设备文件
 硬件事件（插拔设备）
     ↓
