@@ -2037,6 +2037,31 @@ timeout -s KILL 600 reboot
 timeout -s KILL 2 ping www.baidu.com
 
 
+udev2 
+是用户空间设备管理器，它在设备插入或移除时，在用户空间动态创建和管理 /dev目录下的设备文件
+硬件事件（插拔设备）
+    ↓
+Linux 内核
+    ↓
+发送 uevent 到 netlink socket
+    ↓
+udev 守护进程 (udevd) 接收事件
+    ↓
+匹配 udev 规则 (/etc/udev/rules.d/)
+    ↓
+执行动作（创建设备节点、设置权限、运行脚本等）
+    ↓
+更新 /dev 目录
+
+# 1. udev 守护进程
+/usr/lib/systemd/system/udevd.service
+# 2. 规则目录
+/etc/udev/rules.d/           # 用户自定义规则
+/usr/lib/udev/rules.d/       # 系统规则
+
+
+
+
 unzip2 
 // -d extract files into exdir
 unzip XX.zip -d /dirXX
