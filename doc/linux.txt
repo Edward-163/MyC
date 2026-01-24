@@ -651,11 +651,11 @@ boot
 grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg，重新生成grub.cfg文件。生成成功后reboot，OS恢复正常
 
 
-hwlock2 
-// rtc硬件时钟==hwlock -r       systemtime==date  
+hwclock2 
+// rtc==硬件时钟       systemtime==date  
 // -r display rtc
-// -w 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
-// -s 反过来  set system time from rtc
+   -w 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
+   -s 反过来  set system time from rtc
 hwclock -w
 
 
