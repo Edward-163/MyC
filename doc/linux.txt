@@ -249,13 +249,22 @@ chrt -r 99
 
 
 cgroup2 
-进制占用内存不受限制,oom
-进制占用cpu不受限制,其他进程无法得到调度,执行超时or失败,这就是为啥引入cgroup的原因
+control groups provide a mechanism for aggregating/partitioning sets of tasks
+cgroup 出现之前，Linux 内核管理资源的方式相对粗放。系统确实有一个最后的防线——OOM Killer——在内存耗尽时它会“杀死”某些进程来防止系统崩溃。但这是一种被动的、破坏性的补救措施。内核既然能判断哪个进程“该死”，自然也应该有能力提前限制进程的资源使用，防止系统陷入困境，这正是 cgroup
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
 // 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
    需要拼接 /sys/fs/cgroup/memory/system.slice/XX
    需要拼接 /sys/fs/cgroup/memory/system.slice/XX
 cat /proc/XXX/cgroup 
+大目录固定的 /sys/fs/cgroup
+小目录举例 
+/sys/fs/cgroup/cpuset/
+/sys/fs/cgroup/memory/
+小目录的下一层是ssytemd讲进程组织成不同的slice(片)
+system.slice 系统服务slice
+user.slice 用户会话slice
+machine.slice：管理容器和虚拟机
+
 
 
 cpio2 
