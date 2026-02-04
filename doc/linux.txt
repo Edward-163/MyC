@@ -613,6 +613,12 @@ mount /dev/sda mountPoint
 解决:log如果不需要的保留的话,走格式化,挂镜像,mkfs /dev/VG/log
 
 
+gdb2 
+gdb -p pid
+// 没进程,就直接查看core文件
+gdb `which qemu-kvm` core_kvm_XX文件
+
+
 grep2 egrep2
 背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
