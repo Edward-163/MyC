@@ -456,11 +456,13 @@ dumpe2fs2
 场景:sda2超级快坏了,用备份的超级快去修
 dumpe2fs /dev/sda2 |grep -i superblock
 Backup superblock at 8193, Group descriptors at 8194-8197
+如果上述报错bad magic number in super-block这种修不了
 fsck -b 8193 /dev/sda2
 
 
 e2fsck2 
 // check a Linux ext2/ext3/ext4 file system
+针对ext的"专业版"fsck
 
 
 echo2  默认末尾加换行
