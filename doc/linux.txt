@@ -3,7 +3,7 @@
 bios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
    mbr(旧),gpt(新)是两种不同硬盘分区方案
 
-bios程序            上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
+bios"老管家"            上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
    可能会被uefi取代,
 bootloader引导程序  找到内核并加载内核到内存中,例:grub就是其中之一
    grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
