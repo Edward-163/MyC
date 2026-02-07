@@ -120,6 +120,11 @@ bc2
 time echo "scale=2000;4*a(1)" |bc -l  // 用于简易测试环境cpu性能??\
 
 
+/bin/bash2   bash2
+是 Bash shell 的可执行文件。Bash（Bourne Again SHell）是 Unix 和 Linux 系统中一个非常流行的命令行解释器（shell）
+翻译官：你输入人类可读的命令（如 ls、cd），Bash 将这些命令“翻译”成计算机能理解的系统调用
+
+
 /bin/true  /bin/false
 是 Unix/Linux 系统中两个非常简单的特殊命令，它们的设计目的是为了在 shell 脚本中提供固定的返回状态
 场景举例:systemctl cat sshd能看到ExecStart=XX ,可以把XX换成/bin/true,于是这个服务就变成了大事啥不干,光返回1
@@ -223,6 +228,13 @@ Maximum number of days between password change		: 90
 Number of days of warning before password expires	: 7
 // -m set maximum number of days before password change to MAX_DAYS 设置密码expire时间
 chage -M 90 root
+
+
+chroot2
+chroot [新根目录] [要执行的程序] [程序的参数]
+chroot /sysroot // 有一次报错/bin/sh软链接不存在,一般它指向/bin/bash文件
+// 在新的根目录环境里，启动一个 Bash shell 让我用
+chroot /sysroot /bin/bash // 还是报错没有bash,从外面拷贝一份到内部:cp /bin/bash /sysroot/bin/
 
 
 chmod2 
@@ -1749,7 +1761,7 @@ su -
    [root@server ~]# echo $PATH   # PATH环境变量变为root的
    /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/.local/bin:/root/bin
 
-sudo2  临时工卡,你不能老是要root密码才能玩,更高级
+sudo2  临时工卡,你不能老想拿到root密码才能玩,更高级sudo
 // sudo使用户不需要知道root的密码也可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，
    核心配置文件 /etc/sudoers,
    第一部分:环境设置Defaults,暂时省略
