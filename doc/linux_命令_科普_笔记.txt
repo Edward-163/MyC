@@ -484,11 +484,11 @@ echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
 efi2  uefi2  legacyBios(老技术都快淘汰了)
-ls /sys/firmware/efi  // 重要的判断依据
+在 UEFI 时代，启动信息不再存储在硬盘的 MBR（主引导记录），而是存储在主板上的 NVRAM（非易失性随机存取存储器）芯片里
+ls /sys/firmware/efi  // 如果能看到efivars目录,说明系统以uefi启动
 ls /boot/efi/EFI // 它不是判断依据,传统引导也有该目录
 /boot/efi/EFI/XXX/grub.cfg                             uefi
 /boot/grub2/grub.cfg                            legacy
-
 
 efibootmgr2
 // -c | --create         create new variable bootnum and add to bootorder
