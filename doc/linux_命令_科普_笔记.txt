@@ -632,11 +632,12 @@ fuser -mv /var/log
 
 fsck2 
 通常修分区4步
-// umount第一条,不能在当前目录结构当前目录
+// umount第一条,不能在当前目录解挂当前目录
 umount mountPoint
 // -n 以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 
    -f 表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
       skipped journal recovery because doing a read-only check指的是 fsck工具自身运行的模式。-n选项告诉 fsck仅仅检查文件系统，但拒绝进行任何实际的修复,并不是指分区只读
+   -a 自动修复(保守地)
 fsck -nf /dev/sda 
 fsck -y /dev/sda
 mount /dev/sda mountPoint
