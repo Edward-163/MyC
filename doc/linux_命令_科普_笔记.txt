@@ -1945,8 +1945,7 @@ hi hardIrq硬中断
 si softIrq软中断(与收发包有关,具体看sar日志)
 wa 重要,Wait for I/O，中文是 I/O 等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
 
-负载平均值通常显示三个数字，分别代表过去1分钟、5分钟和15分钟的平均负载。
-    例如：load average: 0.65, 0.42, 0.36
+load average: 0.65, 0.42, 0.36 负载平均值通常显示三个数字，分别代表过去1分钟、5分钟和15分钟的平均负载。
     第一个数字（0.65）：过去1分钟的平均负载
     第二个数字（0.42）：过去5分钟的平均负载
     第三个数字（0.36）：过去15分钟的平均负载
@@ -1965,11 +1964,13 @@ function handleSigFunc{
 trap handleSigFunc INIT TERM QUIT 
 
 
-tty2 
-tty # 当你登录一个 Linux 系统（无论是通过本地键盘、SSH 还是终端模拟器），系统会为你分配一个终端设备。tty命令就是用来查询这个设备的。
-/dev/pts/0
+tty2
+指文本终端设备。简单来说，就是你输入命令、看到文字输出的那个“接口”
+tty命令 # 当你登录一个 Linux 系统（无论是通过本地键盘、SSH 还是终端模拟器），系统会为你分配一个终端设备。tty命令就是用来查询这个设备的。
+    输出举例/dev/pts/3
 systemctl status getty@tty1
-systemctl status getty@tty2
+/dev/ttyX	Virtual TTY	虚拟控制台。内核直接提供的纯文本界面，不依赖图形系统。	Ctrl+Alt+F1~F6，服务器故障救援。
+/dev/pts/X	Pseudo TTY	伪终端。图形界面下的终端模拟器或 SSH 会话。	日常使用的终端窗口、远程 SSH。
 
 
 tune2fs2 
