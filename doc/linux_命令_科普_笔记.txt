@@ -2143,6 +2143,26 @@ unzip2
 unzip XX.zip -d /dirXX
 
 
+vfs2
+无论底层是硬盘上的 ext4、U 盘上的 FAT32、Windows 共享的 SMB/CIFS，还是内存中的 tmpfs，应用程序只需要调用统一的系统调用（System Calls），如 open(), read(), write(), close()。VFS 负责将这些通用命令“翻译”成具体文件系统能听懂的指令
+VFS 通过四个关键的数据结构来描述文件系统，它们都定义在内核头文件中：
+Superblock (超级块)
+描述：描述整个文件系统的信息。
+内容：文件系统类型（ext4?）、块大小、空闲块数量、inode 总数等。
+
+Inode (索引节点)
+描述：描述单个文件/目录的元数据（不包含文件名和内容）。
+内容：文件大小、所有者、权限、时间戳、数据块在磁盘上的位置指针。
+
+Dentry (Directory Entry, 目录项)
+描述：描述路径名与 inode 的映射关系。
+内容：文件名、指向对应 inode 的指针、父目录的 dentry。
+作用：加速路径查找（缓存机制）。
+open一个文件/home/xxx/yyy.txt，那么/、home、xxx、yyy.txt都是一个目录项
+
+File (文件对象)
+
+
 vim2 正则2
 在very magic模式（\v）下，常用的元字符包括：
 .：匹配任意字符
