@@ -1020,7 +1020,10 @@ cores per socket   单个cpu的物理核心数
 threads per core   每个物理核心能同时处理的线程数                  逻辑cpu核数==socket*core*thread
 
 
-lsmod2 
+lsmod2
+该命令从/proc/modules读取当前加载的模块列表
+内核模块文件（.ko）存在于磁盘上，并且其元数据（modinfo）可被读取，但该模块当前并未被加载到正在运行的内核内存中
+模块只是静静地躺在 /lib/modules/$(uname -r)/kernel/... 目录下，等待被调用
 module                 size   此模块被其他模块引用的次数
 vfio_pci               57344  0
 vfio_virqfd            16384  1 vfio_pci
@@ -1150,7 +1153,8 @@ mkfs /dev/sda
 mkfs.ext4 /dev/sdb
 
 
-modinfo2 modprobe2                         insmod2 rmmod2 
+modinfo2 modprobe2                         insmod2 rmmod2
+modinfo 读取的是模块文件（如 /lib/modules/$(uname -r)/kernel/.../XXX.ko）中的元数据，它只要求文件存在且格式正确，与模块是否加载无关
 modinfo ipmi_watchdog
 // -r remove
    可以先查询下有没有ko,有的话再modprobe打上ko
@@ -1321,6 +1325,13 @@ printf ":set nu hls cursorline\n" >> ~/.vimrc
 // 保存的是bootloader(引导加载程序) 启动linux kernel 时的参数
 /proc/cmdline
 /proc/meminfo |grep -i huge*
+
+
+/proc/interrupts
+中断号  该cpu上中断累积出发次数      设备名
+            CPU0       CPU1
+   0:        117          0     IR-PCI-MSI 13631508-edge      i40e-eth0-TxRx-19
+场景:%irq硬中断冲高就是硬件上报的多呀,查看interrupts日志,问题时间点前后用excel处理下,看下哪个中断号陡增,进而锁定哪个设备上报的多
 
 
 /proc/mounts
