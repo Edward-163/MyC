@@ -1,0 +1,33 @@
+1
+准备工作:vmcore_debug工具包,内核crash命令,vmlinux镜像
+问题环境vmcore文件,env_compile.tar.gz(源码)
+
+2
+./crash vmlinux vmcore
+
+3
+常用命令
+bt
+dis -l 函数名or某地址 // -l line展示源码行号,推荐加上
+struct -o task_struct // -o offset展示偏移量
+    crash> struct -o address_space
+    struct address_space {
+        [0] struct inode *host;
+        [8] struct xarray i_pages;
+rd addr
+log > log.txt // bt不展示rip关键词,log内容就是vmcore-dmesg.txt,它里面有rip关键词
+
+4
+函数调用约定
+%rdi    参1
+%rsi    参2
+%rdx    参3
+%rcs    参4
+%r8     参5
+%r9     参6
+
+5
+RIP是x86_64架构下的指令指针寄存器（Instruction Pointer），指向当前正在执行的指令地址。在Linux内核崩溃信息或日志中，RIP行通常显示导致问题的那条指令所在的函数以及偏移量。它提供了问题发生的确切位置，是定位问题的起点
+RIP: 0010:try_to_wake_up+0x40/0x4c0
++0x40：指令在函数内部的偏移量，即从函数起始地址往后数 0x40 个字节
+/0x4c0：函数的总大小（字节数，十六进制），这里表示 try_to_wake_up 函数共有 0x4c0 字节（约 1216 字节

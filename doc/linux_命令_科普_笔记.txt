@@ -1,4 +1,4 @@
-我在每个命令后面加个2只是方便搜索
+
 固件      |bootloader       |kernel|initrd|rootfs|1号进程
 bios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
    mbr(旧),gpt(新)是两种不同硬盘分区方案
@@ -91,7 +91,7 @@ ctrlD ctrlD 正常进大系统
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
 
-awk2 
+ awk2
 从输入中读取一行文本,然后针对该行执行program
 格式 awk option program file   ,program举例 '{print $1,$2}' 
 // -F 指定冒号为分隔符,awk将一行分成多段来处理, 如果不指定file,awk则从stdin取数据
@@ -109,28 +109,28 @@ name
 e---
 
 
-basename2 
+ basename2
 basename /home/user/documents/report.txt # 输出report.txt
 
 
-bc2 
+ bc2
 // -l mathlib
    scale=2000 保留小数点后2000位
    4*a(1)==圆周率,pi=180度,tan(45度)=1,arctan(1)=45度,4*arctan(1)=180度=pi
 time echo "scale=2000;4*a(1)" |bc -l  // 用于简易测试环境cpu性能??\
 
 
-/bin/bash2   bash2
+ /bin/bash2   bash2
 是 Bash shell 的可执行文件。Bash（Bourne Again SHell）是 Unix 和 Linux 系统中一个非常流行的命令行解释器（shell）
 翻译官：你输入人类可读的命令（如 ls、cd），Bash 将这些命令“翻译”成计算机能理解的系统调用
 
 
-/bin/true  /bin/false
+ /bin/true  /bin/false
 是 Unix/Linux 系统中两个非常简单的特殊命令，它们的设计目的是为了在 shell 脚本中提供固定的返回状态
 场景举例:systemctl cat sshd能看到ExecStart=XX ,可以把XX换成/bin/true,于是这个服务就变成了大事啥不干,光返回1
 
 
-bios2 e820表2 x86独有,arm没有这表
+ bios2 e820表2 x86独有,arm没有这表
 可用内存（Usable RAM）：操作系统可以自由分配使用的普通内存。
 保留内存（Reserved）：这部分地址空间已被硬件设备"征用"，操作系统不能将其当作普通内存分配
 [ 0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
@@ -139,7 +139,7 @@ bios2 e820表2 x86独有,arm没有这表
 答:直接找bios,它那边没有就上报这么多,少了内存就是少了内存,此处非os锅
 
 
-blkid2 
+ blkid2
 // 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
 blkid /dev/sda
 /dev/sda1 的本质：
@@ -150,7 +150,7 @@ blkid /dev/sda
    类比：必须把书翻开（挂载）才能阅读或修改内容，只看条形码（/dev/sda1）无法编辑。
 
 
-blktrace2 
+ blktrace2
 // -d dev
    -w Stop after defined time, in seconds
    报错FAILED to start thread on CPU 0: 22/Invalid argument,因为当前进程被加到cpuset的cgroup子系统里面了，被限制了只能访问部分cpu
@@ -161,7 +161,6 @@ blktrace -d /dev/sda3  -w30
 blkparse -i sda3 -d sda3dump.bin
 btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(毫秒)和max
             ALL           MIN           AVG           MAX           N
---------------- ------------- ------------- ------------- -----------
                   单位s          平均244ms     最大4985ms         共386个请求
 Q2Q               0.000001500   0.244555772   4.985332850         386   两个io间隔时间
 Q2G               0.000000730   0.000047734   0.006542980         156
@@ -201,7 +200,7 @@ https://www.cnblogs.com/sparkdev/p/11417781.html
 就得具有 capability CAP_SYS_TIME。
 
 
-capsh2 
+ capsh2
 // --caps 设置进程能力集
    --keep 用户切换后保留能力集(默认切用户丢弃)
    --user 指定用户
@@ -210,14 +209,14 @@ capsh2
 capsh --caps="cap_dac_override,cap_setgid,cap_setuid,cap_setpcap+ip" --keep=1 --user="cps" --addamb="cap_dac_override" -- -c "python /usr/bin/logrotate.py >/dev/null 2>&1"
 
 
-cat2 
+ cat2
 // 什么都不写就是,你屏幕输入什么,打印什么
 cat
 // 当前屏幕在线写脚本,ctrl D 退出书写,这么玩不如vim,因为当前屏幕在线写没有退格,只能ctrl U,ctrl W 啥的来删除
 cat > test.sh
 
 
-chage2 
+ chage2
 chage -l root // list account info
 Last password change					: Nov 10, 2023
 Password expires					: Feb 08, 2024
@@ -230,25 +229,26 @@ Number of days of warning before password expires	: 7
 chage -M 90 root
 
 
-chroot2
+ chroot2
 chroot [新根目录] [要执行的程序] [程序的参数]
 chroot /sysroot // 有一次报错/bin/sh软链接不存在,一般它指向/bin/bash文件
 // 在新的根目录环境里，启动一个 Bash shell 让我用
 chroot /sysroot /bin/bash // 还是报错没有bash,从外面拷贝一份到内部:cp /bin/bash /sysroot/bin/
 
 
-chmod2 
+ chmod2
 // -R 目录以及文件递归改
 chmod 777 -R /sys/fs/cgroup/cpu/hyjXX
 
 
-chown2 
+ chown2
 chown root:root b.txt // 改变文件的所有者:所有者组
 chown root a.txt //
 chown :root c.txt //
 
 
-chrt2 
+ chrt2
+change real-time scheduling attributes of process
 诉求:把进程杀掉再拉起,要求0.5s以内,这时候这块知识就有用了
 实时进程与普通进程区别在于schedule策略
 实时进程 SCHED_FF先进先出 SCHED_RR轮训
@@ -261,7 +261,7 @@ chrt -f 99 // 优先级[1,99最高]
 chrt -r 99
 
 
-cgroup2 
+ cgroup2
 control groups provide a mechanism for aggregating/partitioning sets of tasks
 cgroup 出现之前，Linux 内核管理资源的方式相对粗放。系统确实有一个最后的防线——OOM Killer——在内存耗尽时它会“杀死”某些进程来防止系统崩溃。但这是一种被动的、破坏性的补救措施。内核既然能判断哪个进程“该死”，自然也应该有能力提前限制进程的资源使用，防止系统陷入困境，这正是 cgroup
 memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
@@ -280,7 +280,7 @@ machine.slice：管理容器和虚拟机
 
 
 
-cpio2 
+ cpio2
 把文件/目录归档到XXX.cpio中或者从XXX.cpio中提取出来
 // -o create archive 代表归档或者创建
    archive - Bing dictionary   US[ˈɑrˌkaɪv]UK[ˈɑː(r)kaɪv]
@@ -294,7 +294,7 @@ cpio -id a.cpio
 rpm2cpio X.rpm | cpio -idv
 
 
-cpuinfo2 
+ cpuinfo2
 // -c 指定cpulist
 cpuinfo -c 0-3 freqency-info
 performance性能模式就是没调频
@@ -304,7 +304,7 @@ echo coresmart | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 tee2 把输入输出到文件中并保存(实测,源文件内容被删除覆盖)
 
 
-cracklib2 弱密码 密码字典
+ cracklib2 弱密码 密码字典
 // 解析字典,并输出字典规则内容到文件中,当 pw_dict 不存在时，cracklib-unpacker 可能自动尝试加载其他关联文件（如 pw_dict.pwd），因此不会直接报错
 cracklib-unpacker /usr/share/cracklib/pw_dict > /home/a.txt
 create-cracklib-dict a.txt  // 生成新的二进制字典
@@ -312,7 +312,7 @@ update-cracklib  // 更新字典索引
 echo "123" | cracklib-check // 密码预检查
 
 
-curl2 
+ curl2
 curl is a tool for transferring data from or to a server using URLs
 // -i 在输出中包含 HTTP 响应头（便于调试）
    -g 允许url可以包含{}[]
@@ -327,7 +327,7 @@ Chain INPUT (policy ACCEPT 30M packets, 8165M bytes)
     0     0 DROP       all  --  external_api *       0.0.0.0/0            0.0.0.0/0
 
 
-date2 
+ date2
 date [option]..[+format]
 // 什么是format, https://www.man7.org/linux/man-pages/man1/date.1.html
    举例 %Y 四位年份 %m 月份 %d 日
@@ -348,7 +348,7 @@ date -d'@2147483647'
 date --date='@2147483647'
 
 
-dbus2 busctl2 
+ dbus2 busctl2
 D-Bus（Desktop Bus）是一种进程间通信（IPC）机制，最初是为Linux桌面环境设计的，用于应用程序之间的通信，但现在已广泛用于各种系统和服务
 busctl list --system
 busctl list --user
@@ -395,7 +395,7 @@ insmod opt/uvp/modules/megaraid_sas/megaraid_sas.ko
 sh /usr/Euler/project/init/LinuxSetup.sh
 
 
-dd2 
+ dd2
 // /dev/zero  /dev/null 在上面
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
 if      input file
@@ -407,13 +407,12 @@ iflag=direct 绕开fs的缓存
 oflag=direct
 
 
-df2 
-df -h // disk free
+ df2
 df -i // 列出分区inode使用情况,inode被用光了也可能报错no space left
 df -T // 打印fs类型
 
 
-dhclient2 
+ dhclient2
 一般来说就是出网卡发包到pxe服务器上dhcpServer,获取ip,获取不到,最便捷的是先去dhcpServer抓包分析
 // -v verbose log ,动态获取ip,并显示详细过程,
    -x shutDown client
@@ -422,18 +421,18 @@ dhclient -v eth4 // 附:可以指定网络接口
 dhclient -x
 
 
-dirname2 basename2 
+ dirname2 basename2
 dirname /home/user/docs/file.txt        
 /home/user/docs
 
 
-dmesg2 
+ dmesg2
 // -C 清除环回缓冲区
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
 dmesg -c
 
 
-dmidecode2 
+ dmidecode2
 // -t 指定类型  0-bios 1-system 等等
    -s 查看string的值  string有很多,比如 system-uuid
 dmidecode -t bios
@@ -443,13 +442,13 @@ dmidecode -t processor // 如展示core一共多少个,启用多个少core
 dmidecode -s system-uuid // 系统uuid在上面-t system也能查出来
 
 
-dos2unix2 
+ dos2unix2
 将Windows格式文件转换为Unix、Linux格式的实用命令
 // 比如你将window上sh脚本拷贝至linux环境,就容易提示\r错误异常
 dos2unix XX.sh
 
 
-dracut2
+ dracut2
 将为当前运行的内核版本生成一个新的initramfs映像文件，并将其保存在/boot目录下
 // 不加force会提示不会覆盖已有镜像,加了后,镜像的modify,change会更新,
 dracut --force
