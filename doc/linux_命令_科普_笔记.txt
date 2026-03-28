@@ -1,11 +1,18 @@
 
-固件      |bootloader       |kernel|initrd|rootfs|1号进程
-bios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
+固件            |bootloader       |kernel|initrd|rootfs|1号进程
+legacyBios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
    mbr(旧),gpt(新)是两种不同硬盘分区方案
 
-bios"老管家"            上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
-            做什么?开机自检->初始化硬件->寻找系统->交接控制权
-   可能会被uefi取代"智能管家"
+legacyBios
+    "老管家"(老技术都快淘汰了)   上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
+    做什么?开机自检->初始化硬件->寻找系统->交接控制权       可能会被uefi取代"智能管家"
+uefi22
+    在 UEFI 时代，启动信息不再存储在硬盘的 MBR（主引导记录），而是存储在主板上的 NVRAM（非易失性随机存取存储器）芯片里
+    ls /sys/firmware/efi  // 如果能看到efivars目录,说明系统以uefi启动
+    ls /boot/efi/EFI // 它不是判断依据,传统引导也有该目录
+    /boot/grub2/grub.cfg                            legacyBios
+    /boot/efi/EFI/XXX/grub.cfg                             uefi
+
 bootloader引导程序  找到内核并加载内核到内存中,例:grub就是其中之一
    grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
       解压vmlinuz到随意目录,你就能看到 init -> usr/lib/systemd/systemd
@@ -40,6 +47,9 @@ BIOS boot completed.
 [SP BOOT] exit boot service
 物理机串口老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开
 bios->支持spcr->开启
+ibmc后台敲命令(登录提示符是iBMC),可以敲这个  ipmcset2
+ipmcset -t sol -d activate -v 1 0
+
 
 
 解压iso 解压解包
@@ -482,20 +492,13 @@ e2fsck2
 针对ext的"专业版"fsck
 
 
-echo2  默认末尾加换行
+echo22  默认末尾加换行
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
 // -n 表示不要换行输出,-e解析反斜杠
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
-efi2  uefi2  legacyBios(老技术都快淘汰了)
-在 UEFI 时代，启动信息不再存储在硬盘的 MBR（主引导记录），而是存储在主板上的 NVRAM（非易失性随机存取存储器）芯片里
-ls /sys/firmware/efi  // 如果能看到efivars目录,说明系统以uefi启动
-ls /boot/efi/EFI // 它不是判断依据,传统引导也有该目录
-/boot/efi/EFI/XXX/grub.cfg                             uefi
-/boot/grub2/grub.cfg                            legacy
-
-efibootmgr2
+efibootmgr22
 // -v verbose
    -b XX 指定XX引导项
    -B delete
@@ -681,7 +684,7 @@ sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
 
-grub2 手动引导2 
+grub22 手动引导2
 grub.cfg位置x86在grub/ ;arm在efi/??
 无故进入grub模式,屏幕显示grub>
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
@@ -692,6 +695,9 @@ linux /vmlinuz-XX root=/dev/cpsVG/rootfs console=tty0
 initrd /initramfs-XX.img
 boot
 grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg，重新生成grub.cfg文件。生成成功后reboot，OS恢复正常
+
+场景:无grub页面
+
 
 
 hwclock2 
