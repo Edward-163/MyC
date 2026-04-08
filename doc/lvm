@@ -54,8 +54,8 @@ vgdisplay -C
 VG    #PV #LV #SN(snapshots卷组快照数量)   Attr   VSize VFree
 cpsVG   1  15   0                         wz--n- 1.45t 1.30t
 
-vgscan
-vgs
+lvm vgscan
+lvm vgs
 
 lvscan2 
 ACTIVE '/dev/vg0/data' [1000.00 MB] inherit
@@ -69,8 +69,8 @@ lvdisplay2
 vgchange2 
 // -a avtive
    -y yes
-vgchange -ay /dev/xxxVG/  # 激活单个卷组
-vgchange -ay      # 激活系统中所有卷组
+lvm vgchange -ay /dev/xxxVG/  # 激活单个卷组
+lvm vgchange -ay      # 激活系统中所有卷组
 
 
 

@@ -384,7 +384,7 @@ date -d'@2147483647'
 date --date='@2147483647'
 
 
- dbus2 busctl2
+dbus2 busctl2
 D-Bus（Desktop Bus）是一种进程间通信（IPC）机制，最初是为Linux桌面环境设计的，用于应用程序之间的通信，但现在已广泛用于各种系统和服务
 busctl list --system
 busctl list --user
@@ -660,19 +660,27 @@ Show which processes use the named files, sockets, or filesystems.
 fuser -mv /var/log
 
 
-fsck2 
-通常修分区4步
+fsck22
+文件系统建立在分区上,/dev/sda是整块盘,/dev/sda3才是某分区
 // umount第一条,不能在当前目录解挂当前目录
 umount mountPoint
 // -n 以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 
    -f 表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
       skipped journal recovery because doing a read-only check指的是 fsck工具自身运行的模式。-n选项告诉 fsck仅仅检查文件系统，但拒绝进行任何实际的修复,并不是指分区只读
    -a 自动修复(保守地)
-fsck -nf /dev/sda 
-fsck -y /dev/sda
-mount /dev/sda mountPoint
+fsck -nf /dev/sda3
+fsck -y /dev/sda3
+mount /dev/sda3 mountPoint
 场景:-y之后-nf还是提示log分区有损坏,
 解决:log如果不需要的保留的话,走格式化,挂镜像,mkfs /dev/VG/log
+
+NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda                    8:0    0  3.6T  0 disk
+├─sda1                 8:1    0  500M  0 part /boot/efi
+├─sda2                 8:2    0  500M  0 part /boot
+└─sda3                 8:3    0  3.6T  0 part
+  ├─cpsVG-rootfs     253:0    0   50G  0 lvm  /
+你可以fsck -nf sda1或者sda2或者rootfs,但是不应该后接sda或者sda3
 
 
 gdb22
@@ -1474,6 +1482,39 @@ Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
 
+/proc/pidXXX/smaps
+输出由多段组成,举例某段如下
+   93 4ff3efe00000-4fffefe00000 rw-p 00000000 00:00 0
+   94 Size:           50331648 kB
+   95 KernelPageSize:        4 kB
+   96 MMUPageSize:           4 kB
+   97 Rss:             1404928 kB
+   98 Pss:             1404928 kB
+   99 Shared_Clean:          0 kB
+  100 Shared_Dirty:          0 kB
+  101 Private_Clean:         0 kB
+  102 Private_Dirty:   1404928 kB
+  103 Referenced:      1404928 kB
+  104 Anonymous:       1404928 kB
+  105 LazyFree:              0 kB
+  106 AnonHugePages:   1404928 kB
+  107 ShmemPmdMapped:        0 kB
+  108 FilePmdMapped:         0 kB
+  109 Shared_Hugetlb:        0 kB
+  110 Private_Hugetlb:       0 kB
+  111 Swap:                  0 kB
+  112 SwapPss:               0 kB
+// 场景:某进程内存占用大,通过如下命令可以知道是某段地址占用的rss==res占用大
+grep -rin rss /mnt/hyj/qemuSmaps.txt |sort -nk2
+// 然后上gdb
+gdb -p <PID>
+(gdb) dump memory /mnt/hyj/hyjDump 0x4ff3efe00000 0x4fffefe00000
+(gdb) detach
+(gdb) quit
+//
+hexdump -C hyjDump
+
+
 /proc/pidXX/stat 
 第14字段 utime
 第15字段 stime 单位都是clockTicks 每个时钟嘀嗒的时间长度由内核常量USER_HZ决定，通常USER_HZ是100，即一个时钟嘀嗒是10毫秒
@@ -1529,11 +1570,13 @@ python2
 python -c "print(1/3)" // 你就当计算器用得了
 
 
-raid2  mdadm2
+raid22  mdadm22
 raid是一种把多块独立硬盘按不同组合方式形成一个逻辑硬盘,提供更高的性能和数据冗余的技术
 mdadm==软raid  入门级理解
-mdadm -S /dev/md126 // -S stop
-mdadm --zero-superblock /dev/sda // mdadm命令创建软RAID时，会在每个成员磁盘上写入一个超级块,清除设备/dev/sda上的RAID超级块信息。执行这个命令后，该磁盘上的RAID配置信息将被擦除，RAID系统将不再认为这块磁盘是阵列的一部分
+// -S stop
+mdadm -S /dev/md126
+// mdadm命令创建软RAID时，会在每个成员磁盘上写入一个超级块,清除设备/dev/sda上的RAID超级块信息。执行这个命令后，该磁盘上的RAID配置信息将被擦除，RAID系统将不再认为这块磁盘是阵列的一部分
+mdadm --zero-superblock /dev/sda
 
 
 rc.d2 
@@ -2061,7 +2104,7 @@ tmpfs2
 cp message /run
 
 
-top2 
+top22
 动态检测进程运行状态      帮助:直接敲top,按h,实际帮助不大
 // 按1  查看所有cpu占用详情
    按E  切换K M G T // 注意 Mem前有单位变化,单位过小会导致某值末尾+现象(仅仅是数字太大又展示不全,所以展示加号)    XXX+ total,     XXX+ free,     XXX+ buff 
