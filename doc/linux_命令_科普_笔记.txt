@@ -462,13 +462,13 @@ dirname /home/user/docs/file.txt
 /home/user/docs
 
 
- dmesg2
+dmesg22
 // -C 清除环回缓冲区
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
 dmesg -c
 
 
- dmidecode2
+dmidecode22
 // -t 指定类型  0-bios 1-system 等等
    -s 查看string的值  string有很多,比如 system-uuid
 dmidecode -t bios
@@ -478,7 +478,7 @@ dmidecode -t processor // 如展示core一共多少个,启用多个少core
 dmidecode -s system-uuid // 系统uuid在上面-t system也能查出来
 
 
- dos2unix2
+dos2unix22
 将Windows格式文件转换为Unix、Linux格式的实用命令
 // 比如你将window上sh脚本拷贝至linux环境,就容易提示\r错误异常
 dos2unix XX.sh
@@ -487,11 +487,24 @@ dos2unix XX.sh
 dracut22
 将为当前运行的内核版本生成一个新的initramfs映像文件，并将其保存在/boot目录下
 // 不加force会提示不会覆盖已有镜像,加了后,镜像的modify,change会更新,
-dracut --force
-// 举例
-1 /etc/lvm/lvm.conf,放开filter = XXX行 
-2 dracut --forece命令重新打包
-3 /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压镜像命令
+dracut -f
+问:
+小系统卡住,无法识别卷组,手动激活卷组进大系统后,如何详细重做initramfs以达到重启后不再小系统卡住
+答:
+常见于组过新raid或者换过盘,wwn仍是旧的情况常有发生,所以无法识别rootfs或者bak_rootfs,卡在小系统
+1 检查/boot挂载点(以sda为系统盘举例,具体盘具体分析,不要照抄)
+    mount /dev/sda2 /boot // 琦哥:boot没有挂载出来,dracut没意义(如果 /boot 是独立分区且完全没有挂载，那么执行 dracut -f 可能会因为无法写入而报错)
+    mount /dev/sda1 /boot/efi
+2 检查fstab,该改也改
+    举例 有次filter = [ "a|.*|" ] 第二个|前面默认多个/,dracut制作initramfs后,重启还是卡住小系统需要手动激活,所以默认的filter写法也有坑
+    /dev/disk/by-id/scsi-36101b5442bcc70002179e94935cedcf5-part2等同于/dev/sda2
+    /dev/disk/by-id/scsi-36101b5442bcc70002179e94935cedcf5-part1等同于/dev/sda1
+3 修改lvm.conf,把roofs或者bak_rootfs对应的wwn配置正确
+    /etc/lvm/lvm.conf,修改原本未注释的filter = XXX ,只修改wwn号就行了,你要是懒的话,模仿上面,把wwn行换成/dev/sda3
+4 重做initramfs
+    dracut -f 重新制作initramfs,这玩意默认更新并放置于/boot下面
+5 (可选操作)
+    /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压镜像命令,检查一下新镜像中lvm.conf改了没
 
 
 du22
@@ -1151,6 +1164,7 @@ lvm2
 lvm.conf  filter
 // This is a list of regular expressions used to accept or reject block device path names
    LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
+filter = [ "a|.*|" ]
 filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 // Reject the cdrom drive:
 filter = [ "r|/dev/cdrom|" ]
@@ -1585,7 +1599,11 @@ mdadm --zero-superblock /dev/sda
 
 rc.d2 
 /etc/rc.d/init.d/                // 存放系统服务脚本
-/etc/rc.d/after.local            // 所有系统服务启动后执行的脚本,比rc.local早一些
+// 所有系统服务启动后执行的脚本,                比rc.local早
+    OS默认不会识别/etc/rc.d/after.local
+    FS侧搞了一个定制化的服务after-local.service，启动服务时去读取/etc/rc.d/after.local并执行
+    问题节点，after-local.service默认没拉。正常节点，after-local.service正常拉起。
+/etc/rc.d/after.local
 /etc/rc.d/rc.local               // 系统启动时最后执行的用户自定义脚本
 
 
