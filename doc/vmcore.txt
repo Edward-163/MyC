@@ -8,6 +8,9 @@
 3
 常用命令
 bt
+打印所有cpu的堆栈
+    bt -a > /root/cpu.log
+    bt -c 26 打印cpu26的堆栈
 dis -l 函数名or某地址 // -l line展示源码行号,推荐加上
 struct -o task_struct // -o offset展示偏移量
     crash> struct -o address_space

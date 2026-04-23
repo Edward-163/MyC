@@ -175,17 +175,16 @@ blktrace -d /dev/sda3  -w33
 // -i inputFile
    -d dump-binaryFile
 blkparse -i sda3 -d sda3dump.bin
-btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(毫秒)和max
-            ALL           MIN           AVG           MAX           N
-                  单位s          平均244ms     最大4985ms         共386个请求
-Q2Q               0.000001500   0.244555772   4.985332850         386   两个io间隔时间
-Q2G               0.000000730   0.000047734   0.006542980         156
-G2I               0.000004060   0.000036119   0.000097100         118
-Q2M               0.000000400   0.000000867   0.000003550         231
-I2D               0.000003380   0.000019430   0.000041450         120
-M2D               0.000011820   0.000029214   0.000087970         228
-D2C               0.000190170   0.002012626   0.007984870         386   驱动程序处理io请求到完成的时间,它占比大就是硬件消耗,占比小就是花在排队or调度上
-Q2C               0.000348400   0.002078108   0.007998110         387   io进入队列到完成的"总体时间",相当于iostat的await
+btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(单位秒)和max
+ALL  MIN           AVG                 MAX                 N
+Q2Q  0.000001500   0.244555772(244ms)  4.985332850         386   共386个请求(两个io间隔时间)
+Q2G  0.000000730   0.000047734         0.006542980         156
+G2I  0.000004060   0.000036119         0.000097100         118
+Q2M  0.000000400   0.000000867         0.000003550         231
+I2D  0.000003380   0.000019430         0.000041450         120
+M2D  0.000011820   0.000029214         0.000087970         228
+D2C  0.000190170   0.002012626         0.007984870         386   驱动程序处理io请求到完成的时间,它占比大就是硬件消耗,占比小就是花在排队or调度上
+Q2C  0.000348400   0.002078108         0.007998110         387   io进入队列到完成的"总体时间",相当于iostat的await
 应用发起I/O请求
     ↓
 [Q2Q] ← 与前一个请求的间隔
@@ -651,14 +650,18 @@ find . -name log*
 find / -xdev -name \*.rpm
 // %p 代表fileName(注意英文的file==中文文件+目录),假设/home下面有个dir0,里面只有个a.txt,那么下面输出两行,一行是/home/dir0,一行是/home/dir0/a.txt
 find /home/dir0 -printf '%p\n'
-// %h 代表dirname且去掉了末尾的fileName(linux manual,理解了%p就能理解这个),下面命令分两行完成!!!大致意思:遍历/home下每个文件,但是呢,只打印目录+换行           "哪个目录inode占用多"
-   每个文件或者目录都会占用一个inode条目
-find /home -printf '%h\n' | uniq -c |sort -k 1 -n
+
+// %h 代表dirname且去掉了末尾的fileName      大致意思:遍历/home下每个file(包括目录,文件),只打印目录+换行
+   每个文件或者目录都会占用一个inode条目 这句话基本正确，但在某些细节上需要澄清。
+   在传统的 Linux 文件系统（如 ext4、XFS 等）中：
+   每个文件（包括普通文件、设备文件、符号链接等）都占用一个 inode。
+   每个目录本身也是一种特殊类型的文件，因此也会占用一个 inode                                 ------------"哪个目录inode占用多"
+find /home -printf '%h\n' |uniq -c |sort -nk1
 // -type f 搜索regularFile   
    %s 文件bytes大小
-   %p 代表fileName(注意英文的file==中文文件+目录)
+   %p 代表fileName(注意file==中文语义上的文件+目录)
    -n numeric(按数字大小默认升序) 
-   -k 1 指定第一列排序                        "最大文件",find命令无法搜索到lsof中deleted大文件,find机制:遍历目录树举例/,检查每个目录项dentry,而deleted文件没有dentry,补充dentry知识点?
+   -k 1 指定第一列排序                        "最大文件",find命令无法搜索到lsof中deleted大文件,find机制:遍历目录树举例/,检查每个目录项dentry,而deleted文件没有dentry
 find /var/log -type f -printf '%s\t%p\n' |sort -nk1
 
 
@@ -692,8 +695,11 @@ sda                    8:0    0  3.6T  0 disk
 ├─sda1                 8:1    0  500M  0 part /boot/efi
 ├─sda2                 8:2    0  500M  0 part /boot
 └─sda3                 8:3    0  3.6T  0 part
-  ├─cpsVG-rootfs     253:0    0   50G  0 lvm  /
-你可以fsck -nf sda1或者sda2或者rootfs,但是不应该后接sda或者sda3
+  ├─VG-rootfs     253:0    0   50G  0 lvm  /
+你可以fsck -nf sda1或者sda2或者rootfs,但是不应该后接sda
+有时候vm的vda指向主机侧sdd,vm串口提示fsck不通过应该在vm内部去修,和sdd修关系不大,而且sdd在宿主机侧没有挂载点
+答:
+挂载会导致宿主机和虚拟机同时访问同一文件系统，极易造成数据损坏(deepseek)
 
 
 gdb22
@@ -702,21 +708,22 @@ gdb -p pid
 gdb `which qemu-kvm` core_kvm_XX文件
 
 
-grep2 egrep2
+grep22  egrep2
 背景 大概找一下下面这个宏是哪些补丁用到了,假设有(对比开源版本的商用的版本的补丁),看是不是漏打补丁了
 #ifndef OPENSSL_FIPS         // ndef==not defined 这个宏没有定义
 # error FIPS is disabled.
 #endif
 // -r 递归目录(grep最后可以接单个文件,多个文件,或者目录配合-r) 当前目录下有很多补丁,从补丁从查找谁用到openssl_fips这个宏,并且把ifdef给排除掉,最后一个grep仅仅是为了颜色高亮,因为第二个grep -v会把高亮抹掉
    -n 行号 
-   -w 单词匹配  
+   -w 单词匹配
+   --include=*.log 只在*.log里面搜索
    -E 拓展表达式  egrep相当于grep -E
    -v 反向查找
    -m 最大匹配行数
    -A3     // 多展示后面3行
    -B3     // 多展示前面3行
    -C3     // 多展示后面前后各3行
-grep -rnw OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS        
+grep -rnw --include=*.log  OPENSSL_FIPS ./ | grep -v ifdef | grep OPENSSL_FIPS
 ps -aux |grep -m 2 'root'
 ps -ef |grep -E 'warn|err|critical'
 
@@ -763,7 +770,14 @@ fi
 ifconfig2 
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
+
+
 ifconfig eth0 up
+问:
+up eth6之后,ifcfg-eth6配置中的gateway并没有生成
+答:
+ifconfig只负责激活网络接口,你想让eth6配置被读取生效,用ifup
+ifup他会去指定/etc/sysconfig/network-script/ifup脚本,
 
 
 ima2 
@@ -1092,6 +1106,19 @@ lsof2
 list open file
    如df -h某分区占满,du -hs --max-depth=99 /home 下面没几个大文件or目录,就极有可能是进程占用句柄没有释放
 lsof |grep delete |grep home
+// size/off列,文件大小,单位字节
+lsof |grep delete |sort -nk9
+//  -i6 - IPv6 only
+    TCP:25 - TCP and port 25
+    @1.2.3.4 - Internet IPv4 host address 1.2.3.4
+    @[3ffe:1ebc::1]:1234 - Internet IPv6 host address
+        3ffe:1ebc::1, port 1234
+    UDP:who - UDP who service port
+    TCP@lsof.itap:513 - TCP, port 513 and host name lsof.itap
+    tcp@foo:1-10,smtp,99 - TCP, ports 1 through 10,
+        service name smtp, port 99, host name foo
+    tcp@bar:1-smtp - TCP, ports 1 through smtp, host bar
+    :time - either TCP, UDP or UDPLITE time service port
 lsof -i:22 // -i 选项有点长 [46][proto][@host|addr][:svc_list|port_list] 
 lsof -i:4TCP:22 // 查看ipv4,tcp协议,端口22相关的打开的文件
 lsof -p 10086 // 查询指定进程打开的文件
@@ -1303,6 +1330,11 @@ set the date and time via NTP
    -r port
 ntpdate -d fc00:ac1c::b2a 
 ntpdate -d -r 123 10.0.36.6
+
+
+numastat2
+numastat -m
+memused(入门简称大小页)是物理内存页在每个 NUMA 节点上的分配量（单位MB）。它反映的是内核和进程实际占用的内存（包括匿名页、page cache、slab 等）
 
 
 osi七层    简化4层
@@ -1554,9 +1586,12 @@ ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相
    comm 代表command,没卵用,短的很
    cls  scheduling class of the process 
 ps -eLo pid,psr,cmd | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
-// --sort=-rss -rss代表rss数字降序,单位KB,不写或者写+默认数字升序,For example: ps jax --sort=uid,-ppid,+pid
+// --sort=-rss -rss代表rss数字降序,不写或者写+默认数字升序
+   rss  进程实际占用物理内存大小,单位KB
+   %mem rss占系统总物理内存百分比
    坑:这个命令不展示系统大页内存占用,内存资源不够真可能是大页占用多了
 ps -aux --sort=-rss |head -9
+ps jax --sort=uid,-ppid,+pid
 
 
 pstree2 
@@ -1640,7 +1675,7 @@ mv /usr/sbin/reboot /usr/sbin/reboot.bak
 printf  '#!/bin/bash\nps -ef >> /root/ps.log' > /usr/sbin/reboot
 chmod 777 /usr/sbin/reboot 
 mv /usr/sbin/shutdown /usr/sbin/shutdown.bak
-printf  '#!/bin/bash\nps -ef >> /root/ps2.log' > /usr/sbin/shutdown
+printf  '#!/bin/bash\nps -ef >> /root/ps3.log' > /usr/sbin/shutdown
 chmod 777 /usr/sbin/shutdown
 
 
@@ -1648,7 +1683,7 @@ rm2
 rm -r dir0 dir1
 问:rm某文件后,某文件还是被进程占用着,lsof没释放空间
 答:知识点vfs dentry inode
-dentry（目录项）
+dentry2（目录项）
     定义在 <linux/dcache.h> 中的 struct dentry。
     作用：将文件名与对应的 inode 关联起来，是路径名查找的基本单元。
     关键字段：
@@ -1656,23 +1691,35 @@ dentry（目录项）
     d_parent：父目录的 dentry。
     d_inode：指向该文件对应的 inode。    一个文件在磁盘上的数据由 inode（索引节点） 管理，而文件名只是指向该 inode 的一个 目录项（dentry）。rm 命令实际上执行的是系统调用 unlink()，它的作用是删除目录项，并将对应 inode 中的硬链接计数减 1。
     d_count：引用计数，表示该 dentry 被多少个路径查找或进程引用。
-inode（索引节点）
-    定义在 <linux/fs.h> 中的 struct inode。
-    作用：存储文件的元数据（权限、大小、时间戳）以及指向数据块的指针。
+inode2（索引节点）
+    定义在 <linux/fs.h> 中的 struct inode
+    作用：存储文件的元数据（权限、大小、时间戳）以及指向数据块的指针
     关键字段：
-    i_nlink：硬链接计数，即有多少个目录项指向该 inode。
-    i_count：引用计数，表示该 inode 当前被多少个内核对象（如 dentry、文件描述符）使用。
+    i_nlink：硬链接计数，即有多少个目录项指向该 inode
+    i_count：引用计数，表示该 inode 当前被多少个内核对象（如 dentry、文件描述符）使用
 
 
-route2 
+route22   网关22
+https://www.man7.org/linux/man-pages/man8/route.8.html
 A网络中设备想连B网络中设备,需要借助连接两个网络的某特殊设备发送packet,这个特殊设备叫网关 <shell脚本攻略 6章>
 路由表包含了packet如何转发的信息
 // -A inet6 指定地址族,不写相当于只展示ipv4的
    -n numeric,
+route -n // 默认inet4
+route -6 -n
 route -A inet6 -n
 
+route -n
+Destination    Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0        192.168.1.1   0.0.0.0       UG    100    0     0     eth0
+192.168.1.0    0.0.0.0       255.255.255.0 U     0      0     0     eth0
+192.168.2.0    192.168.1.2   255.255.255.0 UG    10     0     0     eth1
+      Destination	目的IP是第X行匹配第X行,都没匹配上,就走0.0.0.0（默认路由匹配目的地址）
+      Gateway	要到达目的ip数据包下一跳发往当前网关;网关0.0.0.0 表示数据包直接从网络接口发送到目的ip（无需网关）
 
-rpm2 
+
+rpm22
+常见二进制包         xx.src.rpm源码包,一般内含.spec
 // -a 查询所有包,但我还是觉得没有grep耗时
    -f 查询哪些包"拥有"此文件
    -i --info list descriptive information from ;-i会多列出包信息,可以去掉    通常-qi配套使用\
@@ -1696,15 +1743,18 @@ rpm -qR XXX
 rpm -Uvh 1260 --nodeps
 rpm -ivh XXX.rpm --force
 
-// 数据库索引文件损坏,--rebuilddb 三步走,一般来说/var/log/rebuilddb.log会记录重建时候把哪些rpm添加到db的idx中
-   rpm相关进程大量持锁do_lock_file_write,也是如下三步走
+// 数据库索引文件损坏,三步走,一般来说/var/log/rebuilddb.log会记录重建时候把哪些rpm添加到db的idx中
+   rpm相关进程大量持锁do_lock_file_write,也是三步走
 rm -f /var/lib/rpm/__db* // db的索引文件
 rm -f /var/lib/rpm/*.lock
 rpm --rebuilddb
 
+问:
+.rpmsave文件的产生与.spec中%config
 
-rpmbuild2 
-是一个将软件的源代码、配置文件、安装脚本等“原材料”，按照预设的“配方”（spec 文件），自动化地打包成标准 RPM 软件包的工具
+
+rpmbuild22
+是一个将软件的源代码、配置文件、安装脚本等“原材料”，按照预设的“配方”（spec文件），自动化地打包成标准 RPM 软件包的工具
 // -ba = -bp + -bc + -bi + -bb + -bs
    # 具体含义：
    -bp    # 执行 %prep 阶段（解压源代码，应用补丁）
@@ -2169,7 +2219,11 @@ systemctl status getty@tty1
 
 tune2fs2 
 // filesystem state:clean还是clean with errors,所以此clean与fsck提示中still have error并不冲突
-   clean with errors 文件系统已经正常解挂(有挂载点,ai还说已经正常解挂?),但是存在些许err,下次挂载的时候会自动fsck
+   clean with errors 当文件系统处于挂载状态时，如果内核在读写操作中检测到元数据不一致（例如，块位图不一致、索引节点错误等），就会触发此状态。具体原因包括：
+                      硬件问题：磁盘坏道、内存错误、有缺陷的SATA/RAID卡或线缆松动，导致写入的数据损坏。
+                      内核或驱动Bug：内核或存储驱动存在缺陷，执行了错误的写入操作。
+                      意外宕机：系统在写入关键元数据时崩溃或断电。
+                      其他软件问题：如虚拟机管理程序（hypervisor）的存储栈问题
    clean	文件系统已正常卸载（无未修复的错误）。	正常关机或手动 umount 后。
    dirty	文件系统未正常卸载（可能存在未同步的元数据或错误）。	强制重启、崩溃、断电等异常情况。
    errors	文件系统已标记为存在错误（需手动修复）。	检测到不一致时（如 fsck 未完成修复）
@@ -2256,6 +2310,7 @@ usermod2
 usermod -md /home/hyj2 hyj
 
 
+secure22
 /var/log/secure
 密码的改动会被记录,如 password changed for XXX
 
@@ -2326,8 +2381,8 @@ udev 守护进程 (udevd) 接收事件
 # 1. udev 守护进程
 /usr/lib/systemd/system/udevd.service
 # 2. 规则目录
-/etc/udev/rules.d/           # 用户自定义规则
 /usr/lib/udev/rules.d/       # 系统规则
+/etc/udev/rules.d/           # 用户自定义规则
 // 举例/etc/udev/rules.d/XXnet.rules;当系统检测到一块新的网卡时，如果它的 MAC 地址是 14:30:04:ea:87:8a，并且满足其他条件，那么就将它在 /dev 下的设备名强制设置为 eth0。
    内核中网络设备属于net子系统;
    attress是mac地址;
@@ -2382,11 +2437,12 @@ $：匹配行尾
 |：或操作
 
 
-watch2 
+watch22
 监视命令
-// -d 高亮变化差异
+// -d diff 高亮变化差异
    -n2 采样间隔2sec
-watch -d -n2 'ps -ef |grep systemd |grep -v grep'
+watch -dn2 'ps -ef |grep systemd |grep -v grep'
+watch -dn1 'ifconfig eth0' // 查看收发包变化
 
 
 wc2 
