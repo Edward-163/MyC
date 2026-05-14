@@ -538,6 +538,7 @@ efibootmgr22
    -B delete
 efibootmgr
     Boot0001* Ubuntu	HD(1,GPT,c8a6b7c4-3e2f-4d5a-9b1c-8f7e6d5c4b3a,0x82800,0x100000)/File(\EFI\UBUNTU\SHIMX64.EFI)
+    想知道启动项在哪个盘上?blkid |grep 上述小写uuid
 efibootmgr -b 0001 -B // 删除0001引导项
 // -c | --create         create new variable bootnum and add to bootorder
    -d | --disk disk       (defaults to /dev/sda) containing loader
