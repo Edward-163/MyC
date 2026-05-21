@@ -27,6 +27,7 @@ bootloader引导程序  找到内核并加载内核到内存中,例:grub就是�
 
 第一内核 主内核
 第二内核 主内核crash时候启用,cmdline中crashkernel=256M 就是预留给第二内核使用的
+        配置文件应该是/etc/kdump.conf里面path配置哪里,crash日志就输出到哪里
 
 
 启动参数
@@ -94,7 +95,7 @@ passwd -d root // 下面是备选方法?
 passwd root 
 sync // 用于 强制将内存缓冲区中的数据写入磁盘
 ctrlD ctrlD 正常进大系统
-涛哥:小系统密码a==iso安装时密码a,进大系统后passwd改密码b,小系统密码a不变
+涛哥:小系统密码a==iso安装时密码a==dracut制作镜像时的密码,进大系统后passwd改密码b,小系统密码a不变
 另一种办法:systemd.debug-shell=1,ctrlAltF9切入单用户模式passwd修改密码,ctrlAltF1切出用新密码登录
 
 
@@ -735,6 +736,14 @@ sysctl -a | grep ip_local_reserved_ports // -a 显示所有的系统参数
 ip a  // Linux系统中用于查看IP地址信息的命令
 
 
+groups22
+// 不指定用户,就是查询当前用户的属组
+groups fsp
+fsp : fsp wheel // 主组是fsp,附加组是wheel(通常用于sudo提权)
+// -d 删除,针对用户,删除wheel组
+gpasswd -d 用户名 wheel
+
+
 grub22 手动引导2
 grub.cfg位置x86在grub/ ;arm在efi/??
 无故进入grub模式,屏幕显示grub>
@@ -1002,7 +1011,7 @@ CPU 虚拟化：管理 CPU 的硬件虚拟化功能（VT-x/AMD-V）。
 
 
 ldconfig2 
-ldconfig 命令用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配置文件 /etc/ld.so.conf 内所列的目录下，搜索出可共享的动态链接库（格式如 lib*.so*），进而创建出动态链接器（ld.so 或 ld-linux.so）所需的缓存文件。
+用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配置文件 /etc/ld.so.conf 内所列的目录下，搜索出可共享的动态链接库（格式如 lib*.so*），进而创建出动态链接器（ld.so 或 ld-linux.so）所需的缓存文件。
 缓存文件默认为 /etc/ld.so.cache，此文件保存已排好序的动态链接库名字列表。为了让动态链接库为系统所共享，需运行动态链接库的管理命令 ldconfig 更新动态链接库的缓存文件。
 附
 /proc/sys/vm/drop_caches 是一个系统文件，它允许用户在 Linux 操作系统中清除内核缓存。这个文件包含一个整数，它控制哪些缓存应该被清除。具体来说，这个整数的值可以是以下之一：
@@ -1014,11 +1023,9 @@ ldconfig 命令用于在默认搜寻目录 /lib 和 /usr/lib 以及动态库配�
 echo 3>/proc/sys/vm/drop_caches
 rm -f /etc/ld.so.cache
 ldconfig
----
-
 
 ldd2 
-print shared object dependencies 列出某程序所需动态链接库(.so)
+list 某程序的 dynamic dependencies==print shared object dependencies 列出某程序所需动态链接库(.so)
 // 问题1:无法restart nscd,报错symbol lookup error
 ldd /usr/sbin/nscd // 他的libc来源于glibc-XXoe版本,这不对,euler环境就应该不用oe的包
 
@@ -1328,7 +1335,6 @@ refid
    .locl.   本地时钟
    .gps.    gps时钟源
 
-
 ntpdate2 
 set the date and time via NTP
 // -d debugMode 后面是ntpServer的ipv6
@@ -1509,6 +1515,19 @@ rd.break=pre-mount
 rd.break=mount
 // 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
 rd.break=initqueue
+场景:
+[ok]reached target switch root.
+starting switch root...
+kernel panic not syncing: attempted to kill init! exitcode=0x00007f00
+答:
+0 发现无grub界面;挂iso
+    mount /dev/sda1 /boot
+    mount /dev/sda2 /boot/efi;修改grub.cfg;set timeout=5,同时感知rootfs是/
+    加rd.break=initqueue console=tty0
+1 lvm vgchange -ay;mount /dev/VG/rootfs /sysroot;chroot /sysroot
+2 ldd /usr/lib/systemd/systemd发现某.so not found;exit
+3 cp /usr/lib/systemd/某.so /usr/lib/systemd/;chroot /sysroot;ldconfig
+
 
 
 systemd.debug-shell=1  
@@ -1744,13 +1763,13 @@ rpm22
    -l 列出指定软件包的所有文件路径，包括配置文件、二进制文件、库文件等(包名不需要打全,打一部分也可以)
    -R, --requires查询XXX所需依赖
    --changelog 比如你给某个rpm包合入过代码,那么就能用changelog查询到
-   --dbpath 举例备区是老版本且人为挂在/mnt下,你想在备区里面查找某个rpm包,那么就得把rpm数据库指向备区
+   --dbpath 举例备区是老版本且人为挂在/mnt下,你想在备区里面查找某个rpm包,那么就得把rpm数据库(通常/var/lib/rpm)指向备区
    --nodeps 已有安装1250的包,已上传1260的包,rpm -Uvh 1260的时候总是提示fail dependencies,解决:--nodeps
    --force 常见于XXX already install,重新强制安装
    -Uvh 升级包,会删除旧包
    -ivh 安装包,不管旧包,同名同版本包例外,会有提示
 rpm -qa openssh // 包名可写可不写
-rpm -qa openssh --dbpath=/mnt/var/log/rpm/
+rpm -qa openssh --dbpath=/mnt/var/lib/rpm/
 find /lib64/ -name "librdmacm.so.1" // 例如输出/lib64/librdmacm.so.1
 rpm -qi XXX.rpm --changelog |less 
 rpm -qp XX.rpm  --changelog |grep -i cve // 如果这个包没有安装,那么你用-qp来查询该包的changelog
@@ -2487,9 +2506,14 @@ wc -l XXX.txt
 XXX |wc -l
 
 
-xfs_repair2
+xfs_repair22
 // -L     Force Log Zeroing
-xfs_repair /dev/vg/swift
+问:
+执行xfs_repair /dev/VG/swift 之后,无法mount /dev/VG/swift  /XX
+但是执行xfs_repair -L /dev/VG/swift 之后,可以mount /dev/VG/swift  /XX
+答:
+xfs_repair    /dev/VG/swift	先尝试“回放”日志（replay），将上次未完成的事务重新应用到文件系统。如果日志本身损坏或无法回放，修复就会失败
+xfs_repair -L /dev/VG/swift	跳过回放，直接清除整个日志。日志被清零后，文件系统不再有不一致的事务记录，因此可以完成修复并挂载
 
 
 zgrep2 
