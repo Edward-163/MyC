@@ -331,7 +331,7 @@ ll stderr 2> stderr.txt // 若stderr文件不存在,会报错no such file,重定
 // 特殊重定向 $> 把stderr stdout重定向到同一文件中
 ls XXX $> a.txt
 
-15.2 临时重定向 重定向到fd时,必须在fd前面加 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+15.2 临时重定向 重定向到fd时,必须在fd前面加 &
 echo "err info" >&2 // 将错误信息重定向到STDERR
 
 15.2.2 永久重定向

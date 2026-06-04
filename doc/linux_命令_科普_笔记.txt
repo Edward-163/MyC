@@ -16,7 +16,7 @@ uefi22
 bootloader引导程序  找到内核并加载内核到内存中,例:grub就是其中之一
    grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
       解压vmlinuz到随意目录
-内核解压initramfs(临时根文件系统)         /boot/initramfs-5.10.0XXX.x86_64.img,包含linux系统所需驱动和必要文件到内存中(举例 帮内核加载硬件驱动)，并执行其中的 /init 脚本
+内核解压initramfs(临时根文件系统)   /boot/initramfs-XXX.x86_64.img,包含linux系统所需驱动和必要文件到内存中(举例 帮内核加载硬件驱动)，并执行其中的 /init 脚本,它解压后目录结构与ls /类似
    执行init进程           第一个进程(举例systemd),读取/etc/inittab配置,启动其他进程
       后续会运行dracut-cmdline等dracut子命令
       解压看到? init -> usr/lib/systemd/systemd     正常大系统:/sbin/init->/sbin/lib/systemd/systemd,注意它pid=1
@@ -40,6 +40,14 @@ GRUB → 内核加载 → systemd启动所有服务 → 显示管理器 → 用�
 GRUB → 内核加载 → 只启动核心服务 → 直接获得root shell
 
 
+网卡绑核
+就是通过设置中断亲和性，让指定CPU专门处理网卡中断，从而提升网络性能并减少对业务核心的干扰
+
+
+远程控制台
+ibmc集成的,控制台输出乱码不是os的锅;mobaX,xShell登录ibmc然后串口重定向,看下输出是不是也乱码
+
+
 串口2 console2
 // x86
 console=tty0 console=ttyS0,115200
@@ -52,8 +60,14 @@ BIOS boot completed.
 [SP BOOT] exit boot service
 物理机串口老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开
 bios->支持spcr->开启
-ibmc后台敲命令(登录提示符是iBMC),可以敲这个  ipmcset2
-ipmcset -t sol -d activate -v 1 0
+mobaX或者xShell登录bmcIp(登录提示符是iBMC>)后敲命令    ipmcset2
+ipmcset -t sol -d activate -v <option> <mode>
+option
+0 SYS COM 原来systemcom.dat名字由来在这
+1 BMC COM
+mode
+0 sharedMode
+1 privateMode
 
 
 解压iso 解压22
@@ -75,6 +89,10 @@ gunzip -c initrd | cpio -id
 cd ..
 umount m
 rm -rf m OS.tar.gz linux
+-----------------
+mkdir -p tt && mount *.iso tt && mkdir -p os && cp tt/repo/OS.tar.gz os/ && umount tt/ && rm -rf tt && cd os/ && tar xf OS.tar.gz && gunzip -c initrd | cpio -id && chroot .
+&&：这个符号用于连接两个命令，只有当第一个命令成功执行（返回值为0）时，才会执行第二个命令。这在脚本中非常有用，可以帮助你检查前一个命令的执行结果，然后决定是否执行下一个命令
+||：这个符号与&&类似，也是用于连接两个命令。不同的是，只有当第一个命令执行失败（返回值非0）时，才会执行第二个命令。这在脚本中也很常用，可以帮助你根据前一个命令的执行结果来决定是否执行下一个命令
 
 
 进程替换22  <()2
@@ -121,6 +139,16 @@ echo "name" |awk 'BEGIN{print "b---"};{print $0};END{print "e---"}'
 b---
 name
 e---
+
+
+bar空间
+Base Address Register，PCI/PCIe 设备向系统声明和沟通自身资源需求的核心机制。你可以把它理解为设备的一块“专用地址窗口”，CPU 通过读写这个窗口，就能与设备上的特定功能进行交互，比如发送命令或交换数据
+BAR（基址寄存器）是绑定在硬件设备上的。它位于每个 PCI/PCIe 设备的配置空间内部，属于设备自身的硬件寄存器
+每个设备都需要一块连续的地址范围，比如显卡可能需要 256 MB 的显存映射，网卡可能需要 32 KB 的控制寄存器。
+那么问题来了：
+    设备自己不知道系统里还有哪些空闲地址；
+    主板上的每个设备也不能互相打架（不能两个设备用同一段地址）。
+于是 PCI/PCIe 规范设计了一个机制：每个设备出厂时都带有一组 BAR 寄存
 
 
 basename22
@@ -744,7 +772,7 @@ fsp : fsp wheel // 主组是fsp,附加组是wheel(通常用于sudo提权)
 gpasswd -d 用户名 wheel
 
 
-grub22 手动引导2
+grub22 手动引导2 grub引导2
 grub.cfg位置x86在grub/ ;arm在efi/??
 无故进入grub模式,屏幕显示grub>
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
@@ -935,7 +963,8 @@ f 代表(先转成2进制,全是1)不参与中断   一位16进制==4位二进�
 irqbalance意义:每个核上均匀参与中断处理,使性能更佳
 
 
-iscsiadm2 
+iscsiadm2
+iSCSI 存储的命令行全流程，主要涉及“发现 -> 登录 -> 使用 -> 维护 -> 登出
     iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
     Iscsi initiator：使用target提供“磁盘”的客户端。
    https://linux.virtualcat.net/c/iscsiadm.html
@@ -943,16 +972,22 @@ iscsiadm2
    -m，--mode  <模式> 指定工作模式，如discovery（发现模式）、node（管理节点）、session（管理会话）
    -t st：指定发现类型为 sendtargets（可简写为 st）。这是最常用的方式，意思是让存储服务器把它提供的存储目标列表“发送”过来
    -p，--portal  <ip:port> 指定目标IP,不带端口默认使用3260，仅用于discovery、node模式
+   -T targetName
+   IQN	iSCSI Qualified Name	iSCSI网络中每个设备（包括目标器和启动器）的唯一名字
 iscsiadm -m discovery -t st -p ip:port // （客户端）根据地址（IP:Port）去询问仓库管理员（存储服务器）：“你们仓库里有哪些货架（Target）可以让我放货？” 管理员会给你一份清单
+
 // -l login
    -u logout
-iscsiadm -m node -p XX.XX.XX.XX -l 
+iscsiadm -m node -p XX.XX.XX.XX -l
 iscsiadm -m node -p XX.XX.XX.XX -u
+
 // 查询当前主机登入的存储设备
-iscsiadm -m session
+iscsiadm -m session // 当前会话存储链接
+tcp:[编号] [XX:XX:XX:XX:XX]:XX iqnXXX
+
 // 查看当前主机上发现所有target
-// -T targetName
-iscsiadm -m node
+iscsiadm -m node // 存储设备"历史记录"
+[XX:XX:XX:XX:XX]:XX iqnXXX
 
 
 
@@ -1043,8 +1078,9 @@ ldd /usr/lib/systemd/systemd                                                    
  有且md5sum不变   ldconfig刷新
 
 
-ln2 
-// ln -s target link_name
+ln2
+// -s, --symbolic              make symbolic links instead of hard links
+ln -s target link_name
 
 
 lo2 
@@ -1176,15 +1212,20 @@ lsscsi2
 lsscsi -g
    scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备 
    [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg1
-   [H:C:T:L]编号。这里的 H(Host) 就是指该设备连接在哪个主机控制器上
-   块设备:直接存取数据,像餐厅点菜 块设备（Block Device）是一种以固定大小的数据块（如512字节或4KB）为单位进行读写的设备，例如硬盘驱动器（HDD）、固态驱动器（SSD）、U盘等。/dev/sda是系统中第一块SCSI或SATA类型磁盘的块设备文件
-   scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
-   /dev/sda是给文件系统和常规存储工具用的“标准接口”，而 /dev/sg1是给工程师和诊断工具用的“底层调试接口”
-// ([0], [1]...): 这是系统为每个SCSI主机控制器分配的唯一标识号, 主机控制器”或“主机适配器”是100%的物理实体。它就是插在您电脑或服务器主板上的一块物理芯片或一张扩展卡，是连接CPU和硬盘的桥梁。\
+   [Host:Channel:Target:Lun]  H(Host) 就是指该设备连接在哪个主机控制器(主机适配器HostBusAdaptor:)上
+       块设备:直接存取数据,像餐厅点菜 块设备（Block Device）是一种以固定大小的数据块（如512字节或4KB）为单位进行读写的设备，例如硬盘驱动器（HDD）、固态驱动器（SSD）、U盘等。/dev/sda是系统中第一块SCSI或SATA类型磁盘的块设备文件
+       scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
+       /dev/sda是给文件系统和常规存储工具用的“标准接口”，而 /dev/sg1是给工程师和诊断工具用的“底层调试接口”
    ds主机控制器举例:集成控制器(主板芯片),扩展卡式控制器(pcie卡,raid卡归属于这种),虚拟控制器(cpu模拟)
 lsscsi -H
+HBA的编号      驱动名
 [0]    megaraid_sas驱动
 [1]    ahci驱动
+
+/sys/class/scsi_host/hostXXX/scan  这个文件丢了
+它是底层设备驱动创建的
+echo "- - -" > /sys/class/scsi_host/host*/scan
+echo "- - -" > /sys/class/scsi_host/host2/scan // 触发编号2的hba重新扫描其所有总线,前提是scan这个虚拟文件存在
 
 
 io路径科普
@@ -1286,13 +1327,22 @@ mount --rbind /proc proc/
 mpstat2
 mpstat [-P {|ALL}] [internal [count]]
 // -P {|ALL} 表示监控哪个CPU， cpu在[0,cpu个数-1]中取值
-   internal 相邻的两次采样的间隔时间、
-   count 采样的次数，count只能和delay一起使用
-   监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
-mpstat -P 8,9,10,11 1 2 
+mpstat -P 8,9,10,11 1 2 // 监视cpu8,9,10,11的数据 间隔1秒 采样2次 输出3段内容,最后一段是前2段采样的平均值
 mpstat -P 0-13 2 5
 %irq 硬中断
 %soft 软中断
+
+/proc/softirqs2 软中断2
+watch -dn2 cat /pro softirqs 关注timer变化大还是net_rx变化大(它大就关注是哪个网卡),
+然后查看/proc/interrupts
+    第一列：中断号 (IRQ)；
+    中间列：各个CPU核心处理该中断的计数；
+    最后一列：中断类型和产生中断的设备或模块名称
+思路:
+softirqs->net_rx->interrupts->我暂时仅关注cpu0->发现中断345号增长迅猛,以及设备eth3-32
+0 异常节点,核0,16,32,48软中断较高
+1 通过/proc/softirqs得知是net_rx计数增长较快
+2 查看/proc/interrupts,以cpu0为例,cpu0在处理中断号361(对应设备eth3-48)和中断号345(对应设备eth3-32)时增长较快
 
 
 multipath2 
@@ -2034,6 +2084,10 @@ ssh -v my@127.0.0.1
 ExecStart=exit 0
 Restart=no # 表示systemd不会去拉起sshd,和sysmonitor两码事?
 
+HostKeyAlgorithms 通俗解释就是：服务器用来向客户端出示“身份证”的签名方式
+ssh_config 里也有 HostKeyAlgorithms 配置项。
+它就像是客户端在连接服务器时，主动递出的一张“认可算法白名单”。它会告诉服务器：“我只认这些方式来证明你的身份，不在名单里的方式我都不信
+
 
 stat2 
 // modify时间早于birth时间可能是系统时间跳变(变小后临时改了下文件,然后又跳变回正常时间)
@@ -2043,10 +2097,11 @@ size 4096 linux中目录的size通常为4096,或者4096倍数?
 
 
 strace2
-// -t           在输出中的每一行前加上时间信息。
-   -tt          在输出中的每一行前加上时间信息,微秒级。
-   -ttt         微秒级输出,以秒了表示时间。
-strace -o /home/fsp/hyj.txt  -tt rpm -evh XX.rpm
+// -t           在输出中的每一行前加上时间信息。 -tt没卵用
+   -ttt          --absolute-timestamps=format:unix,precision:us
+                 Prints the wall clock time as seconds since the epoch, with
+                 microsecond precision.
+strace -o /home/fsp/hyj.txt -ttt rpm -evh XX.rpm
 
 
 su2 万能钥匙权限大,隐患也大
@@ -2223,6 +2278,11 @@ tcpdump -vvv -i enp129s0f0 -w XXX.pcap
 tcpdump -i external_api  -vvv   |grep fc51:158:46:17::32
 
 
+tee2
+// -a append,非覆盖追加
+ls -l | tee -a lsls.log
+
+
 tmpfs2
 临时文件系统,驻留在内存中,比如常见的 /run
 // 多分区只读,message无法vim,则可以拷贝至内存中,再查看message
@@ -2232,16 +2292,17 @@ cp message /run
 top22
 动态检测进程运行状态      帮助:直接敲top,按h,实际帮助不大
 // 按1  查看所有cpu占用详情
+   按c  显示完整cmd
    按E  切换K M G T // 注意 Mem前有单位变化,单位过小会导致某值末尾+现象(仅仅是数字太大又展示不全,所以展示加号)    XXX+ total,     XXX+ free,     XXX+ buff 
    按f  自定义top展示字段    
    按M  内存使用率排序,效果: 按RES列(进程使用物理内存==resident内存 kB)降序
    按P  根据cpu排序 
 top -M
 hi hardIrq硬中断
-si softIrq软中断(与收发包有关,具体看sar日志)
+si softIrq软中断2(与收发包有关,具体看sar日志)
 wa 重要,Wait for I/O，中文是 I/O 等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
 
-load average: 0.65, 0.42, 0.36 负载平均值通常显示三个数字，分别代表过去1分钟、5分钟和15分钟的平均负载。
+load average: 0.65, 0.42, 0.36(过去1,5,15分钟的平均负载。)
     第一个数字（0.65）：过去1分钟的平均负载
     第二个数字（0.42）：过去5分钟的平均负载
     第三个数字（0.36）：过去15分钟的平均负载
