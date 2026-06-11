@@ -1,4 +1,3 @@
-
 固件            |bootloader       |kernel|initrd|rootfs|1号进程
 legacyBios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l中disklLabel type:dos就是mbr
    mbr(旧),gpt(新)是两种不同硬盘分区方案
@@ -13,14 +12,15 @@ uefi22
     /boot/grub2/grub.cfg                            legacyBios
     /boot/efi/EFI/XXX/grub.cfg                             uefi
 
-bootloader引导程序  找到内核并加载内核到内存中,例:grub就是其中之一
-   grub加载vmlinuz(被压缩的内核文件)            bootloader加载内核(/boot/vmlinuz-5.10.0XXX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
+bootloader引导程序  例:grub就是其中之一
+计算机上电后最先运行的、用于加载操作系统内核的小程序。它告诉计算机去哪里找操作系统，并把操作系统从硬盘搬到内存中运行
+   grub加载vmlinuz(被压缩的内核文件)            bootloader加载(/boot/vmlinuz-5.10.XX.x86_64包含内核启动代码和必要的驱动)到内存中,内核解压自己并启动
       解压vmlinuz到随意目录
 内核解压initramfs(临时根文件系统)   /boot/initramfs-XXX.x86_64.img,包含linux系统所需驱动和必要文件到内存中(举例 帮内核加载硬件驱动)，并执行其中的 /init 脚本,它解压后目录结构与ls /类似
    执行init进程           第一个进程(举例systemd),读取/etc/inittab配置,启动其他进程
       后续会运行dracut-cmdline等dracut子命令
       解压看到? init -> usr/lib/systemd/systemd     正常大系统:/sbin/init->/sbin/lib/systemd/systemd,注意它pid=1
-      lsinitrd initramfs-5.10.0-136.12.0.86.h1428.aarch64.img |grep dracut-cmdline
+      lsinitrd initramfs-5.10.0-XX.aarch64.img |grep dracut-cmdline
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面(无论是大伟博客还是宏涛给的journal.log都是先启动systemd,很后面才切根swicthRoot)
    在新的根文件系统上执行真正的初始化进程（如 /sbin/init，现在通常是 systemd），其进程号（PID）为1。此后，systemd将负责启动所有剩余的系统服务
 
@@ -55,10 +55,9 @@ console=tty0 console=ttyS0,115200
 console=tty0 console=ttyAMA0,115200
 
 
-串口重定向2 spcr(Serial Port Console Redirection)
+串口重定向2 spcr2(Serial Port Console Redirection),bios界面->advance->MISC conf,miscellaneous音mi舍`leini尔s  adj杂项的,混杂的
 BIOS boot completed.  
-[SP BOOT] exit boot service
-物理机串口老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开
+[SP BOOT] exit boot service 老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开->systemcom.dat就不打印os相关
 bios->支持spcr->开启
 mobaX或者xShell登录bmcIp(登录提示符是iBMC>)后敲命令    ipmcset2
 ipmcset -t sol -d activate -v <option> <mode>
@@ -141,8 +140,8 @@ name
 e---
 
 
-bar空间
-Base Address Register，PCI/PCIe 设备向系统声明和沟通自身资源需求的核心机制。你可以把它理解为设备的一块“专用地址窗口”，CPU 通过读写这个窗口，就能与设备上的特定功能进行交互，比如发送命令或交换数据
+bar空间2
+Base Address Register，PCI/PCIe设备向系统声明和沟通自身资源需求的核心机制。把它理解为设备的一块“专用地址窗口”，CPU 通过读写这个窗口，就能与设备上的特定功能进行交互，比如发送命令或交换数据
 BAR（基址寄存器）是绑定在硬件设备上的。它位于每个 PCI/PCIe 设备的配置空间内部，属于设备自身的硬件寄存器
 每个设备都需要一块连续的地址范围，比如显卡可能需要 256 MB 的显存映射，网卡可能需要 32 KB 的控制寄存器。
 那么问题来了：
@@ -185,14 +184,27 @@ bios22 e820表2 x86独有,arm没有这表
 
 
 blkid22
-// 查询系统块设备的文件系统类型   以sda为例,常见叫法 磁盘设备 或者 分区
-blkid /dev/sda
+// 查询系统块设备的文件系统类型
+   -s 指定标签名,举例如下UUID,PARTUUID都是标签名
+blkid
+/dev/mapper/cpsVG-rootfs: UUID="c2024c2f-e8be-4320-8039-385026730622" BLOCK_SIZE="4096" TYPE="ext4"
+/dev/sda3: UUID="IZXHoI-DQ7r-SLmE-yDK8-KKUm-Dy7Y-8ZGkB4" TYPE="LVM2_member" PARTLABEL="primary" PARTUUID="b3c1d6d2-a9dc-4915-96bb-a8e4ce615b0e"
+
+blkid /dev/sda // 以sda为例,常见叫法 磁盘设备 或者 分区
 /dev/sda1 的本质：
    它只是块设备的标识符（类似于书的封面条形码），不代表文件内容本身。
-   直接操作 /dev/sda1 相当于操作原始磁盘扇区，需要专业工具（如 dd 或 debugfs）。
+   直接操作 /dev/sda1 相当于操作原始磁盘扇区，需要专业工具（如 dd 或 debugfs）
 挂载的作用：
    将设备中的文件系统映射到目录树（如 /mnt），操作系统才能理解文件结构。
-   类比：必须把书翻开（挂载）才能阅读或修改内容，只看条形码（/dev/sda1）无法编辑。
+   类比：必须把书翻开（挂载）才能阅读或修改内容，只看条形码（/dev/sda1）无法编辑
+
+场景
+blkid -s PARTUUID卡住,正常不卡住输出如下
+/dev/sda3: PARTUUID="b3c1d6d2-a9dc-4915-96bb-a8e4ce615b0e"
+答
+查看此进程的fd,发现其中一行打印如下
+4 -> /sys/devices/pci000:3a/0000:3a:01.0/usb1/1-2/1-1:1.0/host1/target1:0:0/1:0:0:0/block/sr0
+并且dmesg中存在src 报错io err
 
 
 blktrace22
@@ -531,7 +543,7 @@ dracut -f
     /etc/lvm/lvm.conf,修改原本未注释的filter = XXX ,只修改wwn号就行了,你要是懒的话,模仿上面,把wwn行换成/dev/sda3
 4 重做initramfs
     dracut -f 重新制作initramfs,这玩意默认更新并放置于/boot下面
-5 (可选操作)
+5 (推荐操作)
     /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压镜像命令,检查一下新镜像中lvm.conf改了没
 
 
@@ -773,8 +785,8 @@ gpasswd -d 用户名 wheel
 
 
 grub22 手动引导2 grub引导2
-grub.cfg位置x86在grub/ ;arm在efi/??
-无故进入grub模式,屏幕显示grub>
+grub.cfg位置x86在grub/ ;arm在efi/??;特殊测试:移除或者更名grub.cfg之后重启,会默认进入grub模式
+无故进入grub模式,屏幕显示grub>,     有个命令configfile (hd0,gpt1)/efi/os/XX/grub.cfg之后,会弹出grub界面让你选版本号
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
 ls (hd1,gpt2)/
 // 手动引导
@@ -1530,12 +1542,12 @@ dhcpServer返回ip并返回bootFile pxelinux.0   当 DHCP 服务器在启动响�
 安装流程
 
 DHCP22
-Dynamic Host Configuration Protocol，动态主机配置协议）是一种网络管理协议，它能够自动为接入网络的设备分配IP地址，以及子网掩码、默认网关、DNS服务器等网络参数，让设备“即插即用”地接入网络，而无需手动配置
+Dynamic Host Configuration Protocol，动态主机配置协议）网络管理协议，它自动为接入网络的设备分配IP地址，以及子网掩码、默认网关、DNS服务器等网络参数，让设备“即插即用”地接入网络，而无需手动配置
 当一台设备（DHCP 客户端）首次连接到网络时，它会通过以下四个步骤获取 IP 地址：
     发现（DHCPDISCOVER）
-    客户端在网络上广播一个“寻找 DHCP 服务器”的消息。
+    客户端在网络上广播一个“寻找 DHCP 服务器”的消息
     提供（DHCPOFFER）
-    网络中的 DHCP 服务器收到发现消息后，会从可用的 IP 地址池中挑选一个，并回复一个“我为你预留了这个 IP”的提议消息。
+    网络中的 DHCP 服务器收到发现消息后，会从可用的 IP 地址池中挑选一个，并回复一个“我为你预留了这个 IP”的提议消息
     选择（DHCPREQUEST）
     客户端收到一个或多个提议后，会选择其中一个，并广播“我接受这个 IP”的请求。
     确认（DHCPACK）
@@ -1580,7 +1592,7 @@ kernel panic not syncing: attempted to kill init! exitcode=0x00007f00
 
 
 
-systemd.debug-shell=1  
+断点参数 systemd.debug-shell=1
 tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
 有一次
 kernel panic - not syncing: Attempted to kill init  东哥说systemd坏了,让我修,修复ctrlD一路往下multipathd.service又报错了
@@ -1806,7 +1818,7 @@ Destination    Gateway         Genmask         Flags Metric Ref    Use Iface
 
 rpm22
 常见二进制包         xx.src.rpm源码包,一般内含.spec
-// -a 查询所有包,但我还是觉得没有grep耗时
+// -a 查询所有包
    -f 查询哪些包"拥有"此文件
    -i --info list descriptive information from ;-i会多列出包信息,可以去掉    通常-qi配套使用\
    -p, --package                      query/verify a package file
@@ -2062,12 +2074,14 @@ sshd -T
 sshd_config2 
 ssh_config主要关注客户端如何连接到SSH服务器，‌
 sshd_config则关注SSH服务器如何配置以响应这些连接请求
-sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址
+sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址,默认情况下，sshd 会监听本机所有网络接口上的所有 IPv4 和 IPv6 地址（相当于 0.0.0.0 和 ::）
+使用 ListenAddress 可以限制 sshd 只绑定到特定的 IP 地址，从而提高安全性或避免端口冲突
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
+
+问1
+假设listenAddress监听两个ip,下面命令只查出来一个
 // 可以观察到ssh监控的ip
 netstat -tunlp |grep ssh
-
-// 问题1,假设listenAddress监听两个ip,上面命令只查出来一个
 首先systemctl status sshd 确认sshd服务拉起时间
 message日志bind to port 22 on XX failed: cannot assign requested address
 sysmonitor日志eth4: ip[172.28.0.4] prefixlen[20] is added,
@@ -2079,7 +2093,8 @@ AllowUsers XX root
 // -v verbose mode
 ssh -v my@127.0.0.1
 
-// 问题2,stop sshd服务后,修改/usr/lib/systemd/system/sshd.service中的Restart=no,期望ssh不在拉起,但ssh还是快速被拉起,sysmonitor.log记录是某个脚本拉的
+问2
+stop sshd服务后,修改/usr/lib/systemd/system/sshd.service中的Restart=no,期望ssh不在拉起,但ssh还是快速被拉起,sysmonitor.log记录是某个脚本拉的
 复制一行ExecStart
 ExecStart=exit 0
 Restart=no # 表示systemd不会去拉起sshd,和sysmonitor两码事?
@@ -2391,7 +2406,7 @@ upadmin22
 场景:sdbb时延大,message中报错iscsid: connect to 172.28.32.112:3260 failed (No route to host)
 // 第一列pathID为0
 upadmin show path |grep 172.28.32.112
-0 iqn.2012-01.com.XX:00000000-0000-30af-b211-d21dc25cb825::3137:322E:3238:2E33:322E:3700:0:0::4 XX.Storage 0A iqn.2006-08.com.XX:converged:210078dd33a7ebe0::22005:172.28.32.112::0 Fault -- iSCSI CTE0.A.P5
+0 iqn.XX.com.XX:uuidXX::3137:322E:3238:2E33:322E:3700:0:0::4 XX.Storage 0A iqn.XX:converged:210078dd33a7ebe0::22005:172.28.32.112::0 Fault -- iSCSI CTE0.A.P5
 // sdbb的pathID是460,461,path0虽然fault了,但是与sdbb时延大没关系
 upadmin show vlun id=51
 
