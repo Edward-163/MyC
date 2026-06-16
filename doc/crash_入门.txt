@@ -1,0 +1,95 @@
+1
+准备工作:vmcore_debug工具包,内核crash命令,vmlinux镜像
+问题环境vmcore文件,env_compile.tar.gz(源码)
+
+2
+./crash vmlinux vmcore
+crash二进制解析工具
+vmlinux是带内核调试信息的vmlinux镜像
+vmcore文件是内核panic生成的内存快照,是kdump服务通过kexec机制启动第二内核收集和转储
+    /etc/kdump.conf里面path XX记录转储位置
+
+3
+常用命令
+help
+help XX
+
+bt
+bt -a > /root/cpu.log
+     #4 [fffffe2fa5000ef0] end_repeat_nmi at ffffffff85401579
+        [exception RIP: _raw_spin_lock_irqsave+22]               --------5号函数调用4号函数,报错所在exception RIP
+        RIP: ffffffff85302e76  RSP: ffffb246a9357de0  RFLAGS: 00000046
+        RAX: 0000000000000000  RBX: 0000000000000003  RCX: 0000000000000000
+        RDX: 0000000000000001  RSI: 0000000000000003  RDI: ffff943d6e92ae0c
+        RBP: ffff943d6e92a100   R8: ffff943d6e92a100   R9: 0001992464537605
+        R10: 0000000000000000  R11: 0000000000000000  R12: 0000000000000087
+        R13: 0000000000000002  R14: ffff943d6e92ae0c  R15: ffffffff8498ed60
+        ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0000
+    --- <NMI exception stack> ---
+     #5 [ffffb246a9357de0] _raw_spin_lock_irqsave at ffffffff85302e76
+
+crash> bt
+PID: 301958  TASK: ffff9481dc602100  CPU: 31  COMMAND: "CPU 6/KVM"
+ #0 [ffffb2468792b958] panic at ffffffff852a320d
+bt -c 31 // 如上bt报错指向cpu31,那么就-c打印cpuXX的堆栈
+
+dis 函数名or某地址 // -l line展示源码行号
+dis -l sysrq_handel_crash+18 // +18是函数符号的偏移量
+
+struct -o task_struct // -o offset展示偏移量
+    crash> struct -o address_space
+    struct address_space {
+        [0] struct inode *host;
+        [8] struct xarray i_pages;
+
+rd addr
+
+log > log.txt // bt不展示rip关键词,log内容就是vmcore-dmesg.txt,它里面有rip关键词
+
+硬件中断
+系统运行时,外部io收到事件,通过中断通知cpu处理,cpu收到中断,打断当前运行的任务(非中断关闭),调用对应中断服务程序,执行完后返回中断地方继续执行
+
+软锁
+softlockup is defined as a but that causes the kernel to loop in kernel mode for more than 20s,without giving other tasks to run
+代码运行在内核态超过一定时间,触发;内核调度停滞。CPU 还在执行代码，但调度器无法让其他任务运行
+常见于
+频繁处理硬中断,cpu核没时间去调度
+长时间处理软中断
+非抢占式内核,线程长时间执行且不主动触发调度
+
+软狗
+因为软锁,cpu核执行任务A且不调度,软狗的机制是内核喂狗线程(高优先级percpu内核线程watchdog/n)定时唤醒喂狗,它不被cpu调度,无法执行,喂狗超时
+
+硬锁
+hardlock is defined as a bug that causes the cpu to loop in kernel mode for more than 10s,without letting other interrupts to run
+内核代码长时间关闭中断
+
+硬狗 NMI狗  附:nmi中断==non Maskable interrupt不可屏蔽的中断
+
+
+函数调用约定 敌 视 低薪 畜生
+%rdi    参1
+%rsi    参2
+%rdx    参3
+%rcs    参4
+%r8     参5
+%r9     参6
+
+
+RIP是x86_64架构下的指令指针寄存器（Instruction Pointer），指向当前正在执行的指令地址。在Linux内核崩溃信息或日志中，RIP行通常显示导致问题的那条指令所在的函数以及偏移量。它提供了问题发生的确切位置，是定位问题的起点
+RIP: 0010:try_to_wake_up+0x40/0x4c0
++0x40：指令在函数内部的偏移量，即从函数起始地址往后数 0x40 个字节
+/0x4c0：函数的总大小（字节数，十六进制），这里表示 try_to_wake_up 函数共有 0x4c0 字节（约 1216 字节
+
+汇编
+AT&T语法:src在前 dest在后
+movl $1,%eax 将数1传送给起存器eax
+
+intel语法:dest在前 src在后
+mov eax,1
+
+pc程序计数器
+cpu里的特殊寄存器,存放下一条要执行的指令在内存的地址
+x86叫rip (instruction pointer)
+arm叫pc
+

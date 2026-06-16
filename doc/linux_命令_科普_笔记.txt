@@ -205,6 +205,8 @@ blkid -s PARTUUID卡住,正常不卡住输出如下
 查看此进程的fd,发现其中一行打印如下
 4 -> /sys/devices/pci000:3a/0000:3a:01.0/usb1/1-2/1-1:1.0/host1/target1:0:0/1:0:0:0/block/sr0
 并且dmesg中存在src 报错io err
+规避
+eject /dev/sr0      // 弹出光驱
 
 
 blktrace22
@@ -392,7 +394,7 @@ curl22
 curl is a tool for transferring data from or to a server using URLs
 // -i 在输出中包含 HTTP 响应头（便于调试）
    -g 允许url可以包含{}[]
-   -k --insecure不安全,大概就是跳过验证步骤
+   -k --insecure 忽略 TLS/SSL 证书验证。即使目标服务器使用自签名证书、证书过期或域名不匹配，curl 也会继续连接
    -X GET	明确指定 HTTP 方法为 GET（默认即为 GET，可省略
    -H "accept: application/json"要求返回json格式
 curl -igk -X GET https://XXX -H "accept: application/json"
@@ -403,7 +405,7 @@ Chain INPUT (policy ACCEPT 30M packets, 8165M bytes)
     0     0 DROP       all  --  external_api *       0.0.0.0/0            0.0.0.0/0
 
 
- date2
+date2
 date [option]..[+format]
 // 什么是format, https://www.man7.org/linux/man-pages/man1/date.1.html
    举例 %Y 四位年份 %m 月份 %d 日
@@ -489,12 +491,38 @@ df -T // 打印fs类型
 
 
 dhclient22
+是实现了dhcp协议的著名客户端
 一般来说就是出网卡发包到pxe服务器上dhcpServer,获取ip,获取不到,最便捷的是先去dhcpServer抓包分析
 // -v verbose log ,动态获取ip,并显示详细过程,
    -x shutDown client
+   -cf 指定.conf文件
 dhclient -v
 dhclient -v eth4 // 附:可以指定网络接口
 dhclient -x
+dhclient -cf /etc/fssysal/dhclient.conf -V BPSClient eth0
+.conf内容如下
+send dhcp-client-identifier = hardware;
+send dhcp-lease-time 63072000
+
+
+DHCP22
+Dynamic Host Configuration Protocol，动态主机配置协议）网络管理协议，它自动为接入网络的设备分配IP，以及子网掩码、默认网关、DNS服务器等参数，让设备“即插即用”地接入网络，而无需手动配置
+当一台设备（DHCP 客户端）首次连接到网络时，它会通过以下四个步骤获取 IP 地址：
+    发现（DHCPDISCOVER）    客户端在网络上广播一个“寻找 DHCP 服务器”的消息
+    提供（DHCPOFFER）       网络中的 DHCP 服务器收到发现消息后，会从可用的 IP 地址池中挑选一个，并回复一个“我为你预留了这个 IP”的提议消息
+    选择（DHCPREQUEST）     客户端收到一个或多个提议后，会选择其中一个，并广播“我接受这个 IP”的请求。
+    确认（DHCPACK）         服务器收到请求后，正式确认该 IP 租约，并将 IP 地址、子网掩码、网关、DNS 等参数一起发送给客户端。客户端随后配置网络接口，完成接入
+dhcpdiscover from 20:fa:db:42:63:52 via brcps
+dhcpoffer on 172.28.0.6 to 20:fa:db:42:63:52 via brcps
+dhcprequest for 172.28.0.6(172.28.8.140) from 20:fa:db:42:63:52 via brcps
+dhcpack on 172.28.0.6 to 20:fa:db:42:63:52 via brcps
+发现：一台 MAC 地址为 20:fa:db:42:63:52 的设备接入网络，通过 brcps 这个网桥接口大喊：“我是新来的，有没有 DHCP 服务器能给我分配一个 IP 地址？”
+提供：DHCP 服务器听到后，从地址池里挑了一个 IP 172.28.0.6，通过 brcps 回复它：“我这里有个 IP 地址 172.28.0.6 可以给你用，你要不要？”
+选择：客户端收到提议后，正式向服务器确认：“我就要这个 172.28.0.6 了，请确认一下！”（日志里括号里的 172.28.8.140 是 DHCP 服务器的地址，表示它把请求发给了指定的服务器）
+确认：服务器收到请求后，正式批准：“好的，172.28.0.6 现在就是你的了，可以放心使用。” 并把这个地址以及子网掩码、网关等配置信息一起发回给客户端
+
+租约: /var/lib/dhcpd/dhcpd.leases
+
 
 
 dirname2 basename2
@@ -544,7 +572,7 @@ dracut -f
 4 重做initramfs
     dracut -f 重新制作initramfs,这玩意默认更新并放置于/boot下面
 5 (推荐操作)
-    /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压镜像命令,检查一下新镜像中lvm.conf改了没
+    /usr/lib/dracut/skipcpio initramfs-5.10.0-XX.img |zcat |cpio -id  解压init命令,检查一下新镜像中lvm.conf改了没
 
 
 du22
@@ -1541,31 +1569,7 @@ dhcpServer返回ip并返回bootFile pxelinux.0   当 DHCP 服务器在启动响�
 根据pxelinux.cfg配置文件,去tftpServer上下载内核文件,initramfs
 安装流程
 
-DHCP22
-Dynamic Host Configuration Protocol，动态主机配置协议）网络管理协议，它自动为接入网络的设备分配IP地址，以及子网掩码、默认网关、DNS服务器等网络参数，让设备“即插即用”地接入网络，而无需手动配置
-当一台设备（DHCP 客户端）首次连接到网络时，它会通过以下四个步骤获取 IP 地址：
-    发现（DHCPDISCOVER）
-    客户端在网络上广播一个“寻找 DHCP 服务器”的消息
-    提供（DHCPOFFER）
-    网络中的 DHCP 服务器收到发现消息后，会从可用的 IP 地址池中挑选一个，并回复一个“我为你预留了这个 IP”的提议消息
-    选择（DHCPREQUEST）
-    客户端收到一个或多个提议后，会选择其中一个，并广播“我接受这个 IP”的请求。
-    确认（DHCPACK）
-    服务器收到请求后，正式确认该 IP 租约，并将 IP 地址、子网掩码、网关、DNS 等参数一起发送给客户端。客户端随后配置网络接口，完成接入
-dhcpdiscover from 20:fa:db:42:63:52 via brcps
-dhcpoffer on 172.28.0.6 to 20:fa:db:42:63:52 via brcps
-dhcprequest for 172.28.0.6(172.28.8.140) from 20:fa:db:42:63:52 via brcps
-dhcpack on 172.28.0.6 to 20:fa:db:42:63:52 via brcps
-发现：
-一台 MAC 地址为 20:fa:db:42:63:52 的设备接入网络，通过 brcps 这个网桥接口大喊：“我是新来的，有没有 DHCP 服务器能给我分配一个 IP 地址？”
-提供：
-DHCP 服务器听到后，从地址池里挑了一个 IP 172.28.0.6，通过 brcps 回复它：“我这里有个 IP 地址 172.28.0.6 可以给你用，你要不要？”
-选择：
-客户端收到提议后，正式向服务器确认：“我就要这个 172.28.0.6 了，请确认一下！”（日志里括号里的 172.28.8.140 是 DHCP 服务器的地址，表示它把请求发给了指定的服务器）
-确认：
-服务器收到请求后，正式批准：“好的，172.28.0.6 现在就是你的了，可以放心使用。” 并把这个地址以及子网掩码、网关等配置信息一起发回给客户端
 
-租约: /var/lib/dhcpd/dhcpd.leases
 
 
 rd.break2  
@@ -1628,6 +1632,7 @@ Linux下面有个特性叫OOM killer（Out Of Memory killer），这个东西会
 oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_score_adj取值范围是-1000到1000，默认值为0。oom_score_adj设为-1000时，表示禁止OOM killer杀死该进程
 
 
+smaps22  内存占用22
 /proc/pidXXX/smaps
 输出由多段组成,举例某段如下
    93 4ff3efe00000-4fffefe00000 rw-p 00000000 00:00 0
@@ -1636,24 +1641,10 @@ oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_sco
    96 MMUPageSize:           4 kB
    97 Rss:             1404928 kB
    98 Pss:             1404928 kB
-   99 Shared_Clean:          0 kB
-  100 Shared_Dirty:          0 kB
-  101 Private_Clean:         0 kB
-  102 Private_Dirty:   1404928 kB
-  103 Referenced:      1404928 kB
-  104 Anonymous:       1404928 kB
-  105 LazyFree:              0 kB
-  106 AnonHugePages:   1404928 kB
-  107 ShmemPmdMapped:        0 kB
-  108 FilePmdMapped:         0 kB
-  109 Shared_Hugetlb:        0 kB
-  110 Private_Hugetlb:       0 kB
-  111 Swap:                  0 kB
-  112 SwapPss:               0 kB
 // 场景:某进程内存占用大,通过如下命令可以知道是某段地址占用的rss==res占用大
 grep -rin rss /mnt/hyj/qemuSmaps.txt |sort -nk2
 // 然后上gdb
-gdb -p <PID>
+gdb -p <PID>cat /proc/2110023/smaps > /var/log/hyj.txt
 (gdb) dump memory /mnt/hyj/hyjDump 0x4ff3efe00000 0x4fffefe00000
 (gdb) detach
 (gdb) quit
@@ -2112,6 +2103,7 @@ size 4096 linux中目录的size通常为4096,或者4096倍数?
 
 
 strace2
+琦哥:strace抓系统调用:用户态陷入到内核态,vhost线程已经是内核态进程,strace抓个毛
 // -t           在输出中的每一行前加上时间信息。 -tt没卵用
    -ttt          --absolute-timestamps=format:unix,precision:us
                  Prints the wall clock time as seconds since the epoch, with
@@ -2546,6 +2538,40 @@ Dentry (Directory Entry, 目录项)
 open一个文件/home/xxx/yyy.txt，那么/、home、xxx、yyy.txt都是一个目录项
 
 File (文件对象)
+
+
+vhost线程
+一、没有 vhost 时：传统的 virtio-net 纯软件模拟
+    早期 QEMU/KVM 的 virtio-net 网卡是这样工作的：
+    虚拟机的网卡驱动 将数据包放入 virtio 的 vring（环形队列）。
+    KVM 退出到用户态 QEMU（每次虚拟机 I/O 都会触发 VM-Exit）。
+    QEMU 进程（用户态）从 vring 取出数据，通过 write() 或 sendmsg() 发给宿主机内核的 tap 设备（或直接发送到物理网卡）。
+    数据经宿主机网络协议栈最终发出。
+    缺点：
+    每次数据包处理都要 VM-Exit + 用户态/内核态切换，开销大。
+    整个路径长（Guest → KVM → QEMU → host kernel → 网卡），延迟高，吞吐量受限。
+二、vhost-net：将后端处理下放到内核态
+    为了消除用户态 QEMU 的瓶颈，Linux 内核引入了 vhost-net 驱动。
+    工作原理：
+    仍然使用 virtio 协议，vring 在 Guest 和 Host 之间共享内存。
+    但 后端处理不再由 QEMU 负责，而是由内核的一个 vhost‑net 内核线程 直接处理：
+    当 Guest 写入 vring 发送数据包时，内核线程直接读取 vring 内容，并把它交给宿主机的网络栈（tap、bridge 或物理网卡）。
+    接收方向同理，内核线程直接把从 tap 收到的数据填入 vring，然后通知 Guest。
+    整个过程 完全在内核态运行，没有 VM-Exit 到 QEMU，也 没有用户态/内核态切换。
+    显著优势：
+    更低延迟：避免 QEMU 介入。
+    更高吞吐量：尤其适合大流量（如 10G/25G 网卡）。
+    多队列支持：queues='24' 表示可以创建 24 个 vhost 线程，每个队列一个线程，与 Guest 内多队列网卡配合实现并行收发，充分利用多核 CPU
+进阶：vhost-user（用户态 vhost）
+    除了内核态的 vhost-net，还有一种 vhost‑user 方案（常用于 OVS‑DPDK、SPDK）：
+    后端处理从内核搬回用户态，但运行在 独立的用户态进程（如 OVS）中，避免 QEMU 参与。
+    通过 Unix domain socket 协调共享内存，依然保持零 VM‑Exit 特性。
+    性能可以做得比内核 vhost 更高（尤其对于小包），但需要额外配置和专用用户态驱动
+“内核态”含义：
+线程运行在 内核地址空间（Ring 0），拥有最高权限。
+可以直接访问物理内存、硬件寄存器、宿主机网络协议栈。
+不会被调度器切换回用户空间，免去了昂贵的上下文切换开销。
+但仍然可以参与 Linux 的进程调度，也可以被绑定到指定的 CPU 核心（通过 taskset 或 cgroup）
 
 
 vim2 正则2
