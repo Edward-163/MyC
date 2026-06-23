@@ -65,6 +65,9 @@ hardlock is defined as a bug that causes the cpu to loop in kernel mode for more
 内核代码长时间关闭中断
 
 硬狗 NMI狗  附:nmi中断==non Maskable interrupt不可屏蔽的中断
+由于普通中断被屏蔽，高精度定时器（hrtimer(依赖于中断（通常是时钟中断或模拟定时器事件）来触发)）也可能无法工作。因此，内核使用了更底层的 NMI (Non-Maskable Interrupt，不可屏蔽中断)。
+NMI 是最高优先级的中断，几乎无法被屏蔽。系统会周期性地（默认每10秒）通过 NMI 触发一个 Perf 事件来检查。如果连续两次检查都发现 CPU 没有响应，就判定发生了
+当系统进入 Hardlockup 状态时，意味着 CPU 卡死在了某个关闭了中断的代码路径上（比如在驱动程序的 spin_lock_irqsave 区间内死循环，或者在中断处理函数本身中卡住了，因为中断处理函数默认就是关中断的
 
 
 函数调用约定 敌 视 低薪 畜生

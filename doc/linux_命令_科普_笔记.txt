@@ -27,7 +27,7 @@ bootloader引导程序  例:grub就是其中之一
 
 第一内核 主内核
 第二内核 主内核crash时候启用,cmdline中crashkernel=256M 就是预留给第二内核使用的
-        配置文件应该是/etc/kdump.conf里面path配置哪里,crash日志就输出到哪里
+        配置文件应该是/etc/kdump.conf里面path配置哪里,crash2日志就输出到哪里
 
 
 启动参数
@@ -125,7 +125,7 @@ ctrlD ctrlD 正常进大系统
 awk22
 从输入中读取一行文本,然后针对该行执行program
 格式 awk option program file   ,program举例 '{print $1,$2}' 
-// -F 指定冒号为分隔符,awk将一行分成多段来处理, 如果不指定file,awk则从stdin取数据
+// -F 指定冒号为分隔符,awk将一行分成多段来处理, 如果不指定file,awk则从stdin取数据;             默认以空白符（空格/制表符）分隔字段
    print 它不是linux的printf命令,即便环境上没有print命令,它也能正常打印,所以我怀疑它与awk有关系
    $0 整个文本行,文本行第一段$1,第二段$2   下面输出逗号怎么空格了??
 awk -F ":" '{print $1,$2}' /etc/passwd
@@ -138,6 +138,9 @@ echo "name" |awk 'BEGIN{print "b---"};{print $0};END{print "e---"}'
 b---
 name
 e---
+// 假设a.txt有两列
+a.txt |awk '{sum+=$2}END{print sum}'                                                           ----------常见列累加
+
 
 
 bar空间2
@@ -530,6 +533,10 @@ dirname /home/user/docs/file.txt
 /home/user/docs
 
 
+dnsmasq2
+两个核心功能:dns域名解析,分配ip
+
+
 dmesg22
 // -C 清除环回缓冲区
 // -c 打印当前的缓冲区内容并清除,有次巡检不同过,就是把它备份后-c清空,难道巡检与dmesg有什么强相关?
@@ -538,7 +545,7 @@ dmesg -c
 
 dmidecode22
 // -t 指定类型  0-bios 1-system 等等
-   -s 查看string的值  string有很多,比如 system-uuid
+   -s Only display the value of the given DMI string 比如 system-uuid
 dmidecode -t bios
 dmidecode -t 1
 dmidecode -t system // 同上,
@@ -813,18 +820,20 @@ gpasswd -d 用户名 wheel
 
 
 grub22 手动引导2 grub引导2
-grub.cfg位置x86在grub/ ;arm在efi/??;特殊测试:移除或者更名grub.cfg之后重启,会默认进入grub模式
-无故进入grub模式,屏幕显示grub>,     有个命令configfile (hd0,gpt1)/efi/os/XX/grub.cfg之后,会弹出grub界面让你选版本号
+grub.cfg位置x86在grub/ ;arm在efi/??;                                        注意:移除或者更名grub.cfg之后重启,会默认进入grub模式
+问:无故进入grub模式,屏幕显示grub>
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
+ls
 ls (hd1,gpt2)/
-// 手动引导
-set root=hd1,gtp2
-linux /vmlinuz-XX root=/dev/cpsVG/rootfs console=tty0
+configfile (hd0,gpt1)/efi/os/XX/grub.cfg // 可选操作,会弹出grub界面让你选版本号
+set root=hd1,gpt2
+linux /vmlinuz-XX  root=/dev/cpsVG/rootfs console=tty0
 initrd /initramfs-XX.img
 boot
-grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg，重新生成grub.cfg文件。生成成功后reboot，OS恢复正常
+grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg // 正常的话,进大系统,敲此行重新生成grub.cfg,生成后reboot,OS恢复正常
 
-场景:无grub页面
+问:无grub页面
+答:grub.cfg中timeout=0,改成5,就是grub界面停留5s
 
 
 
@@ -1306,6 +1315,7 @@ lvresize2 resize2fs2
 lvresize -L+9G /dev/mapper/rootfs
 lvresize -L-9M /dev/mapper/rootfs
 resize2fs /dev/mapper/rootfs
+    可能报错there are errors in the filesystem,so online resizing is not allowed
 
 
 md5sum2 
@@ -1595,6 +1605,11 @@ kernel panic not syncing: attempted to kill init! exitcode=0x00007f00
 3 cp /usr/lib/systemd/某.so /usr/lib/systemd/;chroot /sysroot;ldconfig
 
 
+tr22
+translate 突出一个字符转换命令
+echo xx |tr 'a-z' 'A-Z' // 转大写
+echo "abc123def456" | tr -d '0-9' // 删除所有数字
+
 
 断点参数 systemd.debug-shell=1
 tty9 终端（默认 CtrlAltF9）开启一个 root 权限的 Shell，即使系统服务崩溃或无法登录
@@ -1633,7 +1648,7 @@ oom_score_adj，用来控制进程打分，分数越高，就先杀谁。oom_sco
 
 
 smaps22  内存占用22
-/proc/pidXXX/smaps
+/proc/pidXXX/smaps > /var/log/XX.txt
 输出由多段组成,举例某段如下
    93 4ff3efe00000-4fffefe00000 rw-p 00000000 00:00 0
    94 Size:           50331648 kB
@@ -1642,8 +1657,8 @@ smaps22  内存占用22
    97 Rss:             1404928 kB
    98 Pss:             1404928 kB
 // 场景:某进程内存占用大,通过如下命令可以知道是某段地址占用的rss==res占用大
-grep -rin rss /mnt/hyj/qemuSmaps.txt |sort -nk2
-// 然后上gdb
+grep -rin rss /var/log/XX.txt |sort -nk2
+// 然后上gdb(不一定)
 gdb -p <PID>cat /proc/2110023/smaps > /var/log/hyj.txt
 (gdb) dump memory /mnt/hyj/hyjDump 0x4ff3efe00000 0x4fffefe00000
 (gdb) detach

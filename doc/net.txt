@@ -38,10 +38,15 @@ arp -e
 
 arping2 
 // -I 你用哪个设备去发arp包
-arping -I brcps 172.28.0.4
+   -c5 共发送5次
+arping -I brcps 172.28.0.4(destIp)                               "谁的 IP 是 172.28.0.4？请将你的 MAC 地址告诉我"
   ARPING 172.28.0.4 from 172.28.0.2 brcps
-  ^CSent 3 probes (3 broadcast(s))
+  Sent 3 probes (3 broadcast(s))
   Received 0 response(s)
+
+arping -A -U -c 5 -I brcps 172.28.8.121
+假设你有一主一备两台服务器，平时 IP 172.28.8.121 在主服务器上。突然主服务器宕机了，备用服务器要顶上去。备用服务器一开机，立刻执行这条命令，
+相当于对着全网喊：“这个 IP 现在归我啦！” 交换机们听到后，马上把通往这个 IP 的网线指向备用服务器，流量瞬间就切过来了
 
 
 ifconfig2 
