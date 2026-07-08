@@ -44,15 +44,13 @@ GRUB → 内核加载 → 只启动核心服务 → 直接获得root shell
 就是通过设置中断亲和性，让指定CPU专门处理网卡中断，从而提升网络性能并减少对业务核心的干扰
 
 
-远程控制台
+bmc网页的远程控制台
 ibmc集成的,控制台输出乱码不是os的锅;mobaX,xShell登录ibmc然后串口重定向,看下输出是不是也乱码
 
 
 串口2 console2
-// x86
-console=tty0 console=ttyS0,115200
-// arm
-console=tty0 console=ttyAMA0,115200
+console=tty0 console=ttyS0,115200 // x86
+console=tty0 console=ttyAMA0,115200 // arm
 
 
 串口重定向2 spcr2(Serial Port Console Redirection),bios界面->advance->MISC conf,miscellaneous音mi舍`leini尔s  adj杂项的,混杂的
@@ -60,13 +58,14 @@ BIOS boot completed.
 [SP BOOT] exit boot service 老是打印上面后就完全不打os时间戳了,bios哥们说是串口重定向没开->systemcom.dat就不打印os相关
 bios->支持spcr->开启
 mobaX或者xShell登录bmcIp(登录提示符是iBMC>)后敲命令    ipmcset2
+//  option
+    0 SYS COM 原来systemcom.dat名字由来在这
+    1 BMC COM
+    mode
+    0 sharedMode
+    1 privateMode
 ipmcset -t sol -d activate -v <option> <mode>
-option
-0 SYS COM 原来systemcom.dat名字由来在这
-1 BMC COM
-mode
-0 sharedMode
-1 privateMode
+ipmcset -t sol -d activate -v 0 1
 
 
 解压iso 解压22
@@ -98,7 +97,7 @@ mkdir -p tt && mount *.iso tt && mkdir -p os && cp tt/repo/OS.tar.gz os/ && umou
 将命令的输出/输入伪装成文件
 source set_env < <(echo 1;echo 123)
 进程替换会在 /dev/fd/ 目录中匿名创建一个命名管道（FIFO）或临时文件,相当于XX文件中两行内容
-vim <(echo 1;echo 123) // 这个最明显
+vim <(echo 1;echo 123) // 这个最明显,提示你正在vim编辑一个只读文件/dev/fd/XX
 
 
 重置root密码2 
@@ -191,7 +190,8 @@ blkid22
    -s 指定标签名,举例如下UUID,PARTUUID都是标签名
 blkid
 /dev/mapper/cpsVG-rootfs: UUID="c2024c2f-e8be-4320-8039-385026730622" BLOCK_SIZE="4096" TYPE="ext4"
-/dev/sda3: UUID="IZXHoI-DQ7r-SLmE-yDK8-KKUm-Dy7Y-8ZGkB4" TYPE="LVM2_member" PARTLABEL="primary" PARTUUID="b3c1d6d2-a9dc-4915-96bb-a8e4ce615b0e"
+/dev/sda3: UUID="IZXHoI-DQ7r-SLmE-yDK8-KKUm-Dy7Y-8ZGkB4" TYPE="LVM2_member" PARTLABEL="primary" PARTUUID="b3c1d6d2-a9dc-4915-96bb-a8e4ce615b0e" // 正常
+/dev/sdad: PARTLABEL="primary" PARTUUID="b3c1d6d2-a9dc-4915-96bb-a8e4ce615b0e" // 异常,盘信息缺失,没有uuid和type
 
 blkid /dev/sda // 以sda为例,常见叫法 磁盘设备 或者 分区
 /dev/sda1 的本质：
@@ -708,11 +708,11 @@ fdisk /dev/sda
 // -l List the partition tables for the specified devices and then exit.
    sector size 通常512bytes,现在也有4k大小的扇区
 fdisk -l /opt/disk.img 
+    Device           Boot Start     End Sectors  Size Id Type
+    /opt/disk.img1        2048  999423  997376  487M 83 Linux           // 挂载出来,一般是/boot/efi
+    /opt/disk.img2      999424 8388607 7389184  3.5G 8e Linux LVM       // 挂载出来,一般是/boot
 mount -o loop,offset=1048576 /opt/disk.img /mnt // 想访问镜像中的某个分区，而不想整个挂载。因为直接mount loop会挂载整个镜像，但镜像里可能有多个分区，他们需要指定具体分区的起始位置
 mount -o loop,offset=34603008 /opt/disk.img /mnt
-Device           Boot Start     End Sectors  Size Id Type
-/opt/disk.img1        2048  999423  997376  487M 83 Linux
-/opt/disk.img2      999424 8388607 7389184  3.5G 8e Linux LVM
 从上面可知第一个分区的 Start是 2048。偏移量 = 2048 * 512= 1048576,如果计算量很大的话,试下挂device?? 例 mount /opt/disk.img2 /mnt
 
 
@@ -825,7 +825,8 @@ grub.cfg位置x86在grub/ ;arm在efi/??;                                        
 // hd0,1,2 gpt1,2,3    如果你发现下面展示和正常的节点/boot内容相同
 ls
 ls (hd1,gpt2)/
-configfile (hd0,gpt1)/efi/os/XX/grub.cfg // 可选操作,会弹出grub界面让你选版本号
+configfile (hd0,gpt1)/efi/os/XX/grub.cfg // 必选操作,会弹出grub界面让你选版本号,弹窗选版本说明grub.cfg正常,且将会进大系统
+// 上一步不正常,此时grub.cfg文件损坏才手动执行下面3行
 set root=hd1,gpt2
 linux /vmlinuz-XX  root=/dev/cpsVG/rootfs console=tty0
 initrd /initramfs-XX.img
@@ -1182,7 +1183,7 @@ lvm2_member 不是一个真正的文件系统，你不能往里面直接存文�
 
 
 
-lscpu2
+lscpu2  cpu拓扑
 有时候不同节点的cpu的flag不同,也有称为cpu feature的,而这些cpu flag从硬件获取的,大概率是bios设置相关,举例bios开关MonitorMwaitEnable,开了flag里面就有monitor这个值,没开就没有
 sockets            主板上物理cpu插槽
 cores per socket   单个cpu的物理核心数
@@ -1357,8 +1358,8 @@ depmod2
 depmod -a
     扫描更新模块数据库modules.dep,modprobe和depmod都是归属于kmod包
     /lib/modules/$(uname -r)/modules.dep // 归属于kernel包,内容就是一行文本,比如A.ko需要依赖a.ko,b.ko,       A.ko: a.ko b.ko
-    depmod 是写操作：它负责“地图绘制”，生成 modules.dep 文件。
-    modprobe 是读操作：它负责“导航”，读取 modules.dep 来智能加载模块。
+    depmod 是写操作：它负责“地图绘制”，生成 modules.dep 文件
+    modprobe 是读操作：它负责“导航”，读取 modules.dep 来智能加载模块
 
 
 mount2 

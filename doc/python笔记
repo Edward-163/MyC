@@ -1,3 +1,6 @@
+for2
+for
+
 变量命名 字幕 下划线 数字 例如 mess_1
 
 字符串 单双引号都算
@@ -6,8 +9,8 @@ str = "1\'22\"33"
 print(3 * "*") // ***
 
 str = "0123" // learn idx
-str[-1] // 3
-str[-2] // 2
+str[-1] // '3'
+str[-2] // '2'
 
 str = " aa bb "
 print(str.title()) # Aa Bb

@@ -34,6 +34,13 @@ undisplay 跟踪号
 bt backtrace 打印当前的函数调用栈的所有信息。
 bt <n> n是一个正整数，表示只打印栈顶上n层的栈信息。
 bt <-n> -n表一个负整数，表示只打印栈底下n层的栈信息。
+
+b 函数名 // 直接打断点
+(gdb) b kpatch_arch_execute_remote_func
+Breakpoint 1 at 0xcba0: file arch/aarch64/arch_ptrace.c, line 260.
+
+info b // 查看断点
+
 f <n> n是一个从0开始的整数，是栈中的层编号。比如：frame 0，表示栈顶，frame 1，表示栈的第二层
 up <n>表示向栈的上面移动n层，可以不打n，表示向上移动一层。
 down <n> 表示向栈的下面移动n层，可以不打n，表示向下移动一层。

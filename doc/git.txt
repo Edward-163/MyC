@@ -1,14 +1,49 @@
-目标远程仓
-fork目标远程仓
+官方仓 目标远程仓 origin_o
+自己fork仓 origin
     目标分支(代码旧了就重新从目标远程仓fetch更新,我不建议把代码提交到此分支上)
     以目标分支为基础,checkout -b出来的众多分支(我建议不同人,不同版本,不同时间点来命名新分支,且push时选择同步推送分支名到fork目标远程仓)
 
+
+// 更新fork仓<<官方仓
+   自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
+   添加官方远程源
+git remote add origin_o https链接或者ssh链接
+fetch2
+git fetch origin_o // 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支
+git fetch origin_o branchXXX // 需要特定分支可以在origin_o后面加上
+// 额外:让当前分支A与fork仓的分支A一模一样?
+git reset --hard origin_o branchAA
+git checkout -b branchBB origin_o/branchBBB
+// 把自己12个补丁"追加"到自己的最新的远程
+   多分支变基,origin_o/branchXXX分支(它作为newbase)和当前分支(不写默认)的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后(注意:我还在是当前分支,博客的图精辟)
+   https://blog.csdn.net/weixin_42310154/article/details/119004977
+   虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
+git rebase -i origin_o/branchXXX
+..rebase continue省略
+git push -uf origin
+
+
+
+apply2
 // 举例:高版本仓某次提交,仅仅是给XX.c路径最外层加层目录(可能是处于梳理代码结构的目的),当你要把这个提交补丁打到低版本仓中,显然就会报错error: XX高版本dir/XX低版本dir/XX.c: No such file or directory
-// 解决: -p2 Remove <n> leading path components (separated by slashes) from traditional diff paths. E.g., with -p2, a patch against a/dir/file will be applied directly to file. The default is 1.
-// 我看完理解以为是-p1,去掉一层高版本dir,剩下的路径高低版本完全一样,以为能解决,实际还是报错,-p2才解决了
+   -p2 Remove <n> leading path components (separated by slashes) from traditional diff paths.移除前<n>个由斜杠分隔的路径组成部分,从传统的 diff 路径中
+        E.g., with -p2, a patch against a/dir/file will be applied directly to file. The default is 1.
+   我看完理解以为是-p1,去掉一层高版本dir,剩下的路径高低版本完全一样,以为能解决,实际还是报错,-p2才解决了
 git apply --reject XXX.patch -p2
 // XX.c文件改动了6出,上面命令打完后,所有改动全在.rej中   衍生问题:这么打没意义,现在还好是6处,万一是60处呢?这和手动挪修改有什么区别???
+问
+回合补丁,某高版本patch如下,低版本目录是1.0.0,所以git apply报错libcareplus-1.0.1/src/kpatch_ptrace.c: No such file or directory
+diff --git a/libcareplus-1.0.1/src/kpatch_ptrace.c b/libcareplus-1.0.1/src/kpatch_ptrace.c
+index 14c71f3..c136fd9 100644
+--- a/libcareplus-1.0.1/src/kpatch_ptrace.c
++++ b/libcareplus-1.0.1/src/kpatch_ptrace.c
+答
+手动把高版本补丁中1.0.1替换成1.0.0
 
+apply还有缺点,举例高版本9个提交,我已经回合到低版本上9个提交,ci流水线报错,需要定位,方法:按序每整一个提交,ci流水线跑一次,当第五次ci时报错需要一个前置提交(缺点:5次提交都要重复git add,输入提交信息),
+你迫切需要git am打补丁且自动生成提交信息
+
+am2
 git-am之前， 你要首先git am –abort 一次，来放弃掉以前的am信息，这样才可以进行一次全新的am。 Apply a series of patches from a mailbox
 git-am 可以一次合并一个文件，或者一个目录下所有的patch，或者你的邮箱目录下的patch.
 git-am ~/patch/0001-trival-patch.patch // 据说am会把多个提交信息合成一个? apply则不会提交,待验证
@@ -62,7 +97,7 @@ git clean XXXdir -n // -n dryRun
 git clean XXXdir -f
 
 
-git clone2    最后可以指定目录名
+clone2    最后可以指定目录名
 // -b 指定检出分支
 git clone -b branchXX https://XXX.git /home/dirXX   
 git clone XX.git D:\XX
@@ -79,7 +114,7 @@ git config --local usern.email "XXX"
 git config --global core.editor vim
 
 
-
+diff2
 // This form is to view the changes you made relative to the index 说白了查看 工作区-->还没暂存到index的改变(通常是git add之前)
 git diff  XXX  
 // 查看staged changes 等同--cached 说白了查看 工作区-->已经暂存到index的改变(通常是git add之后)
@@ -88,6 +123,7 @@ git diff commit1 commit2    // (1,2]
 git diff > 0003.patch
 
 
+format-patch2
 // 前开后闭,注意中间有.. 注意中间有.. 注意中间有..
 git format-patch e4d14012cf3436f8c7f7306aa0bbd113effc7728~1..e4d14012cf3436f8c7f7306aa0bbd113effc7728 // 0001-virtiofs-add-vhost_user_fs-package.patch
 git format-patch 35b1ce814ca6fea6a1207b4b935c55b229f3b6c3 –stdout          //--stdout输出到console查看,实践测试,不写第二个commitId,默认是HEAD
@@ -99,7 +135,10 @@ git format-patch HEAD^..HEAD  –stdout
 git format-patch HEAD -2 –stdout        //生成(HEAD^^,HEAD]之间的patch ,一般来说也就是最近2次提交的patch
 等价
 git format-patch HEAD^^..HEAD  –stdout
+
 git format-patch -1 commitId // 生成commitId单次提交文件
+git format-patch -9 commitId // 从commitId开始,连续9次提交文件,commitId它叫0009-XX.patch,最新的叫0001-XX.patch             ------------------------------
+git format-patch commitId~1 // (commitId~1,最近head]前开后闭                                      -------------这玩意实操价值不大,因为单mr内多提交,很容易流水线报错,纠错成本高
 git format-patch -1 // 不写默认最近一次提交
 
 
@@ -130,22 +169,12 @@ git push -uf origin XXX_10086
 
 
 
-// 更新fork仓库<<官方仓库
-   自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
-   添加官方远程源
-git remote add origin_o https链接或者ssh链接
-// 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支
-git fetch origin_o
-// 需要特定分支可以在origin_o后面加上
-git fetch origin_o branchXXX
-// 额外:抓取后fork的origin和官方的origin_o分支进度不一样,我想用官方全覆盖fork怎么办呢?
-// 把自己12个补丁"追加"到自己的最新的远程
-   多分支变基,origin_o/branchXXX分支(它作为newbase)和当前分支(不写默认)的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后(注意:我还在是当前分支,博客的图精辟)
-   https://blog.csdn.net/weixin_42310154/article/details/119004977   
-   虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
-git rebase -i origin_o/branchXXX
-..rebase continue省略
-git push -uf origin
+
+rebase2
+问
+已有commitA,C,想在AC之间插入一个B
+答
+先把B合入,commitACB,然后git rebase -i A的时候,界面提示CB两个提交,再把B顺序往前调整即可
 
 // 单分支变基,举例如下,变更最近两次"互不干扰"的提交的顺序
 git rebase -i HEAD~2
@@ -187,7 +216,8 @@ git revert -n 此命令通过在版本库中创建一个“反向的”新提交
  这用于反转多个提交非常有用，运行多个git revert –n命令，Git会暂存所有的变更，然后做一次性提交。做反转操作的时候必须提供提交名称，
  反转总是按照从新到旧点的倒序来操作的，即最后的提交最先反转，这样可以避免一些不必要的冲突。
 
-git show commitId --stat // 查看提交的文件列表
+show2
+git show commitId --stat // 查看提交的差异-+
 
 
 // 常见于修改未提交,但又急于检出新分支时,切的时候会提示你先提交或者stash
