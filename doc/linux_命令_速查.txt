@@ -51,6 +51,7 @@ ibmc集成的,控制台输出乱码不是os的锅;mobaX,xShell登录ibmc然后�
 串口2 console2
 console=tty0 console=ttyS0,115200 // x86
 console=tty0 console=ttyAMA0,115200 // arm
+console=tty0
 
 
 串口重定向2 spcr2(Serial Port Console Redirection),bios界面->advance->MISC conf,miscellaneous音mi舍`leini尔s  adj杂项的,混杂的
@@ -755,9 +756,8 @@ fuser -mv /var/log
 
 fsck22
 文件系统建立在分区上,/dev/sda是整块盘,/dev/sda3才是某分区
-// umount第一条,不能在当前目录解挂当前目录
-umount mountPoint
-// -n 以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作 
+umount mountPoint // umount第一条,不能在当前目录解挂当前目录
+// -n 以只读模式运行`fsck`，即不对文件系统进行任何实际的修复操作
    -f 表示强制运行`fsck`，即使文件系统被标记为“干净”（clean），也会进行检查和修复
       skipped journal recovery because doing a read-only check指的是 fsck工具自身运行的模式。-n选项告诉 fsck仅仅检查文件系统，但拒绝进行任何实际的修复,并不是指分区只读
    -a 自动修复(保守地)
@@ -777,6 +777,14 @@ sda                    8:0    0  3.6T  0 disk
 有时候vm的vda指向主机侧sdd,vm串口提示fsck不通过应该在vm内部去修,和sdd修关系不大,而且sdd在宿主机侧没有挂载点
 答:
 挂载会导致宿主机和虚拟机同时访问同一文件系统，极易造成数据损坏(deepseek)
+
+场景:
+虚拟机系统盘所对应的主机上的盘,没有逻辑卷,但是块设备是存在的,fsck 报错 dirty bit is set, fs was not properly unmounted
+答:
+文件系统在挂载时，会设置一个“脏”标志（Dirty Bit）。正常卸载时，系统会完成所有读写操作并清除此标志。如果系统崩溃、断电或连接中断，导致无法正常清除，再次挂载时fsck就会报告此错误
+ds回答可能性部分如下
+网络抖动或中断会使主机与存储设备“失联”，系统无法完成卸载操作，导致“脏”标志残留
+使用多路径（如dm-multipath）的环境中，如果路径管理软件未能正确处理路径切换或故障，可能导致文件系统在错误的路径上尝试写入，最终使卸载失败并留下“脏”标志
 
 
 gdb22
@@ -1583,15 +1591,13 @@ dhcpServer返回ip并返回bootFile pxelinux.0   当 DHCP 服务器在启动响�
 
 
 
-rd.break2  
+rd.break2  断点2
+// 说多少遍了,人为加断点,末尾一定加上tty0,不加你可以人为信息都达到ttyS0里面去了,bmc网页卡住你甚至没有操作空间
 我试过了rd.break不写默认效果是mount,草ds乱说的
-我试过了rd.break不写默认效果是mount,草ds乱说的
-// /sysroot下面空的
-rd.break=pre-mount
-// 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
-rd.break=mount
 // 逻辑卷不识别的时候,/dev/mapper/只剩个control,其他卷设备是空的                激活逻辑卷->挂卷->切根
 rd.break=initqueue
+rd.break=pre-mount // /sysroot下面空的
+rd.break=mount // 可以认为/dev/mapper/rootfs已经挂载到/sysroot,它下面有内容
 场景:
 [ok]reached target switch root.
 starting switch root...
@@ -1604,6 +1610,13 @@ kernel panic not syncing: attempted to kill init! exitcode=0x00007f00
 1 lvm vgchange -ay;mount /dev/VG/rootfs /sysroot;chroot /sysroot
 2 ldd /usr/lib/systemd/systemd发现某.so not found;exit
 3 cp /usr/lib/systemd/某.so /usr/lib/systemd/;chroot /sysroot;ldconfig
+
+场景:
+failed to mount /boot/efi,已知grub.cfg里面用的是rootfs
+答:
+rpm -qa kernel // 显示kernelXX10_44,数据源rpm数据库,/var/lib/rpm
+uname -a // 显示kernelXX10_71,数据源内核本身/proc/version,他是真实当前状态
+rpm -qa kernel --dbpath=/mnt/bakTest/var/lib/rpm // 显示10_71,所以人为改grub.cfg,改用bak_rootfs
 
 
 tr22
@@ -1675,26 +1688,23 @@ hexdump -C hyjDump
 
 
 ps2 
-// 查看所有帮助
-ps --help a
-ps -aux | head -1;ps -aux |grep 889 // 利用head -n ? 显示?行
-ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来,但有个缺点如下
-ps -ef |grep -E "^UID | 889" // ps 后接不同的选项首行的内容也不相同
+ps -aux | head -1;ps -aux |grep 889
+ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找出来
 // -e Select all processes.  Identical to -A
    -L Show threads, possibly with LWP and NLWP columns
    -o  指定格式,后面单词(官网称之为format specifiers)不能写错
    -T     Show threads, possibly with SPID column.
-   pid 
    psr 代表processor that process last executed on  进程最近跑在哪个CPU上
+   pcpu         cpu utilization,cpu利用率
    cmd 详细命令
    comm 代表command,没卵用,短的很
-   cls  scheduling class of the process 
-ps -eLo pid,psr,cmd | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
-// --sort=-rss -rss代表rss数字降序,不写或者写+默认数字升序
    rss  进程实际占用物理内存大小,单位KB
    %mem rss占系统总物理内存百分比
-   坑:这个命令不展示系统大页内存占用,内存资源不够真可能是大页占用多了
-ps -aux --sort=-rss |head -9
+   cls  scheduling class of the process
+   --sort=-rss -rss代表rss数字降序,不写或者写+默认数字升序
+ps -eLo pid,psr,cmd | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
+ps -eLo pid,tid,psr,pcpu,cmd --sort=-pcpu | awk '$3==1'                              // 查出cpu1上跑的进程,并按cpu占用降序排序
+ps -aux --sort=-rss |head -9 //    坑:这个命令不展示系统大页内存占用,内存资源不够真可能是大页占用多了
 ps jax --sort=uid,-ppid,+pid
 
 

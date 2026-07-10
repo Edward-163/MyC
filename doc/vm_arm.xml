@@ -1,0 +1,132 @@
+<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+    <name>vm4</name>
+    <!--memory==最大分配内存,current==启动分配内存,生产环境一般是相同,测试环境current一般更小-->
+    <memory unit='GiB'>32</memory>
+    <currentMemory unit='GiB'>32</currentMemory>
+    <vcpu placement="static" current="8">512</vcpu>
+    <!--可以为virtio-blk虚拟磁盘或者virtio-scsi控制器配置iothread属性，在qemu后端单独开辟iothread线程处理虚拟磁盘读写请求-->
+    <iothreads>4</iothreads>
+    <os>
+        <!--
+        <type arch='x86_64' machine='pc-i440fx-2.8'>hvm</type>
+        -->
+        <type arch='aarch64' machine='virt'>hvm</type>
+
+        <!-- arm需要
+         load指定vm固件加载方式,EDK2是开源UEFI实现，QEMU_EFI-pflash.raw是专为QEMU虚拟化环境编译的ARM64架构固件。大多数Linux发行版已提供预编译的QEMU_EFI-pflash.raw
+         例外:Guest has not initialized the display (yet) 有次报错就是因为没有配置loader
+        -->
+        <loader readonly='yes' type='pflash'>/usr/share/edk2/aarch64/QEMU_EFI-pflash.raw</loader>
+
+        <!--
+		<boot dev='hd'/>
+        <boot dev='cdrom'/>
+		-->
+    </os>
+    <features>
+        <!--Advanced Configuration and Power Interface，高级配置和电源接口,x86架构的虚拟机中，通常需要启用ACPI-->
+        <acpi/>
+    </features>
+    <cpu mode='host-passthrough'/>
+    <clock offset='utc'>
+        <timer name='pit' tickpolicy='delay'/>
+        <timer name='rtc' tickpolicy='catchup'/>
+        <timer name='hpet' present='no'/>
+    </clock>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>restart</on_crash>
+
+    <devices>
+        <emulator>/usr/bin/qemu-kvm</emulator>
+        <!--控制器是虚拟机中的一个虚拟设备，用于管理其他设备。常见的控制器类型有USB控制器、PCI控制器、SCSI控制器等
+        -->
+        <disk type='file' device='disk'>
+            <!--type有raw、qcow2等,io祖传native-->
+<!--            <driver name='qemu' type='qcow2' cache='none' io='native'/>-->
+            <driver name='qemu' type='raw' cache='none' io='native'/>
+            <!--主机上创建镜像qemu-img create -f qcow2  /Images/hyj/r10spc502b012.qcow2 40G
+            多个vm不能只想同一个source标签里的镜像文件
+            <source file='/Images/hyj/r10spc502b012.qcow2'/>
+            -->
+            <source file='/Images/TestImg/EulerOS-V2R15-6.6-aarch64_0'/>
+            <!--后续的磁盘设备可以指定总线为scsi，并关联到这个控制器（通过地址元素指定控制器、总线、目标、单元等），从而通过这个Virtio SCSI控制器来访问磁盘-->
+            <target dev='sda' bus='scsi'/>
+            <!--
+            <boot order='1'/>
+            -->
+            <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+        </disk>
+
+<!--        <disk type='file' device='cdrom'>-->
+<!--            <driver name='qemu' type='raw' cache='none' io='native'/>-->
+<!--            &lt;!&ndash;-->
+<!--            &ndash;&gt;-->
+<!--            <source file='/Images/hyj/EulerOS-Virtual-V200R010C00SPC502B012-aarch64.iso'/>-->
+<!--            <source file='/Images/hyj/EulerOS-Virtual-V200R010C00SPC502B012-x86_64.iso'/>-->
+<!--            &lt;!&ndash;scsi总线比sata总线吊-->
+<!--            <target dev='hda' bus='ide'/>-->
+<!--            &ndash;&gt;-->
+<!--            <target dev='sdb' bus='scsi'/>-->
+<!--            -->
+<!--            <boot order='1'/>-->
+<!--            <readonly/>-->
+<!--        </disk>-->
+
+        <interface type='bridge'>
+            <!--mac随便,保证一台单板上唯一-->
+            <mac address='fa:16:3e:2e:d4:4d'/>
+            <!--只有一个br的话名称最好对应到单板上非pxe网段的网桥，不然SSH连不上去-->
+            <source bridge='br0'/>
+            <virtualport type='openvswitch'>
+                <!--随便改一下保证一台单板上唯一-->
+                <parameters interfaceid='4f2bce78-5bb6-4019-bff6-d0bfe46728cb'/>
+            </virtualport>
+            <!--后端网口名,且不能与主机上其他配置文件中target dev重名?-->
+            <target dev='vnet9'/>
+            <model type='virtio'/>
+            <driver name='vhost' queues='4'/>
+            <alias name='net0'/>
+            <address type='pci'/>
+        </interface>
+
+        <controller type='scsi' index='0' model='virtio-scsi'>
+            <!--表示iothread线程编号，不能重复，从1开始，最大编号为iothreads的配置值-->
+            <driver iothread='1'/>
+<!--            <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>-->
+        </controller>
+        <!--
+        <controller type='scsi' index='1' model='virtio-scsi'>
+            <driver iothread='2'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+        </controller>
+        <controller type='scsi' index='2' model='virtio-scsi'>
+            <driver iothread='3'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+        </controller>
+        <controller type='scsi' index='3' model='virtio-scsi'>
+            <driver iothread='4'/>
+            <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
+        </controller>
+        -->
+
+        <controller type='usb' index='4' model='ehci'/>
+        <!--        <controller type='pci' index='0' model='pci-root'/>-->
+        <input type='tablet' bus='usb'/>
+        <input type='keyboard' bus='usb'/>
+        <!-- Guest has not initialized the display (yet)    -->
+        <graphics type='vnc' autoport='yes' listen='0.0.0.0'>
+            <listen type='address' address='0.0.0.0'/>
+        </graphics>
+        <video>
+            <model type='virtio' heads='1' primary='yes'/>
+            <!--
+            <address type='pci' domain='0x0000' bus='0x04' slot='0x03' function='0x0'/>
+            -->
+        </video>
+        <serial type='pty'/>
+        <console type='pty'>
+            <target type='serial' port='0'/>
+        </console>
+    </devices>
+</domain>
