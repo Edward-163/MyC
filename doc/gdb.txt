@@ -39,6 +39,9 @@ b 函数名 // 直接打断点
 (gdb) b kpatch_arch_execute_remote_func
 Breakpoint 1 at 0xcba0: file arch/aarch64/arch_ptrace.c, line 260.
 
+删除断点
+d 1 // 如上断点编号1
+
 info b // 查看断点
 
 f <n> n是一个从0开始的整数，是栈中的层编号。比如：frame 0，表示栈顶，frame 1，表示栈的第二层

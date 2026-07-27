@@ -212,16 +212,21 @@ git reset --mixed HEAD@{1}
 可以直接按目录restore多个文件
 git restore --staged patches/hulk_7.5/
 
+
+revert2
+注意:revert回退和rebase里面的-d,完全是两个概念
 git revert -n 此命令通过在版本库中创建一个“反向的”新提交来抵消原来提交的改动。通常Git会立即提交反转结果，但是也可以通过参数-n告诉Git先不要提交，
  这用于反转多个提交非常有用，运行多个git revert –n命令，Git会暂存所有的变更，然后做一次性提交。做反转操作的时候必须提供提交名称，
  反转总是按照从新到旧点的倒序来操作的，即最后的提交最先反转，这样可以避免一些不必要的冲突。
+git revert commitA~1..commitB // 前开后闭,自动生成两个新提交(代码内容的是回退两个提交)
+
 
 show2
 git show commitId --stat // 查看提交的差异-+
 
 
 // 常见于修改未提交,但又急于检出新分支时,切的时候会提示你先提交或者stash
-git stash save 'hyj'
+git stash save 'XX'
 git stash list
 git stash apply stash@{编号,0是栈顶}
 git stash apply stash@{XXX}

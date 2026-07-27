@@ -296,17 +296,22 @@ cat /proc/pidXX/cgroup
 system.slice 系统服务slice
 user.slice 用户会话slice
 machine.slice：管理容器和虚拟机
+当然你也可以自己创建
+cd /sys/fs/cgroup/cpuset/system.slice/
+mkdir spdk.slice
+cd spdk.slice/
+echo "0-1" > cpuset.cpus
 
 
 chage22
 chage -l root // list account info
-Last password change					: Nov 10, 2023
-Password expires					: Feb 08, 2024
-Password inactive					: never
-Account expires						: never
-Minimum number of days between password change		: 0
-Maximum number of days between password change		: 90
-Number of days of warning before password expires	: 7
+        Last password change					: Nov 10, 2023
+        Password expires					: Feb 08, 2024
+        Password inactive					: never
+        Account expires						: never
+        Minimum number of days between password change		: 0
+        Maximum number of days between password change		: 90
+        Number of days of warning before password expires	: 7
 // -m set maximum number of days before password change to MAX_DAYS 设置密码expire时间
 chage -M 90 root
 
@@ -409,11 +414,20 @@ Chain INPUT (policy ACCEPT 30M packets, 8165M bytes)
     0     0 DROP       all  --  external_api *       0.0.0.0/0            0.0.0.0/0
 
 
+d 大页2
+// 主机大页
+echo 60 >/sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+// 只设置node0的大页,临时规避:
+echo 4 > /sys/devices/system/node/node0/hugepages/hugepages-1048576kB/nr_hugepages
+
+
 date2
 date [option]..[+format]
 // 什么是format, https://www.man7.org/linux/man-pages/man1/date.1.html
    举例 %Y 四位年份 %m 月份 %d 日
    %s    seconds since the Epoch (1970-01-01 00:00 UTC)
+   %T == %H:%M:%S     Hour:Minute:Second
+   %N nanoSeconds
 date +%m_%d // 输出举例 01_17
    #!/bin/bash
    month_day=$(date +%m%d)
@@ -584,9 +598,8 @@ dracut -f
 
 
 du22
-// -s 总结
-   diskUsage,默认显示当前目录,显示当前目录总大小
-du -hs
+diskUsage,默认显示当前目录,显示当前目录总大小
+du -hs // -s 总结
 du -hs * // 显示当前目录,每个子项的大小
 
 
@@ -606,6 +619,7 @@ e2fsck2
 echo22  默认末尾加换行
 // echo --help是看不到帮助的,需要找出echo位置,如/usr/bin/echo --help       
 // -n 表示不要换行输出,-e解析反斜杠
+   -e 启动转义字符解释,默认禁用
 echo -n "末尾不自动加换行,本str会直接输出在右侧"
 
 
@@ -721,7 +735,7 @@ find2
 // -type d 只查找目录 
    2>/dev/null 标准错误流向"无底洞",也就是丢弃错误信息
 find / -name uvp-getosstat -type d 2>/dev/null  
-// find 会直接打印当前目录所有,下面更简短更强
+// find 遍历打印当前目录所有
 find |grep log
 find . -name log*
 // -xdev 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件,举例,假设/目录是ext4,u盘文件系统是iso9660,从/搜索rpm就搜不到u盘里的rpm
@@ -739,7 +753,7 @@ find /home -printf '%h\n' |uniq -c |sort -nk1
    %s 文件bytes大小
    %p 代表fileName(注意file==中文语义上的文件+目录)
    -n numeric(按数字大小默认升序) 
-   -k 1 指定第一列排序                        "最大文件",find命令无法搜索到lsof中deleted大文件,find机制:遍历目录树举例/,检查每个目录项dentry,而deleted文件没有dentry
+   -k 1 指定第一列排序                        ------------------"最大文件",find命令无法搜索到lsof中deleted大文件,find机制:遍历目录树举例/,检查每个目录项dentry,而deleted文件没有dentry
 find /var/log -type f -printf '%s\t%p\n' |sort -nk1
 
 
@@ -781,10 +795,16 @@ sda                    8:0    0  3.6T  0 disk
 场景:
 虚拟机系统盘所对应的主机上的盘,没有逻辑卷,但是块设备是存在的,fsck 报错 dirty bit is set, fs was not properly unmounted
 答:
-文件系统在挂载时，会设置一个“脏”标志（Dirty Bit）。正常卸载时，系统会完成所有读写操作并清除此标志。如果系统崩溃、断电或连接中断，导致无法正常清除，再次挂载时fsck就会报告此错误
+文件系统挂载时，会设置DirtyBit。正常卸载时，系统会完成所有读写操作并清除此标志。如果系统崩溃、断电或连接中断，导致无法正常清除，再次挂载时fsck就会报告此错误
 ds回答可能性部分如下
 网络抖动或中断会使主机与存储设备“失联”，系统无法完成卸载操作，导致“脏”标志残留
 使用多路径（如dm-multipath）的环境中，如果路径管理软件未能正确处理路径切换或故障，可能导致文件系统在错误的路径上尝试写入，最终使卸载失败并留下“脏”标志
+
+场景:
+打断点fsck -y修完之后,fsck -nf检查没有报错,但是还有free blocks count wrong, free inodes count wrong打印
+再次打断点,fsck -fy修完之后,fsck -nf无上述打印
+答:
+free blocks count wrong (A, counted=B)：超级块记录有 A 个空闲数据块，但fsck实际统计出来只有 B 个
 
 
 gdb22
@@ -1696,8 +1716,8 @@ ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找
    -T     Show threads, possibly with SPID column.
    psr 代表processor that process last executed on  进程最近跑在哪个CPU上
    pcpu         cpu utilization,cpu利用率
-   cmd 详细命令
-   comm 代表command,没卵用,短的很
+   cmd 详细命令,/proc/XX/cmdline
+   comm 代表command,没卵用,短的很,/proc/XX/comm
    rss  进程实际占用物理内存大小,单位KB
    %mem rss占系统总物理内存百分比
    cls  scheduling class of the process
@@ -2134,18 +2154,27 @@ strace2
    -ttt          --absolute-timestamps=format:unix,precision:us
                  Prints the wall clock time as seconds since the epoch, with
                  microsecond precision.
+   -p 指定pid
+   -f 跟踪子进程
 strace -o /home/fsp/hyj.txt -ttt rpm -evh XX.rpm
 
 
 su2 万能钥匙权限大,隐患也大
+// -s --shell 指定shell
 // 不写用户,默认切root,保持工作目录和用户的环境变量
 su 
 // 不写用户,默认切root,切换到目标用户的家目录，同时完全加载目标用户的环境变量和配置文件   https://www.cnblogs.com/linyfeng/p/13511945.html
-su -
+su - test
    [root@server ~]# pwd   # 当前目录变为/root（root的家目录）
    /root
    [root@server ~]# echo $PATH   # PATH环境变量变为root的
    /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/.local/bin:/root/bin
+
+问:
+su - test -s /bin/bash报错cannot change directory to /home/test permission denied
+答:
+/权限644,正常755
+
 
 sudo2  临时工卡,你不能老想拿到root密码才能玩,更高级sudo
 // sudo使用户不需要知道root的密码也可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，
@@ -2401,6 +2430,9 @@ umask（用户文件创建掩码）是一个重要的权限管理机制，用于
 目录：默认最大权限为 777（rwxrwxrwx）
 如果umask==022 ,快捷计算规律:文件默认权限==777-022==755
 
+/etc/logins.def的末尾添加UMASK   027
+那么你useradd添加用户后,/home下面用户的家目录默认就是777-027=750
+
 
 umount2 
 // -l --lazy detach the filesystem now, and cleanup all later
@@ -2635,7 +2667,7 @@ XXX |wc -l
 
 
 xfs_repair22
-// -L     Force Log Zeroing
+// -L    Forces xfs_repair to zero the log even if it is dirty (contains metadata changes)
 问:
 执行xfs_repair /dev/VG/swift 之后,无法mount /dev/VG/swift  /XX
 但是执行xfs_repair -L /dev/VG/swift 之后,可以mount /dev/VG/swift  /XX

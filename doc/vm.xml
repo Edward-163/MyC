@@ -3,20 +3,20 @@
     <!--memory==最大分配内存,current==启动分配内存,生产环境一般是相同,测试环境current一般更小-->
     <memory unit='GiB'>32</memory>
     <currentMemory unit='GiB'>32</currentMemory>
-    <vcpu placement="static" current="8">512</vcpu>
+    <vcpu placement="static" current="8">255</vcpu>
     <!--可以为virtio-blk虚拟磁盘或者virtio-scsi控制器配置iothread属性，在qemu后端单独开辟iothread线程处理虚拟磁盘读写请求-->
     <iothreads>4</iothreads>
     <os>
         <!--
-        <type arch='x86_64' machine='pc-i440fx-2.8'>hvm</type>
-        -->
         <type arch='aarch64' machine='virt'>hvm</type>
+        -->
+        <type arch='x86_64' machine='pc-i440fx-2.8'>hvm</type>
 
         <!-- arm需要
          load指定vm固件加载方式,EDK2是开源UEFI实现，QEMU_EFI-pflash.raw是专为QEMU虚拟化环境编译的ARM64架构固件。大多数Linux发行版已提供预编译的QEMU_EFI-pflash.raw
          例外:Guest has not initialized the display (yet) 有次报错就是因为没有配置loader
-        -->
         <loader readonly='yes' type='pflash'>/usr/share/edk2/aarch64/QEMU_EFI-pflash.raw</loader>
+        -->
 
         <!--
 		<boot dev='hd'/>
@@ -48,8 +48,9 @@
             <!--主机上创建镜像qemu-img create -f qcow2  /Images/hyj/r10spc502b012.qcow2 40G
             多个vm不能只想同一个source标签里的镜像文件
             <source file='/Images/hyj/r10spc502b012.qcow2'/>
-            -->
             <source file='/Images/TestImg/EulerOS-V2R15-6.6-aarch64_0'/>
+            -->
+            <source file='/Images/TestImg/EulerOS-V2R13-5.10-x86_64'/>
             <!--后续的磁盘设备可以指定总线为scsi，并关联到这个控制器（通过地址元素指定控制器、总线、目标、单元等），从而通过这个Virtio SCSI控制器来访问磁盘-->
             <target dev='sda' bus='scsi'/>
             <!--
