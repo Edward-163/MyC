@@ -217,7 +217,7 @@ blktrace22
 // -d dev
    -w Stop after defined time, in seconds
    报错FAILED to start thread on CPU 0: 22/Invalid argument,因为当前进程被加到cpuset的cgroup子系统里面了，被限制了只能访问部分cpu
-   解决:echo $$ >> /sys/fs/cgroup/cpuset/cgroup.procs 
+   解决:echo $$ >> /sys/fs/cgroup/cpuset/cgroup.procs                                                     转cgroup章节
 blktrace -d /dev/sda3  -w33
 // -i inputFile
    -d dump-binaryFile
@@ -280,27 +280,52 @@ cat > test.sh
 
 cgroup22
 control groups provide a mechanism for aggregating/partitioning sets of tasks
-以前内核管理资源方式粗暴。系统有一个最后防线:OOM Killer,内存耗尽时它会“杀死”进程来防止系统崩溃。但这是被动的、破坏性的补救措施。内核既然能判断哪个进程“该死”，自然也应该有能力提前限制进程的资源使用，防止系统陷入困境，这正是 cgroup
-大目录固定的
-/sys/fs/cgroup
-小目录举例,如cpu,memory
-/sys/fs/cgroup/cpuset/
-/sys/fs/cgroup/memory/
-
-memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
-// 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
-/sys/fs/cgroup/memory/system.slice/XX
-
+以前内核管理资源方式粗暴。系统有最后防线:OOM Killer,内存耗尽时杀进程来防止系统崩溃。但这是被动的、破坏性的补救措施。内核既然能判断哪个进程“该死”，自然也能提前限制进程的资源使用，防止系统陷入困境，这正是cgroup
 cat /proc/pidXX/cgroup
-小目录的下一层是systemd讲进程组织成不同的slice(片)
-system.slice 系统服务slice
-user.slice 用户会话slice
-machine.slice：管理容器和虚拟机
-当然你也可以自己创建
+    11:memory:/user.slice/user-1008.slice/session-3.scope
+    10:cpuset:/user.slice
+    小目录的下一层是systemd将进程组织成不同的slice(片)
+    system.slice 系统服务slice
+    user.slice 用户会话slice
+    machine.slice：管理容器和虚拟机;当然你也可以自己创建
+    /sys/fs/cgroup // 大目录固定的
+    小目录举例,如cpu,memory
+    /sys/fs/cgroup/cpuset/
+    memory.usage_in_bytes 当前已用内存(曾经有一次echo 3 > /proc/sys/vm/drop_caches后,某cgroup的该值与top中某进程的res值接近)
+    // 已知pid,查看cgroup相关,如:查看memory的限制,它一般位于输出的第二行 memory:/system.slice/XXX/XXX/XXX
+    /sys/fs/cgroup/memory/system.slice/XX
+
 cd /sys/fs/cgroup/cpuset/system.slice/
 mkdir spdk.slice
 cd spdk.slice/
 echo "0-1" > cpuset.cpus
+
+cat /sys/fs/cgroup/cpuset/system.slice/fsp/cpuset.cpus
+0,2-3,5-95
+echo "X,X,X" > /sys/fs/cgroup/cpuset/system.slice/fsp/FSP_server_cpu/cpuset.cpus // echo的值需要在父的范围内  父子关系  层级关系
+
+/sys/fs/cgroup/cpuset/cgroup.procs                                    决定哪些进程只能使用指定的 CPU 核心，就像给进程分配固定的“工作座位”。
+// 把当前shellPid写入它里面,允许当前shell使用cpu
+echo $$ >> /sys/fs/cgroup/cpuset/cgroup.procs
+CPU 核心 = 办公桌（比如 4 张桌子对应 4 个 CPU 核心）
+cpuset = 你给不同项目组划分的专属办公区（比如：A 组只能用 1-2 号桌，B 组用 3-4 号桌）
+cgroup.procs = 贴在办公区门口的成员名单，只有名单上的人才能进这个区域工作
+/sys 是内存虚拟文件系统
+   /sys/fs/cgroup/ 下的文件仅存在于内存中，由内核动态生成
+   所有修改不会写入磁盘，重启后内核会按默认配置重建
+进程生命周期绑定
+   echo $$ 操作仅对当前Shell进程有效
+   若Shell退出（如关闭终端），进程自动移出该cgroup
+   子进程不会继承这一设置（除非显式配置）
+cgroup 的临时性设计
+   默认cgroup规则是会话级（session）的临时控制
+   持久化需要借助管理工具（如systemd、cgconfig）
+
+cat /sys/fs/cgroup/blkio/system.slice/fsp/openstack-blkio/blkio.throttle.write_bps_device
+    8:0 31457280                                    第一个 磁盘(转ls) 第二个限速字节数
+    ll  /dev/sda
+    brw-rw---- 1 root disk 8, 0 Aug 11 10:23 /dev/sda
+
 
 
 chage22
@@ -491,16 +516,16 @@ insmod opt/uvp/modules/megaraid_sas/megaraid_sas.ko
 sh /usr/Euler/project/init/LinuxSetup.sh
 
 
- dd2
+dd2
 // /dev/zero  /dev/null 在上面
 dd if=/dev/zero of=/mnt/test bs=1M count=10 oflag=direct
-if      input file
-of      output file
-ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
-obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
-bs=bytes：同时设置读入/输出的块大小为bytes个字节。
-iflag=direct 绕开fs的缓存
-oflag=direct
+    if      input file
+    of      output file
+    ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
+    obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
+    bs=bytes：同时设置读入/输出的块大小为bytes个字节。
+    iflag=direct 绕开fs的缓存
+    oflag=direct
 
 
 df2
@@ -937,7 +962,10 @@ rrqm/s：read requestMerged/sec   每秒有多少个"取件请求"被你合并�
 wrqm/s：   每秒有多少个"寄件请求"被你合并处理了（比如把寄往同一城市的3个包裹合并成1个包裹）
 rKB/s    读带宽
 avgrq-sz   和/sys/block/sdb/queue/max_sector_kb有关联        https://bean-li.github.io/dive-into-iostat/
-avgqu-sz   待处理io队列大小,平均值,值越大,"排队的人越多"
+avgqu-sz   待处理io队列大小,平均值越大,"排队的人越多",达到 5 或 10 以上，说明严重拥堵，几乎所有新请求一进来就被迫调用 blk_io_schedule 进入睡眠状态
+util        磁盘利用率,接近100可能是磁盘性能瓶颈,可能是cgroup里面blkio设限(转cgroup)
+
+
 
 
 ip a 
@@ -1107,7 +1135,13 @@ killall -w /sbin/dhclient
 kvmtop2
 // -p vm数字编号
    -H 线程信息
+   -d -d2 间隔两秒
 kvmtop -p XX -H
+
+extirq
+    厨师（vCPU）正在炒菜（运行Guest代码）。服务员（硬件/宿主机）端着新点的菜（磁盘I/O完成、网络数据包到达）进来喊一声“菜来了！”。厨师必须放下手里的铲子（VM-Exit）去处理这个新菜（处理中断）。EXTirq 就是“服务员喊厨师的次数”
+extwfi
+    Wait For Interrupt”（等待中断）。这是一个 ARM 电源管理/空闲指令。当客户机操作系统空闲（例如，运行空闲循环）时，它会执行 WFI 指令以暂停 CPU 直到下一个中断到来
 
 
 qemu2 kvm2 
@@ -1185,6 +1219,10 @@ Logical Unit Number（逻辑单元号）
 ls2 
 // -Z 仅在 SELinux 处于 Enforcing（强制模式） 或 Permissive（宽容模式） 时才有意义。如果 SELinux 被禁用（Disabled），所有文件的安全上下文通常显示为 system_u:object_r:unlabeled_t:s0或类似内容，表明它们未被标记
 ls -Z XX.so
+ll  /dev/sda
+    brw-rw---- 1 root disk 8, 0 Aug 11 10:23 /dev/sda
+    8（主设备号）代表什么？ 它标识设备驱动程序。在Linux中，主设备号8代表sd（SCSI磁盘）驱动程序。
+    0（次设备号）代表什么？ 它标识该驱动程序管理的特定物理设备（或分区）。对于主设备号8，次设备号0通常指第一个磁盘（sda本身），而1表示sda1
 
 
 lsattr2  
@@ -1282,23 +1320,23 @@ lspci -s 3b:08.0 -k // 查看它的驱动已经变成vfio-pci
 
 
 scsi2 
-SCSI（Small Computer System Interface），中文全称是“小型计算机系统接口”。你可以把它想象成一条高效且智能的“设备高速公路”，它能让多种设备（如硬盘、光驱、扫描仪等）以一种相对聪明和快速的方式与计算机连接和通信
+SCSI（Small Computer System Interface小型计算机系统接口)。你可以把它想象成一条高效且智能的“设备高速公路”，它能让多种设备（如硬盘、光驱、扫描仪等）以一种相对聪明和快速的方式与计算机连接和通信
 
 lsscsi2 
 // -g Output the SCSI generic device file name.
    -H lists scsi hosts rather than scsi devices不要显示具体的磁盘或设备，而是只显示这些设备所连接的“主机控制器”
 lsscsi -g
-   scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备 
-   [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg1
-   [Host:Channel:Target:Lun]  H(Host) 就是指该设备连接在哪个主机控制器(主机适配器HostBusAdaptor:)上
+    scsi设备地址  设备类型   厂商     型号              固件版本  块设备      scsi通用设备
+    [0:0:0:0]    disk      ATA      ST1000DM010-2EP1  CC43     /dev/sda   /dev/sg1
+    [Host:Channel:Target:Lun]  H(Host) 就是指该设备连接在哪个主机控制器(主机适配器HostBusAdaptor:)上
        块设备:直接存取数据,像餐厅点菜 块设备（Block Device）是一种以固定大小的数据块（如512字节或4KB）为单位进行读写的设备，例如硬盘驱动器（HDD）、固态驱动器（SSD）、U盘等。/dev/sda是系统中第一块SCSI或SATA类型磁盘的块设备文件
        scsi通用设备:发送底层scsi命令,像进厨房对厨师下特殊命令,例如sg_format /dev/sg0,功能强大但是危险
        /dev/sda是给文件系统和常规存储工具用的“标准接口”，而 /dev/sg1是给工程师和诊断工具用的“底层调试接口”
-   ds主机控制器举例:集成控制器(主板芯片),扩展卡式控制器(pcie卡,raid卡归属于这种),虚拟控制器(cpu模拟)
+    ds主机控制器举例:集成控制器(主板芯片),扩展卡式控制器(pcie卡,raid卡归属于这种),虚拟控制器(cpu模拟)
 lsscsi -H
-HBA的编号      驱动名
-[0]    megaraid_sas驱动
-[1]    ahci驱动
+    HBA的编号      驱动名
+    [0]    megaraid_sas驱动
+    [1]    ahci驱动
 
 /sys/class/scsi_host/hostXXX/scan  这个文件丢了
 它是底层设备驱动创建的
@@ -1318,7 +1356,7 @@ lvcreate -L 10G -n upgrade cpsVG
 mkfs.ext4 /dev/cpsVG/upgrade               // 格式化逻辑卷
 
 
-lvm2 
+
 lvm.conf  filter
 // This is a list of regular expressions used to accept or reject block device path names
    LVM就只会扫描并管理/dev/sda和/dev/sdb这两个设备，其他设备会被过滤掉
@@ -1328,7 +1366,12 @@ filter = [ "a|^/dev/sda$|", "a|^/dev/sdb$|" ]
 filter = [ "r|/dev/cdrom|" ]
 // vgchange代表改变vg属性 -a代表active -y代表yes                                      在系统中激活所有已知的卷组
    系统启动时，bios会扫描所有盘找到系统启动的引导文件。也就是boot分区(只有系统盘中才会有boot分区)，及分区内的grub.cfg，引导文件initrd等。引导入内存后根据lvm.conf2的过滤条件激活逻辑卷，然后挂载启动
-lvm vgchange -ay 
+lvm vgchange -ay
+    手动激活无效(但bios设置界面有磁盘),小系统ls /dev没有nvme盘也没有sdXX盘,没有盘(盘没有上报或者盘没有驱动)
+    挂iso发现该机器的sda是能识别的,并且驱动是smartpqi
+    规避:小系统进入到相应的目录下面,insmod smartpqi.ko.XX
+
+
 lvm2 
 lv      如果cpsvg卷组里只有rootfs,bak-rootfs,log,那么lv==3
 vg
@@ -1425,8 +1468,11 @@ softirqs->net_rx->interrupts->我暂时仅关注cpu0->发现中断345号增长�
 
 
 multipath2 
-// -f 您想要删除的特定多路径设备名
+// -f 您想要删除的特定多路径设备名,有"刷新"or"强制删除"的意思
 multipath -f 多路径盘uuid
+multipath -ll   |grep 3688860300000114e34a28bd765ec26b6
+    3688860300000114e34a28bd765ec26b6 dm-40 DeepSeek,VBS fileIO
+
 
 
 netstat22  ss22
@@ -1444,12 +1490,26 @@ netstat22  ss22
 netstat -anlp |grep ssh
 
 
+ss2
+socket statistic
+// -u udp
+   -a all sockets
+   -m：显示套接字的内存使用详情（--memory）。这是核心参数，会输出当前占用的内存页数
+   sport = :514：过滤器。只显示源端口（source port）等于 514 的套接字
+ss -m -u -a sport =:514
+
+
+nscd2
+Name Service Cache Daemon) 是 Linux 系统中一个关键的名称服务缓存守护进程。它的核心作用就是加速，通过缓存来提升系统查询各类名称服务
+
+
+
 nslookup22
 nslookup network.XX.com
-Server:		172.28.8.21      dnsServer的地址
-Address:	172.28.8.21#53
-Name:	network.XX.com         这个域名指向下面的地址
-Address: 128.9.61.10
+        Server:		172.28.8.21      dnsServer的地址
+        Address:	172.28.8.21#53
+        Name:	network.XX.com         这个域名指向下面的地址
+        Address: 128.9.61.10
 
 
 ntp22 ntpq22
@@ -1470,6 +1530,10 @@ set the date and time via NTP
    -r port
 ntpdate -d fc00:ac1c::b2a 
 ntpdate -d -r 123 10.0.36.6
+
+
+numa2
+Non-Uniform Memory Access
 
 
 numastat2
@@ -1727,6 +1791,9 @@ ps -eLo pid,tid,psr,pcpu,cmd --sort=-pcpu | awk '$3==1'                         
 ps -aux --sort=-rss |head -9 //    坑:这个命令不展示系统大页内存占用,内存资源不够真可能是大页占用多了
 ps jax --sort=uid,-ppid,+pid
 
+WCHAN Waiting Channel
+它显示进程在内核中休眠的"内核函数名称"（如果它处于可中断/不可中断睡眠状态，即 S 或 D 状态）
+
 
 pstree2 
   -l, --long          don't truncate long lines
@@ -1851,6 +1918,9 @@ Destination    Gateway         Genmask         Flags Metric Ref    Use Iface
 192.168.2.0    192.168.1.2   255.255.255.0 UG    10     0     0     eth1
       Destination	目的IP是第X行匹配第X行,都没匹配上,就走0.0.0.0（默认路由匹配目的地址）
       Gateway	要到达目的ip数据包下一跳发往当前网关;网关0.0.0.0 表示数据包直接从网络接口发送到目的ip（无需网关）
+        U (Up)：表示这条路由是启用的（可用的）。
+        G (Gateway)：表示这条路由需要经过一个网关（下一跳地址）。
+        因此，包含 UG 的行，通常就是默认网关路由（Destination 为 0.0.0.0 的那一行）
 
 
 rpm22
@@ -2195,22 +2265,7 @@ sudo2  临时工卡,你不能老想拿到root密码才能玩,更高级sudo
    #includedir /etc/sudoer.d/
 
 
-/sys/fs/cgroup/cpuset/cgroup.procs                                    决定哪些进程只能使用指定的 CPU 核心，就像给进程分配固定的“工作座位”。
-// 把当前shellPid写入它里面,允许当前shell使用cpu
-echo $$ >> /sys/fs/cgroup/cpuset/cgroup.procs
-CPU 核心 = 办公桌（比如 4 张桌子对应 4 个 CPU 核心）
-cpuset = 你给不同项目组划分的专属办公区（比如：A 组只能用 1-2 号桌，B 组用 3-4 号桌）
-cgroup.procs = 贴在办公区门口的成员名单，只有名单上的人才能进这个区域工作
-/sys 是内存虚拟文件系统
-   /sys/fs/cgroup/ 下的文件仅存在于内存中，由内核动态生成
-   所有修改不会写入磁盘，重启后内核会按默认配置重建
-进程生命周期绑定
-   echo $$ 操作仅对当前Shell进程有效
-   若Shell退出（如关闭终端），进程自动移出该cgroup
-   子进程不会继承这一设置（除非显式配置）
-cgroup 的临时性设计
-   默认cgroup规则是会话级（session）的临时控制
-   持久化需要借助管理工具（如systemd、cgconfig）
+
 
 
 sysctl2 
@@ -2325,7 +2380,7 @@ type取值         host 127.0.0.1
                   net127.0.0.1/8 
                   port22 
                   portrange 22-24
-输出格式:时分秒毫秒 协议(ivp6/ip)  src的ip+port > dst的ip+port 数据包内容
+
 // -v verbose -v -vv -vvv
    -nn 单个n不解析域名,两个n表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
    -e  显示数据链路层信息。默认情况下 tcpdump 不会显示数据链路层信息，使用 -e 选项可以显示源和目的 MAC 地址，以及 VLAN tag 信息
@@ -2338,6 +2393,17 @@ tcpdump -vvv -i enp129s0f0 -w XXX.pcap
 // 源端ssh连不上目的,|info|sshd[2054272]|Connection from fc51:158:46:17::32 port 58890 on fc00:0:0:2621::2 port 22 rdomain ""
    1 先确定目的端ip对应的网口名字叫external_api,然后目的端敲命令如下
 tcpdump -i external_api  -vvv   |grep fc51:158:46:17::32
+
+输出格式:
+    [S] = SYN（发起连接请求，三次握手第一步）。// 标识位科普
+    [.] = ACK（确认包，表示收到了数据）。
+    [P] = PUSH（推送数据，表示有实际应用数据要传输）。
+    [F] = FIN（结束连接，主动关闭的一方发这个）。
+    [R] = RST（复位连接，直接终止，表示错误或拒绝）
+时分秒.微秒       协议(ivp6/ip)  src的ip+port > dst的ip+port   标识位      数据包内容
+10:35:12.345... IP 192.168.1.100.54322 > 93.184.216.34.80: Flags [S], seq 123456, win 65535	客户端说：“嘿，服务器，我要连接你（SYN），我的初始序号是 123456。”
+10:35:12.345... IP 93.184.216.34.80 > 192.168.1.100.54322: Flags [S.], seq 654321, ack 123457, win 65535	服务器回复：“收到你的请求了（ACK），我也要连接你（SYN），我的序号是 654321，我确认你的序号是 123457。”
+10:35:12.345... IP 192.168.1.100.54322 > 93.184.216.34.80: Flags [.], ack 654322, win 65535	客户端最后确认：“收到你的序号了（ACK），确认你的 654322。”
 
 
 tee2
@@ -2360,10 +2426,13 @@ top22
    按M  内存使用率排序,效果: 按RES列(进程使用物理内存==resident内存 kB)降序
    按P  根据cpu排序 
 top -M
-hi hardIrq硬中断
-si softIrq软中断2(与收发包有关,具体看sar日志)
-wa 重要,Wait for I/O，中文是 I/O 等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
 
+hi
+    hardIrq硬中断
+si
+    softIrq软中断2(与收发包有关,具体看sar日志)
+wa
+    重要,Wait for I/O，I/O等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
 load average: 0.65, 0.42, 0.36(过去1,5,15分钟的平均负载。)
     第一个数字（0.65）：过去1分钟的平均负载
     第二个数字（0.42）：过去5分钟的平均负载
@@ -2432,6 +2501,8 @@ umask（用户文件创建掩码）是一个重要的权限管理机制，用于
 
 /etc/logins.def的末尾添加UMASK   027
 那么你useradd添加用户后,/home下面用户的家目录默认就是777-027=750
+login.def中umask是否影响创建用户时,用户家目录下所有子目录或者子文件的权限?
+否
 
 
 umount2 
