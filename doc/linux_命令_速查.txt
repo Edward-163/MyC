@@ -222,37 +222,29 @@ blktrace -d /dev/sda3  -w33
 // -i inputFile
    -d dump-binaryFile
 blkparse -i sda3 -d sda3dump.bin
-btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(单位秒)和max
-ALL  MIN           AVG                 MAX                 N
-Q2Q  0.000001500   0.244555772(244ms)  4.985332850         386   共386个请求(两个io间隔时间)
-Q2G  0.000000730   0.000047734         0.006542980         156
-G2I  0.000004060   0.000036119         0.000097100         118
-Q2M  0.000000400   0.000000867         0.000003550         231
-I2D  0.000003380   0.000019430         0.000041450         120
-M2D  0.000011820   0.000029214         0.000087970         228
-D2C  0.000190170   0.002012626         0.007984870         386   驱动程序处理io请求到完成的时间,它占比大就是硬件消耗,占比小就是花在排队or调度上
-Q2C  0.000348400   0.002078108         0.007998110         387   io进入队列到完成的"总体时间",相当于iostat的await
-应用发起I/O请求
-    ↓
-[Q2Q] ← 与前一个请求的间隔
-    ↓
-进入块层队列
-    ↓
-[Q2G] 队列等待
-    ↓
-[G2I] 通用块层处理
-    ↓
-[I2D] I/O调度器处理
-    ↓
-[Q2M] 可能合并请求
-    ↓
-[M2D] 合并后处理
-    ↓
-[D2C] 设备驱动+硬件处理 ← 最耗时阶段
-    ↓
-完成
-    ↓
-[Q2C] 总耗时
+    btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(单位秒)和max
+    ALL  MIN           AVG                 MAX                 N
+    Q2Q  0.000001500   0.244555772(244ms)  4.985332850         386   共386个请求(两个io间隔时间)
+    Q2G  0.000000730   0.000047734         0.006542980         156
+    G2I  0.000004060   0.000036119         0.000097100         118
+    Q2M  0.000000400   0.000000867         0.000003550         231
+    I2D  0.000003380   0.000019430         0.000041450         120
+    M2D  0.000011820   0.000029214         0.000087970         228
+    D2C  0.000190170   0.002012626         0.007984870         386   驱动程序处理io请求到完成的时间,它占比大就是硬件消耗,占比小就是花在排队or调度上
+    Q2C  0.000348400   0.002078108         0.007998110         387   io进入队列到完成的"总体时间",相当于iostat的await
+    应用发起I/O请求
+        ↓
+    [Q2Q] ← 与前一个请求的间隔
+        ↓
+    进入块层队列
+    [Q2G] 队列等待
+    [G2I] 通用块层处理
+    [I2D] I/O调度器处理
+    [Q2M] 可能合并请求
+    [M2D] 合并后处理
+    [D2C] 设备驱动+硬件处理 ← 最耗时阶段
+    完成
+    [Q2C] 总耗时
 
 
 capability2 
@@ -302,7 +294,7 @@ echo "0-1" > cpuset.cpus
 
 cat /sys/fs/cgroup/cpuset/system.slice/fsp/cpuset.cpus
 0,2-3,5-95
-echo "X,X,X" > /sys/fs/cgroup/cpuset/system.slice/fsp/FSP_server_cpu/cpuset.cpus // echo的值需要在父的范围内  父子关系  层级关系
+echo "X,X" > /sys/fs/cgroup/cpuset/system.slice/fsp/FSP_server_cpu/cpuset.cpus // echo的值是父的子集  父子关系  层级关系
 
 /sys/fs/cgroup/cpuset/cgroup.procs                                    决定哪些进程只能使用指定的 CPU 核心，就像给进程分配固定的“工作座位”。
 // 把当前shellPid写入它里面,允许当前shell使用cpu
@@ -892,10 +884,10 @@ grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg // 正常的话,进大系统,�
 
 
 hwclock2 
-// rtc==real Time Clock==硬件时钟       systemtime==date  
+// rtc==real Time Clock==硬件时钟       systemtime==date命令
 // -r display rtc
-   -w 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
-   -s 反过来  set system time from rtc
+   -w, --systohc 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
+   -s, --hctosys        set the system time from the RTC
 hwclock -w
 
 
@@ -1500,7 +1492,7 @@ ss -m -u -a sport =:514
 
 
 nscd2
-Name Service Cache Daemon) 是 Linux 系统中一个关键的名称服务缓存守护进程。它的核心作用就是加速，通过缓存来提升系统查询各类名称服务
+Name Service Cache Daemon 它的核心作用就是加速，通过缓存来提升系统查询各类域名服务
 
 
 
@@ -2247,22 +2239,24 @@ su - test -s /bin/bash报错cannot change directory to /home/test permission den
 
 
 sudo2  临时工卡,你不能老想拿到root密码才能玩,更高级sudo
-// sudo使用户不需要知道root的密码也可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，
-   核心配置文件 /etc/sudoers,
-   第一部分:环境设置Defaults,暂时省略
-   第二部分:用户权限规则
-      user host=(可切换的user:可切换的group) command
-      alice ALL=(ALL:ALL)  NOPASSWD:ALL
-      用户 alice 可以在任何主机上，可切换到任何用户和任何组的身份，运行任何命令。（相当于给 alice root权限）
-      NOPASSWD:： 关键标志。表示“无需密码”。如果没有这个标志，用户每次执行 sudo时都必须输入自己的密码。加上它之后，执行 sudo时直接授权，不询问密码
-
-      bob myserver=(root) /usr/bin/apt, /usr/bin/systemctl restart nginx
-      用户 bob 在主机 myserver上，可以以 root身份，只运行 apt和 systemctl restart nginx这两个命令。权限被严格限制
-
-      %developers ALL=(ALL) /bin/systemctl start docker, /bin/systemctl stop docker
-      %开头代表一个组,用户组developers的所有成员，可以在任何主机上以 root身份启动和停止 Docker 服务。
-   第三部分:引用其他配置文件
-   #includedir /etc/sudoer.d/
+核心配置文件 /etc/sudoers,
+sudo使用户不需要知道root的密码也可获得权限。首先超级用户将普通用户的名字、可以执行的特定命令、按照哪种用户或用户组的身份执行等信息，
+第一部分:
+    环境设置Defaults
+第二部分:用户权限规则
+    user host=(可切换的user:可切换的group) command
+    alice ALL=(ALL:ALL)  NOPASSWD:ALL
+        alice能在任何all主机上，可切换到任何用户和任何组的身份，运行任何命令。（相当于给 alice root权限）
+        NOPASSWD: 关键标志。表示“无需密码”。如果没有这个标志，用户每次执行 sudo时都必须输入自己的密码。加上它之后，执行 sudo时直接授权，不询问密码
+    bob myserver=(root) /usr/bin/apt, /usr/bin/systemctl restart nginx
+        用户 bob 在主机 myserver上，可以以 root身份，只运行 apt和 systemctl restart nginx这两个命令。权限被严格限制
+    %developers ALL=(ALL) /bin/systemctl start docker, /bin/systemctl stop docker
+        %开头代表一个组,用户组developers的所有成员，可以在任何主机上以 root身份启动和停止 Docker 服务。
+第三部分:
+   #includedir /etc/sudoer.d/ // 引用其他配置文件
+   Defaults passwd_timeout=1 // 单位min,密码输入超时时间
+       特定于域的语言（DSL），用于配置 sudo,在 sudoers 中，包含指令有几种形式：#include、#includedir
+       用户恶意往#includedir加空格,导致引用其他目录失效
 
 
 
@@ -2349,10 +2343,11 @@ taskset2
 // -c, --cpu-list          display and specify cpus in list format
    -p --pid
 taskset -c 1,3,5-7 /home/a.sh
-taskset -cp 3960447 // 举例查询qemuPid的核,进程绑核
+taskset -p $$
+    pid 985863's current affinity mask: ffffffffffffffff
+taskset -cp 3960447 // 展示qemuPid的进程绑核
    pid 3960447's current affinity list: 40-47
-// 当然也可以指定进程绑核范围
-taskset -cp 0,3  1393 
+taskset -cp 0,3  1393 // 当然也可以指定进程绑核范围
    pid 1393's current affinity list: 0,4
    pid 1393's new affinity list: 0,3
 // 常见报错,绑核失败,
@@ -2360,16 +2355,9 @@ taskset -cp 40  11940
    pid 11940's current affinity list: 0-11,28-39
    taskset: failed to set pid 11940's affinity: Invalid argument
    接上,这个进程的cpuset位于system-hostos.slice下面
-   cat /proc/11940/cgroup
-   ...
-   8:cpuset:/system.slice/system-hostos.slice
-   // 范围没有40
+   cat /proc/11940/cgroup输出   8:cpuset:/system.slice/system-hostos.slice
    cat /sys/fs/cgroup/cpuset/system.slice/system-hostos.slice/cpuset.cpus
-   0-11,28-39
-   // 注意:父cgroup的约束,不能乱echo
-   cat /sys/fs/cgroup/cpuset/system.slice/cpuset.cpus
-   0-55
-   echo '40,42-44' > /sys/fs/cgroup/cpuset/system.slice/system-hostos.slice/cpuset.cpus
+   0-11,28-39   // 范围没有40所以绑定40报错,(转cgroup父子关系)
 
 
 tcpdump2 
