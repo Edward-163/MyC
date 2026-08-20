@@ -1,5 +1,9 @@
 随着接触c越来越久,发现很多安全规范中提到的函数都是linux环境下的,如tmpnam,getenv啥的
 
+gcc 编译器
+glibc   c语言基础标准库
+
+
 char是signed还是unsigned,由编译器决定,如 gcc的-funsigned-char
 
 https://blog.csdn.net/linuxweiyh/article/details/112978257#:~:text=printf%20%28%29%20%E7%9A%84%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F%E4%B8%BA%EF%BC%9A%20%25%20%5Bparameter%5D%20%5Bflags%5D%20%5Bwidth%5D%20%5B.precision%5D,%25zu%20%E5%AF%B9%E7%85%A7%E8%BF%87%E6%9D%A5%EF%BC%8Cz%20%E5%B1%9E%E4%BA%8E%20length%20%E5%AD%97%E6%AE%B5%EF%BC%8Cu%20%E5%B1%9E%E4%BA%8E%20type%20%E5%AD%97%E6%AE%B5%E3%80%82

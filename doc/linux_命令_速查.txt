@@ -222,7 +222,7 @@ blktrace -d /dev/sda3  -w33
 // -i inputFile
    -d dump-binaryFile
 blkparse -i sda3 -d sda3dump.bin
-    btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(单位秒)和max
+btt -i sda3dump.bin > sda3.log // 蔡俊杰:正常来说就应该d2c高,正常需要看blktrace的avg(单位秒)和max
     ALL  MIN           AVG                 MAX                 N
     Q2Q  0.000001500   0.244555772(244ms)  4.985332850         386   共386个请求(两个io间隔时间)
     Q2G  0.000000730   0.000047734         0.006542980         156
@@ -1526,6 +1526,12 @@ ntpdate -d -r 123 10.0.36.6
 
 numa2
 Non-Uniform Memory Access
+NUMA架构下，主板被划分为若干个 Node（节点）。每个节点包含：
+一组物理CPU核心（比如 8 个核）。
+一块本地内存（插在离这个CPU最近的内存插槽上）。
+一个内存控制器
+本地内存（Local Access）：Node 1 的 CPU 核心访问 Node 1 自己的内存。这条路极短、极快，延迟低，带宽高。
+远程内存（Remote Access）：Node 1 的 CPU 核心要去访问 Node 2 的内存。这条路径必须通过主板上的高速互联通道（Intel叫 QPI/UPI，AMD叫 Infinity Fabric）绕过去。这条路绕远、较慢，延迟通常是本地内存的 1.5~2 倍
 
 
 numastat2
@@ -1982,23 +1988,53 @@ rsync -r /home/dir1/ /home/dir2/
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
 
-rsyslog2 
+rsyslog2  记录日志
+$outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
+    	$outchannel message给输出通道起名message，方便在其它规则里引用,后面是文件8M切转,最后面是转储脚本以及入参.通常配合:omfile:$message使用
+
 /etc/rsyslog.conf +117             // 由此就是人为改成*.err,导致message,libvirt,sysmonitor等全部日志都不打印了
 *.debug;mail.none;authpriv.none;cron.none                :omfile:$message
-1. 日志过滤规则
-*.debug
-捕获 所有设施（facility） 且 日志级别为 debug 及以上（即所有日志，因为 debug 是最低级别）。
-* 表示所有设施（如 kern、auth、cron 等）。
-.debug 表示日志级别为 debug（包括 debug、info、notice、warning、err、crit、alert、emerg）。
-排除规则（; 分隔）
-mail.none：忽略邮件相关日志（mail 设施）。
-authpriv.none：忽略敏感认证日志（如 SSH、sudo，通常单独存储到 /var/log/secure）。
-cron.none：忽略计划任务日志（cron 设施，通常单独存储到 /var/log/cron）。
-2. 日志存储方式
-:omfile:$message
-omfile：表示使用 文件输出模块（Output Module File）。
-$message：将日志的原始消息内容写入文件（不附加额外元数据如时间戳、主机名等）。
-默认情况下，日志会写入 /var/log/messages（具体路径由全局配置决定）。
+    1. 日志过滤规则
+    *.debug
+    捕获 所有设施（facility） 且 日志级别为 debug 及以上（即所有日志，因为 debug 是最低级别）。
+    * 表示所有设施（如 kern、auth、cron 等）。
+    .debug 表示日志级别为 debug（包括 debug、info、notice、warning、err、crit、alert、emerg）。
+    排除规则（; 分隔）
+    mail.none：忽略邮件相关日志（mail 设施）。
+    authpriv.none：忽略敏感认证日志（如 SSH、sudo，通常单独存储到 /var/log/secure）。
+    cron.none：忽略计划任务日志（cron 设施，通常单独存储到 /var/log/cron）。
+    2. 日志存储方式
+    :omfile:$message
+    omfile：表示使用 文件输出模块（Output Module File）。
+    $message：将日志的原始消息通过message通道写入/var/log/message中（不附加额外元数据如时间戳、主机名等）。
+
+message转储logdump
+问:
+message转储成logdump到底是/etc/rsyslog.conf  起作用
+# rsyslog configuration file
+$outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
+还是
+cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog   起作用
+我有点懵了???
+答:
+ds说两者共同作用,我这环境logdump文件都接近8M了,注意解压之后里面message确实<=4M
+cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog
+    /var/log/messages
+    /var/log/cron
+    {
+        maxage 365
+        rotate 30 // 转储日志数量最多30个
+        notifempty
+        copytruncate
+        missingok
+        size +4096k
+        sharedscripts
+        postrotate
+            /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true
+        endscript
+    }
+
+logrotate2    日志转储压缩
 
 
 scp2 
@@ -2206,7 +2242,7 @@ ssh_config 里也有 HostKeyAlgorithms 配置项。
 stat2 
 // modify时间早于birth时间可能是系统时间跳变(变小后临时改了下文件,然后又跳变回正常时间)
 modify`时间戳表示文件的内容最后一次被修改的时间，即文件内容的修改时间。                       英文语义:小改
-change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间   英文语义:通常涉及根本性变化
+change`时间戳表示文件的元数据最后一次被修改的时间，即文件权限、所有权、链接等元数据的修改时间     英文语义:通常涉及根本性变化
 size 4096 linux中目录的size通常为4096,或者4096倍数?
 
 
@@ -2268,13 +2304,24 @@ sysctl -a |grep perf_event_max_sample_rate
 sysctl -a |grep panic |grep oom
 // 关闭oom时panic
 sysctl -w vm.panic_on_oom = 0
+把缓冲区的值调大或者少发一点(业务逻辑,os不管)
+sysctl -a | grep net.ipv4.tcp | grep mem
+net.ipv4.tcp_mem = 2692251	3589671	5384502
+net.ipv4.tcp_rmem = 4096	131072	6291456
+net.ipv4.tcp_wmem = 4096字节	32768	4194304         分别 min值 压力值 max值
+    系统低于此值时，TCP 内存分配不受限制。
+    超过此值，内核会开始压制新的内存分配，尝试回收缓存。此时 dmesg 可能会提示 TCP: out of memory。
+    TCP 内存的绝对硬上限。达到此值后，新连接请求可能会被拒绝，原有连接发送窗口会被限制。
+// 设置,调大
+sysctl -w net.ipv4.tcp_wmem="4096 32768 4194304"
+
 
 持久化核心配置文件 /etc/sysctl.confg
 // vi /etc/sysctl.conf
 kernel.hungtask_panic=1
 kernel.softlockup_panic=1
 vm.panic_on_oom=1
-// -p, --load[=<file>]  read values from file
+// -p, --load[=<file>]  read values from file,默认读取上面配置文件
 sysctl -p
 
 
@@ -2578,11 +2625,11 @@ lsof -t /var/log |xargs ls -s
 yum2 
 // 配置仓库/etc/yum.repo.d/??.repo
 yum search git
-// 查询某个包的来源,字段from repo
+// 查询某个包的repo来源,查看输出字段From repo:
 yum info git
 yum install git
-       import rpmUtils.updates  // 报错就是rpm包中相应的update.pyc update.py文件搞坏了,规避:rpm -Uvh yum同版本包
-   ValueError: bad marshal data (unknown type code)
+    import rpmUtils.updates  // 报错就是rpm包中相应的update.pyc update.py文件搞坏了,规避:rpm -Uvh yum同版本包
+    ValueError: bad marshal data (unknown type code)
 
 yum list installed |grep git*
 yum remove git
