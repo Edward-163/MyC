@@ -24,12 +24,12 @@ bootloader引导程序  例:grub就是其中之一
 切根               init完成初始化工作后,内核卸载initrd临时系统,切根到你平时常见/下面(无论是大伟博客还是宏涛给的journal.log都是先启动systemd,很后面才切根swicthRoot)
    在新的根文件系统上执行真正的初始化进程（如 /sbin/init，现在通常是 systemd），其进程号（PID）为1。此后，systemd将负责启动所有剩余的系统服务
 
-
+------------------------------
 第一内核 主内核
 第二内核 主内核crash时候启用,cmdline中crashkernel=256M 就是预留给第二内核使用的
         配置文件应该是/etc/kdump.conf里面path配置哪里,crash2日志就输出到哪里
 
-
+--------------------------------
 启动参数
 单用户
 single参数告诉Linux内核："不要启动正常的完整系统，只要给我一个root权限的shell就可以了
@@ -68,7 +68,7 @@ mobaX或者xShell登录bmcIp(登录提示符是iBMC>)后敲命令    ipmcset2
 ipmcset -t sol -d activate -v <option> <mode>
 ipmcset -t sol -d activate -v 0 1
 
-
+----------------------------
 解压iso 解压22
 #!/bin/bash
 isoname=$1
@@ -88,19 +88,19 @@ gunzip -c initrd | cpio -id
 cd ..
 umount m
 rm -rf m OS.tar.gz linux
------------------
+
 mkdir -p tt && mount *.iso tt && mkdir -p os && cp tt/repo/OS.tar.gz os/ && umount tt/ && rm -rf tt && cd os/ && tar xf OS.tar.gz && gunzip -c initrd | cpio -id && chroot .
 &&：这个符号用于连接两个命令，只有当第一个命令成功执行（返回值为0）时，才会执行第二个命令。这在脚本中非常有用，可以帮助你检查前一个命令的执行结果，然后决定是否执行下一个命令
 ||：这个符号与&&类似，也是用于连接两个命令。不同的是，只有当第一个命令执行失败（返回值非0）时，才会执行第二个命令。这在脚本中也很常用，可以帮助你根据前一个命令的执行结果来决定是否执行下一个命令
 
-
+--------------------------------
 进程替换22  <()2
 将命令的输出/输入伪装成文件
 source set_env < <(echo 1;echo 123)
 进程替换会在 /dev/fd/ 目录中匿名创建一个命名管道（FIFO）或临时文件,相当于XX文件中两行内容
 vim <(echo 1;echo 123) // 这个最明显,提示你正在vim编辑一个只读文件/dev/fd/XX
 
-
+-----------------------------
 重置root密码2 
 按e进入grub页面
 启动参数删掉console=tty0 XXX;(奇怪,删掉串口输出为啥)添加rd.break=mount         
@@ -121,7 +121,7 @@ ctrlD ctrlD 正常进大系统
 127.0.0.1/8       255.0.0.0(掩码)   所有(二进制)前8位相同的IP地址都属于这个网段(或者说属于同一个子网,可以直接通信),实际覆盖了 127.0.0.0 ~ 127.255.255.255
 192.168.1.0/24	   255.255.255.0	   192.168.1.0 ~ 192.168.1.255	实际覆盖了256个ip
 
-
+----------------------------------
 awk22
 从输入中读取一行文本,然后针对该行执行program
 格式 awk option program file   ,program举例 '{print $1,$2}' 
@@ -907,14 +907,13 @@ fi
 ifconfig2 
 // -a 展示所有network interface,不加只展示激活的interface
 ifconfig -a
-
-
 ifconfig eth0 up
 问:
 up eth6之后,ifcfg-eth6配置中的gateway并没有生成
 答:
 ifconfig只负责激活网络接口,你想让eth6配置被读取生效,用ifup
 ifup他会去指定/etc/sysconfig/network-script/ifup脚本,
+
 
 
 ima2 
@@ -1023,7 +1022,7 @@ ipmitool power cycle
 // 对ipmi的网络接口(lan通道,特指bmc的专用管理网络接口),其ip address输出就是bmc的ip
 ipmitool lan print
 
-
+---------------------------------
 iptables2 ip6tables 
 硬件->数据包->内核空间(netfilter框架)->用户空间(iptables,可以视作框架的接口)
 iptables->包含表->包含chain->rule(从上往下执行rule行)
@@ -1045,14 +1044,15 @@ service iptables save
    --dport   指定des端端口8002
    -s        指定src端地址
    -j        指定动作ACCEPT DROP REJECT 等    This specifies the target of the rule; i.e., what to do if the packet matches it.
-ip6tables -A INPUT -p tcp --dport 8002 -s 2409:8080:5A0A:6058::/80 -j ACCEPT 
-// 删除所有rule
+ip6tables -A INPUT -p tcp --dport 8002 -s 2409:8080:5A0A:6058::/80 -j ACCEPT
+
+// 删除所有rule  清空防火墙规则前一定要save
    -F Flush the selected chain (all the chains in the table if none is given).  This is equivalent to deleting all the rules one by one.
 iptables-save > /home/XX.txt
 iptables -F
 iptables-save < /home/XX.txt
 
-
+---------------------------------
 irqbalance2 
 /etc/sysconfig/irqbalance
 IRQBALANCE_BANNED_CPUS=ffffffff,fffffffc,ffffffff,fffffffc
@@ -1458,7 +1458,7 @@ softirqs->net_rx->interrupts->我暂时仅关注cpu0->发现中断345号增长�
 1 通过/proc/softirqs得知是net_rx计数增长较快
 2 查看/proc/interrupts,以cpu0为例,cpu0在处理中断号361(对应设备eth3-48)和中断号345(对应设备eth3-32)时增长较快
 
-
+----------------------------
 multipath2 
 // -f 您想要删除的特定多路径设备名,有"刷新"or"强制删除"的意思
 multipath -f 多路径盘uuid
@@ -1466,22 +1466,23 @@ multipath -ll   |grep 3688860300000114e34a28bd765ec26b6
     3688860300000114e34a28bd765ec26b6 dm-40 DeepSeek,VBS fileIO
 
 
-
+------------------------------------
 netstat22  ss22
 有点过时 现在用ss命令
 打印网络连接、路由表、连接的数据统计、伪装连接以及广播域成员
-   Local Address   本地地址和端口
-   Foreign Address 远程地址和端口
-   state       常见 established listen(首先服务端需要打开一个socket进行监听，状态为LISTEN./*The socket is listening for incoming connections. 侦听来自远方TCP端口的连接请求)
-   -a   display all sockets
-   -t   tcp协议
-   -u   udp协议
+Proto Recv-Q  Send-Q  LocalAddress(本地地址和端口)     ForeignAddress(远程地址和端口)         State       PID/Program name
+   state       常见
+       listen(服务端打开一socket进行监听，The socket is listening for incoming connections. 侦听来自客户端的连接请求)
+       established  含义：连接已建立成功！双方可以正常传输数据
+// -a   display all sockets
    -n   numeric
    -l   display listening server sockets
    -p   display pid/program name for socket 常常lp一块使用
-netstat -anlp |grep ssh
+   -t   tcp协议
+   -u   udp协议
+netstat -anlp |grep sshd
 
-
+----------------------------------
 ss2
 socket statistic
 // -u udp
@@ -1490,12 +1491,10 @@ socket statistic
    sport = :514：过滤器。只显示源端口（source port）等于 514 的套接字
 ss -m -u -a sport =:514
 
-
+-------------------------
 nscd2
 Name Service Cache Daemon 它的核心作用就是加速，通过缓存来提升系统查询各类域名服务
-
-
-
+-------------------------------
 nslookup22
 nslookup network.XX.com
         Server:		172.28.8.21      dnsServer的地址
@@ -1516,7 +1515,25 @@ refid
    .locl.   本地时钟
    .gps.    gps时钟源
 
-ntpdate2 
+ntpd2
+// -c confFile
+   -u user[:group]指定用户,指定group(可选)
+   -q 一次同步时间后退出
+ntpd -u ntp:ntp -c /usr/local/bin/ntp-client/conf/ntp.conf -q
+让 ntpd（NTP 守护进程）以指定的低权限用户身份，使用特定的配置文件，立刻同步一次系统时间，然后退出
+
+问:
+ntpd[564960]listen and drop on 0 v6wildcare [::]:123
+unable to bind to wildcard address XXX another process may be running - EXITING
+答:
+ds
+我想绑定（监听）这个端口(操作系统有一个铁律：一个端口（IP+Port组合）在同一时刻只能被一个进程监听（除非设置了特定的 SO_REUSEPORT 选项）)，但该端口已经被别的进程占用了，所以我启动失败
+结论:
+可能是当时ntpd进程已经启动了一个(查看ps日志没有发现ntpd进程占用)
+可能是其他进程把默认123port占用了(查看日志,此问题归属于这种)
+
+
+ntpdate2       过期,废弃
 set the date and time via NTP
 // -d debugMode 后面是ntpServer的ipv6
    -r port
@@ -1617,19 +1634,30 @@ pgrep22
 pgrep ssh // 只展示ssh进程的pid
 pgrep -l ssh // -l 展示 pid 和 processName
 
+------------------------------------------------
+ping2     ping不通
+问
+主机ping不通vm
+答
+主机上tcpdump,一堆neighbor solicitation
+vm内部网口的收包计数为0,转guestos
 
+如果tcpdump抓到了,说明包到了网口,但是后续包可能被iptables给drop了
+
+
+----------------------------------------------------
 pkill22
 // 通过进程名字杀进程  -f 代表full process name 
 pkill -9 -f /usr/XXX.py
 pkill -9 -f "life.sh"
 
-
+--------------------------------------------
 printf2 
 // printf formatStr args
 printf "first %s %s\n" hello world
 printf ":set nu hls cursorline\n" >> ~/.vimrc
 
-
+----------------------------------
 proc2
 /proc/XX/status 输出中
 Uid:    1000    1000    1000    1000
@@ -2196,8 +2224,8 @@ ssh-keygen2
 // 然后把id_rsa.pub的内容加到github中就行了
 ssh-keygen -C XXX@163.com
 
-
-ssh22
+----------------------------
+ssh22    ssh连不上
 ssh root:passXXX@10.189.4.183:35
 ssh -vvv ipXX
 
@@ -2212,6 +2240,18 @@ sshd_config则关注SSH服务器如何配置以响应这些连接请求
 sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址,默认情况下，sshd 会监听本机所有网络接口上的所有 IPv4 和 IPv6 地址（相当于 0.0.0.0 和 ::）
 使用 ListenAddress 可以限制 sshd 只绑定到特定的 IP 地址，从而提高安全性或避免端口冲突
 假设服务器有2个网卡,一个连内网(假设ip 192.168.1.11),一个连外网(假设ip 192.168.1.22),如果只监听内网网卡ip的话,可以减少外部攻击的风险
+
+问
+主机ssh连不上虚拟机
+答
+1 检查/etc/ssh/sshd_config中ListenAddress是否被
+2 netstat -anpl |grep sshd观察state为listen真的有在监听吗?
+3 都有的话,上tcpdump看有没有收发包
+4 有收发包的话,再看看iptalbes有没有drop了(转iptables清空防火墙规则)
+ListenAddress 监听了A,B地址,
+但是netstat -anpl |grep 22显示只有B地址
+所以重启sshd服务,恢复正常
+
 
 问1
 假设listenAddress监听两个ip,下面命令只查出来一个
@@ -2406,7 +2446,7 @@ taskset -cp 40  11940
    cat /sys/fs/cgroup/cpuset/system.slice/system-hostos.slice/cpuset.cpus
    0-11,28-39   // 范围没有40所以绑定40报错,(转cgroup父子关系)
 
-
+------------------------------
 tcpdump2 
 格式:tcpdump option protocol diretion type                              https://www.cnblogs.com/wongbingming/p/13212306.html
 proto取值         传输层网络层协议可以ip ip6 icmp tcp udp,应用层协议不行http https dns ssh这些一般用特定的port过滤
@@ -2415,7 +2455,6 @@ type取值         host 127.0.0.1
                   net127.0.0.1/8 
                   port22 
                   portrange 22-24
-
 // -v verbose -v -vv -vvv
    -nn 单个n不解析域名,两个n表示不解析域名和端口。这样不仅方便查看 IP 和端口号，而且在抓取大量数据时非常高效，因为域名解析会降低抓取速度。
    -e  显示数据链路层信息。默认情况下 tcpdump 不会显示数据链路层信息，使用 -e 选项可以显示源和目的 MAC 地址，以及 VLAN tag 信息
@@ -2430,17 +2469,17 @@ tcpdump -vvv -i enp129s0f0 -w XXX.pcap
 tcpdump -i external_api  -vvv   |grep fc51:158:46:17::32
 
 输出格式:
-    [S] = SYN（发起连接请求，三次握手第一步）。// 标识位科普
-    [.] = ACK（确认包，表示收到了数据）。
-    [P] = PUSH（推送数据，表示有实际应用数据要传输）。
-    [F] = FIN（结束连接，主动关闭的一方发这个）。
+    [S] = SYN（发起连接请求，三次握手第一步）// 标识位科普
+    [.] = ACK（确认包，表示收到了数据）
+    [P] = PUSH（推送数据，表示有实际应用数据要传输）
+    [F] = FIN（结束连接，主动关闭的一方发这个）
     [R] = RST（复位连接，直接终止，表示错误或拒绝）
 时分秒.微秒       协议(ivp6/ip)  src的ip+port > dst的ip+port   标识位      数据包内容
 10:35:12.345... IP 192.168.1.100.54322 > 93.184.216.34.80: Flags [S], seq 123456, win 65535	客户端说：“嘿，服务器，我要连接你（SYN），我的初始序号是 123456。”
-10:35:12.345... IP 93.184.216.34.80 > 192.168.1.100.54322: Flags [S.], seq 654321, ack 123457, win 65535	服务器回复：“收到你的请求了（ACK），我也要连接你（SYN），我的序号是 654321，我确认你的序号是 123457。”
+10:35:12.345... IP 93.184.216.34.80 > 192.168.1.100.54322: Flags [S.], seq 654321, ack 123457, win 65535服务器回复：“收到你的请求了（ACK），我也要连接你（SYN），我的序号是 654321，我确认你的序号是 123457
 10:35:12.345... IP 192.168.1.100.54322 > 93.184.216.34.80: Flags [.], ack 654322, win 65535	客户端最后确认：“收到你的序号了（ACK），确认你的 654322。”
 
-
+---------------------------------
 tee2
 // -a append,非覆盖追加
 ls -l | tee -a lsls.log
@@ -2468,10 +2507,7 @@ si
     softIrq软中断2(与收发包有关,具体看sar日志)
 wa
     重要,Wait for I/O，I/O等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
-load average: 0.65, 0.42, 0.36(过去1,5,15分钟的平均负载。)
-    第一个数字（0.65）：过去1分钟的平均负载
-    第二个数字（0.42）：过去5分钟的平均负载
-    第三个数字（0.36）：过去15分钟的平均负载
+load average: 0.65, 0.42, 0.36 (过去1,5,15分钟的平均负载)
 负载数值的大小需要结合系统的CPU核心数来理解。负载值小于CPU核心数时，通常表示系统还有空闲资源；负载值大于CPU核心数时，表示系统可能过载。
 假设你的系统有4个CPU核心。
     如果负载为2.0，意味着平均有2个进程在占用或等待CPU，系统还有一半的CPU空闲。
