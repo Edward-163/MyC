@@ -3,7 +3,7 @@ legacyBios|uefi|mbr(dos)|gpt|grub|kernel|initrd|rootfs|init|systemd  例fdisk -l
    mbr(旧),gpt(新)是两种不同硬盘分区方案
 
 legacyBios
-    "老管家"(老技术都快淘汰了)   上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
+    "老管家"(老技术快淘汰了) 上电后运行的第一个程序,保存在bios芯片中,它会去引导bootloader,检查硬件等,现实中bios是一种固化在主板上的固件,通常有芯片存储
     做什么?开机自检->初始化硬件->寻找系统->交接控制权       可能会被uefi取代"智能管家"
 uefi22
     在 UEFI 时代，启动信息不再存储在硬盘的 MBR（主引导记录），而是存储在主板上的 NVRAM（非易失性随机存取存储器）芯片里
@@ -950,11 +950,11 @@ rrqm/s：read requestMerged/sec   每秒有多少个"取件请求"被你合并�
    有合并：聪明的 I/O 调度器会发现这些请求是访问连续的磁盘区域。于是，它会将这4个小请求合并成1个大的请求：
    READ from block 100, length 4 blocks
    这样，只需要向硬盘发送1次命令，硬盘执行一次连续读取就能完成所有任务，效率大大提高。
-wrqm/s：   每秒有多少个"寄件请求"被你合并处理了（比如把寄往同一城市的3个包裹合并成1个包裹）
-rKB/s    读带宽
+wrqm/s     每秒有多少个"寄件请求"被你合并处理了（比如把寄往同一城市的3个包裹合并成1个包裹）
+rKB/s      读带宽
 avgrq-sz   和/sys/block/sdb/queue/max_sector_kb有关联        https://bean-li.github.io/dive-into-iostat/
 avgqu-sz   待处理io队列大小,平均值越大,"排队的人越多",达到 5 或 10 以上，说明严重拥堵，几乎所有新请求一进来就被迫调用 blk_io_schedule 进入睡眠状态
-util        磁盘利用率,接近100可能是磁盘性能瓶颈,可能是cgroup里面blkio设限(转cgroup)
+util       磁盘利用率,接近100可能是磁盘性能瓶颈,可能是cgroup里面blkio设限(转cgroup)
 
 
 
@@ -1060,12 +1060,22 @@ f 代表(先转成2进制,全是1)不参与中断   一位16进制==4位二进�
 0 代表参与中断
 irqbalance意义:每个核上均匀参与中断处理,使性能更佳
 
+----------------------
+ipsan2
+IP SAN（Internet Protocol Storage Area Network）是一种基于 IP 网络 构建的存储区域网络，它使用标准的以太网和 TCP/IP 协议来传输存储数据，
+让服务器可以像访问本地硬盘一样访问网络上的存储设备。最常见的 IP SAN 实现技术是 iSCSI（Internet Small Computer System Interface）
+
+主机（Host）：一般指服务器或计算机，需要访问存储资源。
+主机启动器（Host Initiator）：启动器是发起iSCSI连接的客户端，通常是主机上的iSCSI initiator软件或硬件（HBA）。主机启动器就是主机的iSCSI启动器标识，通常是IQN（iSCSI Qualified Name）或WWPN（对于FC）。
+启动器类型（Initiator Type）：指启动器的类型，例如iSCSI、FC等。这里用户提到“启动器类型iscsi”，指的是iSCSI类型的启动器。
+IP SAN：基于IP网络的存储区域网络，iSCSI是其最常用的协议。所以iSCSI是实现IP SAN的一种技术。
+关系：主机通过配置主机启动器（iSCSI initiator）连接到IP SAN存储。启动器类型为iSCSI意味着使用iSCSI协议。IP SAN是整体存储架构，iSCSI是其中一种具体协议
 
 iscsiadm2
 iSCSI 存储的命令行全流程，主要涉及“发现 -> 登录 -> 使用 -> 维护 -> 登出
-    iscsi target：存储设备端，服务器端的设备，为其他服务器提供“磁盘”。
-    Iscsi initiator：使用target提供“磁盘”的客户端。
-   https://linux.virtualcat.net/c/iscsiadm.html
+    Iscsi initiator（发起端）：通常是服务器上的软件或硬件（如 iSCSI HBA 卡），负责封装 SCSI 命令并发起连接
+    iscsi target：（目标端）：存储设备或存储服务器，提供实际的存储资源（LUN，逻辑单元号），响应 Initiator 的请求
+    https://linux.virtualcat.net/c/iscsiadm.html
 // 发现阵列ip==对端业务ip的目标,用于发现指定存储服务器（Target）上可供连接的存储资源,
    -m，--mode  <模式> 指定工作模式，如discovery（发现模式）、node（管理节点）、session（管理会话）
    -t st：指定发现类型为 sendtargets（可简写为 st）。这是最常用的方式，意思是让存储服务器把它提供的存储目标列表“发送”过来
@@ -1076,8 +1086,8 @@ iscsiadm -m discovery -t st -p ip:port // （客户端）根据地址（IP:Port�
 
 // -l login
    -u logout
-iscsiadm -m node -p XX.XX.XX.XX -l
-iscsiadm -m node -p XX.XX.XX.XX -u
+iscsiadm -m node -p XX.XX.XX.XX -l // 输出变化:lsblk会多些远端盘
+iscsiadm -m node -p XX.XX.XX.XX -u // 输出变化:lsblk会少些远端盘
 
 // 查询当前主机登入的存储设备
 iscsiadm -m session // 当前会话存储链接
@@ -1086,6 +1096,13 @@ tcp:[编号] [XX:XX:XX:XX:XX]:XX iqnXXX
 // 查看当前主机上发现所有target
 iscsiadm -m node // 存储设备"历史记录"
 [XX:XX:XX:XX:XX]:XX iqnXXX
+
+iscsiadm -m node
+[fc00:0:0:4004:0:0:0:224]:3260,4294967295 iqn.2006-08.com:oceanstor:2100487b6bef54a5::1020000:fc00:0:0:4004:0:0:0:224
+[fc00:0:0:4004:0:0:0:220]:3260,4294967295 iqn.2006-08.com:oceanstor:2100487b6bef54a5::20000:fc00:0:0:4004:0:0:0:220
+iscsiadm -m session
+tcp: [15] [fc00:0:0:4004:0:0:0:220]:3260,1 iqn.2006-08.com:oceanstor:2100487b6bef54a5::20000:fc00:0:0:4004:0:0:0:220 (non-flash)
+tcp: [16] [fc00:0:0:4004:0:0:0:224]:3260,11 iqn.2006-08.com:oceanstor:2100487b6bef54a5::1020000:fc00:0:0:4004:0:0:0:224 (non-flash)
 
 
 
@@ -1514,8 +1531,10 @@ refid
    .init.   初始化中
    .locl.   本地时钟
    .gps.    gps时钟源
-
+-------------------------
 ntpd2
+ntpd：守护进程（服务）。持续在后台运行。逐步调整时间（回转/slewing）。更准确，对运行中的服务影响更小
+ntpdate：用于一次性时间同步的旧命令行工具。立即设置时间（跳跃）
 // -c confFile
    -u user[:group]指定用户,指定group(可选)
    -q 一次同步时间后退出
@@ -1532,11 +1551,11 @@ ds
 可能是当时ntpd进程已经启动了一个(查看ps日志没有发现ntpd进程占用)
 可能是其他进程把默认123port占用了(查看日志,此问题归属于这种)
 
-
+------------------
 ntpdate2       过期,废弃
 set the date and time via NTP
 // -d debugMode 后面是ntpServer的ipv6
-   -r port
+   -r port 指定port,不加是client端随机port(ntpserver依旧是默认123port)
 ntpdate -d fc00:ac1c::b2a 
 ntpdate -d -r 123 10.0.36.6
 
@@ -1917,7 +1936,7 @@ dentry2（目录项）
     关键字段：
     d_name：文件名。
     d_parent：父目录的 dentry。
-    d_inode：指向该文件对应的 inode。    一个文件在磁盘上的数据由 inode（索引节点） 管理，而文件名只是指向该 inode 的一个 目录项（dentry）。rm 命令实际上执行的是系统调用 unlink()，它的作用是删除目录项，并将对应 inode 中的硬链接计数减 1。
+    d_inode：指向该文件对应的 inode  一个文件在磁盘上的数据由 inode管理，而文件名只是指向该 inode 的一个 目录项（dentry）。rm实际上执行的是系统调用 unlink()，它的作用是删除目录项，并将对应 inode 中的硬链接计数减 1。
     d_count：引用计数，表示该 dentry 被多少个路径查找或进程引用。
 inode2（索引节点）
     定义在 <linux/fs.h> 中的 struct inode
@@ -2015,10 +2034,12 @@ rsync -r /home/dir1/ /home/dir2/
 // -v 代表verbose 至于后面的 用户@ip:目录 类似scp -z代表压缩(网络传输时改善传输效率)
 rsync -avz /home/data root@172.X.X.X:/home/back/data
 
-
-rsyslog2  记录日志
+--------------------------
+rsyslog2
+systemd-journald 负责收集所有日志，rsyslog 可以从 journald 中读取日志，并写入传统文本文件（如 /var/log/syslog）或转发到远程
+它从内存里面journalctl日志收集分类,也可能直接发给远端-->系统日志服务，负责收集、处理、转发日志;将日志写入文件、转发到远程服务器
 $outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
-    	$outchannel message给输出通道起名message，方便在其它规则里引用,后面是文件8M切转,最后面是转储脚本以及入参.通常配合:omfile:$message使用
+    	$outchannel message给输出通道起名message，方便在其它规则里引用(举例  :omfile:$message),后面是文件8M切转,后面2段是脚本入参.
 
 /etc/rsyslog.conf +117             // 由此就是人为改成*.err,导致message,libvirt,sysmonitor等全部日志都不打印了
 *.debug;mail.none;authpriv.none;cron.none                :omfile:$message
@@ -2036,14 +2057,12 @@ $outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_d
     omfile：表示使用 文件输出模块（Output Module File）。
     $message：将日志的原始消息通过message通道写入/var/log/message中（不附加额外元数据如时间戳、主机名等）。
 
-message转储logdump
 问:
 message转储成logdump到底是/etc/rsyslog.conf  起作用
 # rsyslog configuration file
 $outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
 还是
-cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog   起作用
-我有点懵了???
+cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog   起作用??
 答:
 ds说两者共同作用,我这环境logdump文件都接近8M了,注意解压之后里面message确实<=4M
 cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog
@@ -2064,7 +2083,7 @@ cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog
 
 logrotate2    日志转储压缩
 
-
+-----------------------------
 scp2 
 // ipv4 当时从已登录的单板9.11...上传了证书(被改名为github.cer)到自己的单板9.13...上
    -r 递归整个目录 
@@ -2249,7 +2268,7 @@ sshd_config中的ListenAddress 指定 SSH 服务器监听的 IP 地址,默认情
 3 都有的话,上tcpdump看有没有收发包
 4 有收发包的话,再看看iptalbes有没有drop了(转iptables清空防火墙规则)
 ListenAddress 监听了A,B地址,
-但是netstat -anpl |grep 22显示只有B地址
+但是netstat -anpl |grep sshd显示只有B地址
 所以重启sshd服务,恢复正常
 
 

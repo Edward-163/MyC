@@ -52,3 +52,43 @@ up-silently <n> 不打印堆栈信息；对应于 up 命令。
 down-silently <n> 不打印堆栈信息；对应于 down 命令。
 show endian
 
+--------------------------
+(gdb) bt
+#0  0x0000ffffad6a2fe0 in ?? () from /usr/lib64/libc.so.6
+#1  0x0000ffffad65bf3c in raise () from /usr/lib64/libc.so.6
+#2  0x0000ffffad649d30 in abort () from /usr/lib64/libc.so.6
+#3  0x0000ffffad69702c in ?? () from /usr/lib64/libc.so.6
+#4  0x0000ffffad6ad1bc in ?? () from /usr/lib64/libc.so.6
+#5  0x0000ffffad6b00f8 in ?? () from /usr/lib64/libc.so.6
+#6  0x0000ffffad6b0948 in ?? () from /usr/lib64/libc.so.6
+#7  0x0000ffffad6b1534 in realloc () from /usr/lib64/libc.so.6
+#8  0x0000ffffade3c7bc in g_realloc () from /usr/lib64/libglib-2.0.so.0
+#9  0x0000aaaadd801860 in qemu_sglist_add (qsg=qsg@entry=0xaaaae82eac48, base=7113003008, len=4096) at ../softmmu/dma-helpers.c:45
+#10 0x0000aaaaddd21050 in qemu_sgl_concat (req=0xaaaae82eac00, iov=<optimized out>, addr=<optimized out>, num=<optimized out>, skip=<optimized out>) at ../hw/scsi/virtio-scsi.c:106
+#11 0x0000aaaaddd21224 in virtio_scsi_parse_req (req=req@entry=0xaaaae82eac00, req_size=<optimized out>, resp_size=<optimized out>) at ../hw/scsi/virtio-scsi.c:157
+#12 0x0000aaaaddd22ac0 in virtio_scsi_handle_cmd_req_prepare (req=0xaaaae82eac00, s=0xaaaaea340a70) at ../hw/scsi/virtio-scsi.c:627
+#13 virtio_scsi_handle_cmd_vq (s=s@entry=0xaaaaea340a70, vq=vq@entry=0xffffa663a150) at ../hw/scsi/virtio-scsi.c:692
+#14 0x0000aaaaddd23cac in virtio_scsi_data_plane_handle_cmd (vdev=<optimized out>, vq=0xffffa663a150) at ../hw/scsi/virtio-scsi-dataplane.c:63
+#15 0x0000aaaaddd412cc in virtio_queue_notify_aio_vq (vq=0xffffa663a150) at ../hw/virtio/virtio.c:2292
+#16 0x0000aaaaddf4b33c in aio_dispatch_handler (ctx=ctx@entry=0xaaaae71fab40, node=0xffff94005f90) at ../util/aio-posix.c:329
+#17 0x0000aaaaddf4b9f0 in aio_dispatch_handlers (ctx=0xaaaae71fab40) at ../util/aio-posix.c:372
+#18 aio_dispatch (ctx=0xaaaae71fab40) at ../util/aio-posix.c:382
+#19 0x0000aaaaddf603c4 in aio_ctx_dispatch (source=<optimized out>, callback=<optimized out>, user_data=<optimized out>) at ../util/async.c:330
+#20 0x0000ffffade365a0 in g_main_context_dispatch () from /usr/lib64/libglib-2.0.so.0
+#21 0x0000aaaaddf6cc0c in glib_pollfds_poll () at ../util/main-loop.c:231
+#22 os_host_main_loop_wait (timeout=448000000) at ../util/main-loop.c:254
+#23 main_loop_wait (nonblocking=nonblocking@entry=0) at ../util/main-loop.c:530
+#24 0x0000aaaaddcc0960 in qemu_main_loop () at ../softmmu/runstate.c:1253
+#25 0x0000aaaadd7a9300 in main (argc=<optimized out>, argv=<optimized out>, envp=<optimized out>) at ../softmmu/main.c:52
+(gdb) p base
+No symbol "base" in current context.
+(gdb) f 9 // 等同frame 9
+#9  0x0000aaaadd801860 in qemu_sglist_add (qsg=qsg@entry=0xaaaae82eac48, base=7113003008, len=4096) at ../softmmu/dma-helpers.c:45
+45	../softmmu/dma-helpers.c: No such file or directory.
+(gdb) p base
+$2 = 7113003008
+(gdb) p len
+$3 = 4096
+(gdb) p qsg->nsg
+$4 = 8
+

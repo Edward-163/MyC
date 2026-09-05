@@ -3,6 +3,9 @@ w   word 向右单词头
 b   back 向左单词头
 e   end  向右单词尾
 
+----------------批量替换
+
+
 win git自带的vim的配置文件是C:\Program Files\Git\etc\vimrc
 而linux环境下vimrc前面一般都加上. 表示隐藏
 

@@ -77,7 +77,7 @@ ip address del 192.168.1.222 dev eth0
 
 
 ip neigh show2 
-  邻居设备的ip         |通过wlan0网卡可达前一列ip | linkLayerAddr            |
+  邻居设备的ip          |通过wlan0网卡可达前一列ip   | linkLayerAddr            |
   192.168.1.200       | dev wlan0               | lladdr 11:22:33:44:55:66 | DELAY
   fe80::abc:def1:2345 | dev eth0                | lladdr 00:1a:2b:3c:4d:5e router REACHABLE
   IP 地址	邻居设备的网络层地址（IPv4 或 IPv6）	192.168.1.1 或 fe80::...
