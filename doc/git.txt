@@ -1,25 +1,22 @@
-官方仓 目标远程仓 origin_o
+官方仓 origin_o
 自己fork仓 origin
-    目标分支(代码旧了就重新从目标远程仓fetch更新,我不建议把代码提交到此分支上)
-    以目标分支为基础,checkout -b出来的众多分支(我建议不同人,不同版本,不同时间点来命名新分支,且push时选择同步推送分支名到fork目标远程仓)
+    目标分支(代码旧了就重新从官方仓fetch更新,我不建议把代码提交到此分支上)
+    以目标分支为基础,checkout -b出来的众多分支(我建议不同人,不同版本,不同时间点来命名新分支,且push时选择同步推送分支名到fork官方仓)
 
-
-// 更新fork仓<<官方仓
-   自己远程改了12个补丁,但官方远程更新了许多,此时自己的pr会显示与官方远程冲突,
-   添加官方远程源
+---------------------------------
 git remote add origin_o https链接或者ssh链接 // remote2
 fetch2
-git fetch origin_o // 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支
-git fetch origin_o branchXXX // 需要特定分支可以在origin_o后面加上
-// 额外:让当前分支A与fork仓的分支A一模一样?
-git reset --hard origin_o branchAA
-git checkout -b branchBB origin_o/branchBBB
-// 把自己12个补丁"追加"到自己的最新的远程
-   多分支变基,origin_o/branchXXX分支(它作为newbase)和当前分支(不写默认)的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后(注意:我还在是当前分支,博客的图精辟)
+git fetch origin_o // 抓取官方仓库所有分支的更新(无则新增,有则更新),缺点:可能新增大量的分支(需要特定分支可以在origin_o后面加上)
+git checkout -b DTXX origin_o/branchXX
+// 假设自己fork仓DTXX加了12个提交,但官方仓的branchXX同时合入了XX个提交,                   ====此时常出现"源分支比目标分支落后XX个提交"
+   把自己12个提交"追加"到自己的fork仓的DTXX
+   多分支变基,origin_o/branchXXX分支(它作为newbase)和当前分支(不写默认)的共同父节点,提取当前分支的(父节点,当前分支尾提交点],并嫁接到origin_o/branchXXX的尾节点后
+   (注意:博客的图精辟,你把分支理解为指向节点的"指针"或者"箭头")
    https://blog.csdn.net/weixin_42310154/article/details/119004977
    虽然上面fetch->多分支变基->解决冲突->rebase --continue->push -f 自己fork仓,完美解决问题 https://blog.csdn.net/weixin_35794878/article/details/128052626
-git rebase -i origin_o/branchXXX
+git rebase -i origin_o/branch目标分支
 ..rebase continue省略
+git status // 此时他会提示你git pull,然后自动生成一条merge提交,其实这一步别pull,直接push origin就是"精简"的提交
 git push -uf origin
 
 
@@ -182,10 +179,14 @@ git rebase -i HEAD~2
 // 修改某次提交的代码,pick改edit,剩下的看帮助提示也不难
 git rebase -i commitId~1
 
+reset2
 git reset --mixed HEAD^ // 默认参数,保留修改,撤销本地提交和撤销git add    知识点:HEAD(指针) index(暂存区) workingTree==workDir(工作区)
 git reset --sort HEAD^ // 保留修改,撤销本地提交,不撤销git add
 git reset --hard HEAD^ // 修改无了,相当于回滚到上一个提交
 git reset --hard origin/dev // 本地当前分支重置成和远程一样
+// 额外:让当前分支A与fork仓的分支A一模一样?
+git reset --hard origin_o/branchAA
+git checkout -b branchBB origin_o/branchBBB
 https://vue3js.cn/interview/git/HEAD_tree_index.html#%E4%B8%80%E3%80%81head
 
 

@@ -66,6 +66,9 @@ lvdisplay2
 他的输出老多了,
 
 
+pvcreate2
+
+
 vgchange2 
 // -a avtive
    -y yes

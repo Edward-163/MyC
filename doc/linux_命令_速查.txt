@@ -823,6 +823,11 @@ ds回答可能性部分如下
 答:
 free blocks count wrong (A, counted=B)：超级块记录有 A 个空闲数据块，但fsck实际统计出来只有 B 个
 
+问:
+dirty bit is set,fs was not properly unmounted and some data may be corrupt
+答:
+系统在挂载时设置一个“脏位”，正常卸载时会清除它。如果看到这个报错，说明上次没有正常卸载（比如断电、强制关机）
+
 
 gdb22
 gdb -p pid
@@ -886,7 +891,7 @@ grub2-mkconfig -o /boot/efi/EFI/euleros/grub.cfg // 正常的话,进大系统,�
 hwclock2 
 // rtc==real Time Clock==硬件时钟       systemtime==date命令
 // -r display rtc
-   -w, --systohc 虽然w不是write的意思,通常叫法是"写硬件时钟"   用什么写呢,当然是systemtime    set rtc from system time
+   -w, --systohc 虽然w不是write的意思,用systemtime是"写硬件时钟"       set rtc from system time
    -s, --hctosys        set the system time from the RTC
 hwclock -w
 
@@ -1193,7 +1198,7 @@ ldd /usr/sbin/nscd // 他的libc来源于glibc-XXoe版本,这不对,euler环境�
    断点pre-mount
 mount /dev/mapper/rootfs /sysroot
 chroot /sysroot
-ldd /usr/lib/systemd/systemd                                                                举例,输出提示/usr/lib/systemd/libsystemd-shared-XX.so=>not found
+ldd /usr/lib/systemd/systemd                              举例,输出提示/usr/lib/systemd/libsystemd-shared-XX.so=>not found
 没有共享库文件->从正常环境拷贝一份
  有且md5sum变化   从正常环境拷贝
  有且md5sum不变   ldconfig刷新
@@ -1582,6 +1587,10 @@ osi七层    简化4层
 链路层 可能是eth,光纤fiber,无线网
 
 
+oslogadm2
+oslogadm -t days 90 // 设置90天;持久化配置文件是/etc/esyslog/oslogdump.conf
+
+
 pageUp22
 // 众所周知,上下键可以切换历史命令,
 // 举例:当你敲了ssh 然后pageUp时候,只会展示之前ssh相关的历史命令,好用!!!
@@ -1831,6 +1840,7 @@ ps -aux |grep -E "^USER | 889" // 利用正则顺便把USER开头的首行查找
    %mem rss占系统总物理内存百分比
    cls  scheduling class of the process
    --sort=-rss -rss代表rss数字降序,不写或者写+默认数字升序
+ps aux |head -5 // [XX]方括号代表内核线程
 ps -eLo pid,psr,cmd | awk '{if ($2 >= 1 && $2 <= 1) print}'                              // 查出cpu1上跑的进程
 ps -eLo pid,tid,psr,pcpu,cmd --sort=-pcpu | awk '$3==1'                              // 查出cpu1上跑的进程,并按cpu占用降序排序
 ps -aux --sort=-rss |head -9 //    坑:这个命令不展示系统大页内存占用,内存资源不够真可能是大页占用多了
@@ -2038,6 +2048,7 @@ rsync -avz /home/data root@172.X.X.X:/home/back/data
 rsyslog2
 systemd-journald 负责收集所有日志，rsyslog 可以从 journald 中读取日志，并写入传统文本文件（如 /var/log/syslog）或转发到远程
 它从内存里面journalctl日志收集分类,也可能直接发给远端-->系统日志服务，负责收集、处理、转发日志;将日志写入文件、转发到远程服务器
+# rsyslog configuration file
 $outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
     	$outchannel message给输出通道起名message，方便在其它规则里引用(举例  :omfile:$message),后面是文件8M切转,后面2段是脚本入参.
 
@@ -2058,10 +2069,7 @@ $outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_d
     $message：将日志的原始消息通过message通道写入/var/log/message中（不附加额外元数据如时间戳、主机名等）。
 
 问:
-message转储成logdump到底是/etc/rsyslog.conf  起作用
-# rsyslog configuration file
-$outchannel message,/var/log/messages,8388608,/opt/esyslog/esyslog_log_rsyslog_dump.sh /var/log/messages logdump
-还是
+message转储成logdump到底是/etc/rsyslog.conf  起作用,还是
 cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog   起作用??
 答:
 ds说两者共同作用,我这环境logdump文件都接近8M了,注意解压之后里面message确实<=4M
@@ -2082,6 +2090,7 @@ cron->脚本->/etc/logrotate.conf->#include->/etc/logrotate.d/rsyslog
     }
 
 logrotate2    日志转储压缩
+/etc/logrotate.d/wtmp
 
 -----------------------------
 scp2 
@@ -2524,6 +2533,10 @@ hi
     hardIrq硬中断
 si
     softIrq软中断2(与收发包有关,具体看sar日志)
+st值
+    被虚拟机管理程序（hypervisor）偷走的时间，即 虚拟CPU 等待 物理CPU 的时间，通常出现在虚拟机中
+    虚拟机 top 显示 %Cpu(s): 10.0 us, 5.0 sy, 0.0 ni, 80.0 id, 0.0 wa, 0.0 hi, 0.0 si, 5.0 st。说明 5% 时间 vCPU 被宿主机偷走，虚拟机实际只得到 95%
+    如果物理机 top 显示 st 通常为 0，因为物理机没有 hypervisor 偷时间；但在嵌套虚拟化或某些云环境可能非零
 wa
     重要,Wait for I/O，I/O等待时间百分比。它表示 CPU 花费在等待磁盘I/O操作完成上的时间占总时间的比例 正常范围<5%   7.4wa已经很高了
 load average: 0.65, 0.42, 0.36 (过去1,5,15分钟的平均负载)
